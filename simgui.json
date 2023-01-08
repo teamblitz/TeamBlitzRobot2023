@@ -1,0 +1,56 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [11]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
+      "/Shuffleboard/DriveSubsystem/Field": "Field2d",
+      "/SmartDashboard/DriveSubsystem": "Subsystem",
+      "/SmartDashboard/Test": "PIDController"
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "AdvantageKit": {
+        "PowerDistribution": {
+          "open": true
+        },
+        "Swerve Mod 0": {
+          "open": true
+        },
+        "SystemStats": {
+          "open": true
+        },
+        "open": true
+      },
+      "Robot": {
+        "Swerve": {
+          "Mod0": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
+    }
+  }
+}
