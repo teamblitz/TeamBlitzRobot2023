@@ -205,8 +205,8 @@ public final class Constants {
 
     public static final class OIConstants {
 
-        public static final Function<Double, Double> inputCurve = (x) -> x;
-        // public static final Function<Double, Double> inputCurve = (x) -> .6*x+.4*(x*x*x);
+        // public static final Function<Double, Double> inputCurve = (x) -> x;
+        public static final Function<Double, Double> inputCurve = (x) -> .6*x+.4*(x*x*x);
 
         // Choose 1, not both.
         public static final boolean USE_XBOX_CONTROLLER = false;
