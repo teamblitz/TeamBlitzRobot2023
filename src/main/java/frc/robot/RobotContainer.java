@@ -7,25 +7,27 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.SaitekX52Joystick;
-import frc.robot.Constants.OIConstants.SaitekMappings;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SwerveTuning;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
+import frc.robot.subsystems.drive.gyro.GyroIONavx;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,27 +45,26 @@ public class RobotContainer {
     private XboxController driveController1;
     private SaitekX52Joystick driveController;
 
-    private SwerveTuning tuningCommand; 
+    private SwerveTuning tuningCommand;
+    private final Logger logger = Logger.getInstance();
 
     public RobotContainer() {
         configureSubsystems();
 
         // CameraServer.startAutomaticCapture(); // Ignore warning.
 
-        
-        
-        
         this.tuningCommand = new SwerveTuning(driveSubsystem);
-        
+
         configureButtonBindings();
         setDefaultCommands();
         // tuningTab.add("Tuning Command", tuningCommand);
 
         // tuningCommand.schedule();
         DriverStation.silenceJoystickConnectionWarning(true);
-        Shuffleboard.getTab("DriveSubsystem").add("ResetOdometry", Commands.runOnce(() -> driveSubsystem.resetOdometry(new Pose2d())));
-
-        
+        Shuffleboard.getTab("DriveSubsystem")
+                .add(
+                        "ResetOdometry",
+                        Commands.runOnce(() -> driveSubsystem.resetOdometry(new Pose2d())));
     }
 
     private void setDefaultCommands() {
@@ -78,27 +79,37 @@ public class RobotContainer {
         driveSubsystem.setDefaultCommand(
                 new TeleopSwerve(
                         driveSubsystem,
-                        () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kYAxis.value) * calculateDriveMutiplyer(),
-                        () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kXAxis.value) * calculateDriveMutiplyer(),
+                        () ->
+                                OIConstants.inputCurve.apply(-driveController.getRawAxis(SaitekX52Joystick.Axis.kYAxis.value)
+                                        * calculateDriveMutiplyer()),
+                        () ->
+                                OIConstants.inputCurve.apply(-driveController.getRawAxis(SaitekX52Joystick.Axis.kXAxis.value)
+                                        * calculateDriveMutiplyer()),
                         () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .2,
                         () -> false));
         // driveSubsystem.setDefaultCommand(tuningCommand);
+        // driveSubsystem.setDefaultCommand(Commands.run(() -> {
+        //     // System.out.println("Touhiuhl");
+        //     logger.recordOutput("DriveController/DriveY", driveController.getRawAxis(SaitekX52Joystick.Axis.kYAxis.value));
+        //     logger.recordOutput("DriveController/DriveX", driveController.getRawAxis(SaitekX52Joystick.Axis.kXAxis.value));
+            
+        // }, driveSubsystem
+        // ));
     }
 
-    private final SlewRateLimiter driveMultiplyerLimiter = new SlewRateLimiter(.5);
+    private final SlewRateLimiter driveMultiplyerLimiter = new SlewRateLimiter(.25);
 
     private double calculateDriveMutiplyer() {
         if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
             return driveMultiplyerLimiter.calculate(.2);
+        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
+            return driveMultiplyerLimiter.calculate(1);
         } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
-            return driveMultiplyerLimiter.calculate(.7);
-        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
-            return driveMultiplyerLimiter.calculate(.9);
+            return driveMultiplyerLimiter.calculate(.75);
         } else {
             return driveMultiplyerLimiter.calculate(.5);
         }
     }
-
 
     private void configureSubsystems() {
         driveSubsystem =
@@ -108,8 +119,8 @@ public class RobotContainer {
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         new GyroIONavx());
-        driveController1 = new XboxController(0);
-        driveController = new SaitekX52Joystick(1);
+        driveController1 = new XboxController(1);
+        driveController = new SaitekX52Joystick(0);
     }
 
     /**
@@ -119,7 +130,8 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        new Trigger(() -> driveController.getRawButton(SaitekX52Joystick.Button.kFire.value)).onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
+        new Trigger(() -> driveController.getRawButton(SaitekX52Joystick.Button.kFire.value))
+                .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
         new Trigger(driveController1::getAButton)
                 .onTrue(new InstantCommand(tuningCommand::nextAngle));
     }

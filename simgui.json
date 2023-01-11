@@ -24,6 +24,7 @@
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/DriveSubsystem/Field": "Field2d",
+      "/Shuffleboard/DriveSubsystem/ResetOdometry": "Command",
       "/SmartDashboard/DriveSubsystem": "Subsystem",
       "/SmartDashboard/Test": "PIDController"
     }

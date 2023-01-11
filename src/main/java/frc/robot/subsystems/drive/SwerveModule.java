@@ -61,6 +61,7 @@ public class SwerveModule {
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
             io.setDrivePercent(percentOutput);
+            logger.recordOutput(logKey + "/drivePercent", percentOutput);
         } else {
             logger.recordOutput(logKey + "/SpeedSetpoint", desiredState.speedMetersPerSecond);
             io.setDriveSetpoint(

@@ -38,7 +38,7 @@ public class SaitekX52Joystick extends GenericHID {
         /** Upper trigger pulled atleast 1/2 way */
         kUpperTrigger1(1),
         /** Upper trigger pulled all the way */
-        kUpperTrigger2(2),
+        kUpperTrigger2(15),
         kLowerTrigger(6),
         kFire(2),
         kA(3),

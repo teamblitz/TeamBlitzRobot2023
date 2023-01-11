@@ -17,6 +17,7 @@ import frc.lib.util.COTSSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -203,6 +204,9 @@ public final class Constants {
     }
 
     public static final class OIConstants {
+
+        public static final Function<Double, Double> inputCurve = (x) -> x;
+        // public static final Function<Double, Double> inputCurve = (x) -> .6*x+.4*(x*x*x);
 
         // Choose 1, not both.
         public static final boolean USE_XBOX_CONTROLLER = false;

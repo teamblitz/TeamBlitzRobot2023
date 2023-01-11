@@ -20,9 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.lib.BlitzSubsystem;
-import frc.robot.commands.SwerveTuning;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
@@ -148,7 +146,7 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void zeroGyro() {
-            gyroIO.zeroGyro();
+        gyroIO.zeroGyro();
         // TODO: I plan to have 2
     }
 
