@@ -108,7 +108,7 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double ANGLE_KP = 0.005; // TODO: Tune this.
+        public static final double ANGLE_KP = 0.004; // TODO: Tune this.
         public static final double ANGLE_KI = 0.0;
         public static final double ANGLE_KD = 0.0;
         public static final double ANGLE_KF = 0.0; // For now, should remain zero
@@ -126,7 +126,7 @@ public final class Constants {
 
         /* DriveSubsystem Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 4.5; // TODO: This must be tuned to specific robot
+        public static final double MAX_SPEED = 4.6; // TODO: This must be tuned to specific robot
         /**
          * Radians per Second
          *

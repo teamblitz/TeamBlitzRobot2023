@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,8 +16,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
@@ -28,6 +24,7 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -80,19 +77,25 @@ public class RobotContainer {
                 new TeleopSwerve(
                         driveSubsystem,
                         () ->
-                                OIConstants.inputCurve.apply(-driveController.getRawAxis(SaitekX52Joystick.Axis.kYAxis.value)
-                                        * calculateDriveMutiplyer()),
+                                OIConstants.inputCurve.apply(
+                                        -driveController.getRawAxis(
+                                                        SaitekX52Joystick.Axis.kYAxis.value)
+                                                * calculateDriveMutiplyer()),
                         () ->
-                                OIConstants.inputCurve.apply(-driveController.getRawAxis(SaitekX52Joystick.Axis.kXAxis.value)
-                                        * calculateDriveMutiplyer()),
+                                OIConstants.inputCurve.apply(
+                                        -driveController.getRawAxis(
+                                                        SaitekX52Joystick.Axis.kXAxis.value)
+                                                * calculateDriveMutiplyer()),
                         () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .2,
                         () -> false));
         // driveSubsystem.setDefaultCommand(tuningCommand);
         // driveSubsystem.setDefaultCommand(Commands.run(() -> {
         //     // System.out.println("Touhiuhl");
-        //     logger.recordOutput("DriveController/DriveY", driveController.getRawAxis(SaitekX52Joystick.Axis.kYAxis.value));
-        //     logger.recordOutput("DriveController/DriveX", driveController.getRawAxis(SaitekX52Joystick.Axis.kXAxis.value));
-            
+        //     logger.recordOutput("DriveController/DriveY",
+        // driveController.getRawAxis(SaitekX52Joystick.Axis.kYAxis.value));
+        //     logger.recordOutput("DriveController/DriveX",
+        // driveController.getRawAxis(SaitekX52Joystick.Axis.kXAxis.value));
+
         // }, driveSubsystem
         // ));
     }

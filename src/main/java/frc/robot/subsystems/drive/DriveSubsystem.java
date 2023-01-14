@@ -97,27 +97,34 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         this.gyroIO = gyroIO;
         logger = Logger.getInstance();
 
-        keepHeadingPid = new PIDController(.01, 0, 0);
+        keepHeadingPid = new PIDController(.1, 0, 0);
         keepHeadingPid.enableContinuousInput(-180, 180);
         initTelemetry();
     }
 
     public void drive(
-            Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean maintainHeading) {
+            Translation2d translation,
+            double rotation,
+            boolean fieldRelative,
+            boolean isOpenLoop,
+            boolean maintainHeading) {
 
         if (rotation != 0) {
             lastTurnCommandSeconds = Timer.getFPGATimestamp();
             keepHeadingSetpointSet = false;
+            logger.recordOutput("Swerve/Turning", true);
         }
-        if (lastTurnCommandSeconds >= Timer.getFPGATimestamp() + .5
+        if (lastTurnCommandSeconds + .5 <= Timer.getFPGATimestamp()
                 && !keepHeadingSetpointSet) { // If it has been at least .5 seconds.
             keepHeadingPid.setSetpoint(getYaw().getDegrees());
             keepHeadingSetpointSet = true;
+            logger.recordOutput("Swerve/Turning", false);
         }
         if (keepHeadingSetpointSet && maintainHeading) {
-            rotation = MathUtil.clamp(keepHeadingPid.calculate(getYaw().getDegrees()), -.1, .1);
+            rotation = keepHeadingPid.calculate(getYaw().getDegrees());
         }
-
+        logger.recordOutput("Swerve/keepHeadingSetpointSet", keepHeadingSetpointSet);
+        logger.recordOutput("Swerve/keepSetpoint", keepHeadingPid.getSetpoint());
 
         SwerveModuleState[] swerveModuleStates =
                 KINEMATICS.toSwerveModuleStates(
@@ -173,6 +180,8 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public void zeroGyro() {
         gyroIO.zeroGyro();
+        keepHeadingSetpointSet = false;
+        lastTurnCommandSeconds = Timer.getFPGATimestamp();
         // TODO: I plan to have 2
     }
 
@@ -240,6 +249,7 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public void initTelemetry() {
         shuffleboardTab.add(field);
+        tuningTab.add("KeepHeadingPid", keepHeadingPid);
         // tuningTab.add("Tuning Command", new SwerveTuning(this));
     }
 

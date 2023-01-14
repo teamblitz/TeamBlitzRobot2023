@@ -7,7 +7,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
 import org.littletonrobotics.junction.Logger;
 
 public class TeleopSwerve extends CommandBase {
@@ -43,12 +42,9 @@ public class TeleopSwerve extends CommandBase {
         double rotationVal =
                 MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.STICK_DEADBAND);
 
-
         logger.recordOutput("DriveCommand/translation", translationVal);
         logger.recordOutput("DriveCommand/strafe", strafeVal);
         logger.recordOutput("DriveCommand/rot", rotationVal);
-
-        
 
         /* Drive */
         driveSubsystem.drive(
