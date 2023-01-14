@@ -4,6 +4,8 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.Constants.Swerve.*;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -14,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -61,6 +64,11 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     private double driveI = DRIVE_KI;
     private double driveD = DRIVE_KD;
 
+    private double lastTurnCommandSeconds;
+    private boolean keepHeadingSetpointSet;
+
+    private PIDController keepHeadingPid;
+
     public DriveSubsystem(
             SwerveModuleIO frontLeft,
             SwerveModuleIO frontRight,
@@ -88,11 +96,29 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         swerveOdometry = new SwerveDriveOdometry(KINEMATICS, getYaw(), getModulePositions());
         this.gyroIO = gyroIO;
         logger = Logger.getInstance();
+
+        keepHeadingPid = new PIDController(.01, 0, 0);
+        keepHeadingPid.enableContinuousInput(-180, 180);
         initTelemetry();
     }
 
     public void drive(
-            Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+            Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean maintainHeading) {
+
+        if (rotation != 0) {
+            lastTurnCommandSeconds = Timer.getFPGATimestamp();
+            keepHeadingSetpointSet = false;
+        }
+        if (lastTurnCommandSeconds >= Timer.getFPGATimestamp() + .5
+                && !keepHeadingSetpointSet) { // If it has been at least .5 seconds.
+            keepHeadingPid.setSetpoint(getYaw().getDegrees());
+            keepHeadingSetpointSet = true;
+        }
+        if (keepHeadingSetpointSet && maintainHeading) {
+            rotation = MathUtil.clamp(keepHeadingPid.calculate(getYaw().getDegrees()), -.1, .1);
+        }
+
+
         SwerveModuleState[] swerveModuleStates =
                 KINEMATICS.toSwerveModuleStates(
                         fieldRelative

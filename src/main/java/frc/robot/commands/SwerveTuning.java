@@ -53,7 +53,7 @@ public class SwerveTuning extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        driveSubsystem.drive(new Translation2d(0, 0), 0, false, true);
+        driveSubsystem.drive(new Translation2d(0, 0), 0, false, true, false);
         System.out.println("swervetuningend");
     }
 

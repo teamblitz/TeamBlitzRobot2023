@@ -32,6 +32,7 @@ public class SwerveSimTest extends CommandBase {
                 new Translation2d(translationEntry.getDouble(0), strafeEntry.getDouble(0)),
                 rotationEntry.getDouble(0),
                 false,
+                true,
                 true);
     }
 
