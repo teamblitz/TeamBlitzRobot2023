@@ -41,6 +41,24 @@ public final class Constants {
         REPLAY
     }
 
+    public static final class Intake {
+        public static final int FRONT_LEFT_ID = 14;
+        public static final int FRONT_RIGHT_ID = 15;
+        public static final int BACK_LEFT_ID = 16;
+        public static final int BACK_RIGHT_ID = 17;
+        /*
+         * Neo 550
+         * 20A Limit - Motor survived full 220s test.
+         * 40A Limit - Motor failure at approximately 27s.
+         * 60A Limit - Motor failure at approximately 5.5s
+         * 80A Limit* - Motor failure at approximately 2.0s
+         *
+         * For NEOs
+         * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
+         * */
+        public static final int CURRENT_LIMIT = 20;
+    }
+
     public static final class Swerve {
         public static final int PIGEON_ID = 1;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -206,7 +224,7 @@ public final class Constants {
     public static final class OIConstants {
 
         // public static final Function<Double, Double> inputCurve = (x) -> x;
-        public static final Function<Double, Double> inputCurve = (x) -> .6*x+.4*(x*x*x);
+        public static final Function<Double, Double> inputCurve = (x) -> .6 * x + .4 * (x * x * x);
 
         // Choose 1, not both.
         public static final boolean USE_XBOX_CONTROLLER = false;

@@ -4,7 +4,6 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.Constants.Swerve.*;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
