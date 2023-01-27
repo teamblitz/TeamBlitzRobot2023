@@ -10,6 +10,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -33,7 +34,7 @@ public final class Constants {
 
     public static final boolean tuningMode = true;
 
-    public static enum Mode {
+    public enum Mode {
         /** Running a physics simulator. */
         SIM,
 
@@ -53,10 +54,31 @@ public final class Constants {
          * 60A Limit - Motor failure at approximately 5.5s
          * 80A Limit* - Motor failure at approximately 2.0s
          *
-         * For NEOs
+         * For NEOs use 40
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
         public static final int CURRENT_LIMIT = 20;
+    }
+
+    public static final class Arm {
+        /** The center of the center of rotation for the arm */
+        public static final Translation3d ARM_BASE =
+                new Translation3d(0, 0, 0); // TODO: Tune to robot
+
+        public static final Rotation2d LOWEST_ROTATION = new Rotation2d(); // TODO: Tune to robot
+        public static final Rotation2d HIGHEST_ROTATION = new Rotation2d(); // TODO: Tune to robot
+
+        /** End of arm distance from the center of rotation when the arm is not extended*/
+        public static final int MIN_EXTENSION = 1;
+        /** Distance of the end of the arm from the center of rotation when the arm is fully extended.*/
+        public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
+
+        public static final double ROTATION_GEAR_RATIO = 1.0/16.0; // TODO: Tune to robot
+        public static final double EXTENSION_GEAR_RATION = 0; // TODO: Tune to robot
+
+        // Values to determine if a configuration of the arm is legal.
+        public static final double MAX_LEGAL_HEIGHT = Units.feetToMeters(6.5);
+        public static final double MAX_EXTENSION_PAST_Frame = Units.inchesToMeters(48);
     }
 
     public static final class Swerve {
