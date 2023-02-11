@@ -43,7 +43,7 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int FRONT_LEFT_ID = 14;
+        public static final int FRONT_LEFT_ID = 14; // May need to be adjusted
         public static final int FRONT_RIGHT_ID = 15;
         public static final int BACK_LEFT_ID = 16;
         public static final int BACK_RIGHT_ID = 17;
@@ -61,6 +61,16 @@ public final class Constants {
     }
 
     public static final class Arm {
+
+        public static final int ARM_ROT_LEADER = 18; // Like the above IDs, may need to be adjusted
+        public static final int ARM_ROT_FOLLOWER = 19;
+
+        public static final int WRIST_ROT_LEADER = 20;
+        public static final int WRIST_ROT_FOLLOWER = 21;
+
+        public static final int ARM_EXTENSION_LEADER = 22;
+        public static final int ARM_EXTENSION_FOLLOWER = 23;
+
         /** The center of the center of rotation for the arm */
         public static final Translation3d ARM_BASE =
                 new Translation3d(0, 0, 0); // TODO: Tune to robot
@@ -68,12 +78,15 @@ public final class Constants {
         public static final Rotation2d LOWEST_ROTATION = new Rotation2d(); // TODO: Tune to robot
         public static final Rotation2d HIGHEST_ROTATION = new Rotation2d(); // TODO: Tune to robot
 
-        /** End of arm distance from the center of rotation when the arm is not extended*/
+        /** End of arm distance from the center of rotation when the arm is not extended */
         public static final int MIN_EXTENSION = 1;
-        /** Distance of the end of the arm from the center of rotation when the arm is fully extended.*/
+        /**
+         * Distance of the end of the arm from the center of rotation when the arm is fully
+         * extended.
+         */
         public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
 
-        public static final double ROTATION_GEAR_RATIO = 1.0/16.0; // TODO: Tune to robot
+        public static final double ROTATION_GEAR_RATIO = 1.0 / 16.0; // TODO: Tune to robot
         public static final double EXTENSION_GEAR_RATION = 0; // TODO: Tune to robot
 
         // Values to determine if a configuration of the arm is legal.
