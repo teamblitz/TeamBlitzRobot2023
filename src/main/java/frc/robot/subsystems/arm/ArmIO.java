@@ -12,7 +12,7 @@ public interface ArmIO {
 
     public default void setArmRotation(Rotation2d rot) {}
 
-    public default void setArmPosition(double meters) {}
+    public default void setArmExtension(double meters) {}
 
     public default void setWristRotation(Rotation2d rot) {}
 
