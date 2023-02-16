@@ -51,23 +51,36 @@ public class ArmIOTalonSpark implements ArmIO {
         armExtensionFollower.setInverted(InvertType.OpposeMaster);
     }
 
-    public void setArmRotation(Rotation2d rot) {
+    @Override
+    public void updateInputs(ArmIOInputs inputs) {
+        // TODO: Update inputs
     }
 
+    @Override
+    public void setArmRotation(Rotation2d rot) {
+        // Get sensor position and use that to determine rotations?
+    }
+
+    @Override
     public void setArmExtension(double meters) {
     }
 
+    @Override
     public void setWristRotation(Rotation2d rot) {
+
     }
 
+    @Override
     public void setArmRotationSpeed(double speed) {
         armRotLeader.set(ControlMode.PercentOutput, speed);
     }
 
+    @Override
     public void setArmExtensionSpeed(double speed) {
         armExtensionLeader.set(ControlMode.PercentOutput, speed);
     }
 
+    @Override
     public void setWristRotationSpeed(double speed) {
         wristRotLeader.set(speed);
     }
