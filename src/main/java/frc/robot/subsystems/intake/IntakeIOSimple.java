@@ -11,8 +11,14 @@ public class IntakeIOSimple implements IntakeIO {
     private final CANSparkMax followerMotor;
 
     public IntakeIOSimple() {
-        leaderMotor = new CANSparkMax(-1, CANSparkMaxLowLevel.MotorType.kBrushless);
-        followerMotor = new CANSparkMax(-1, CANSparkMaxLowLevel.MotorType.kBrushless);
+        leaderMotor =
+                new CANSparkMax(
+                        Constants.Intake.Simple.LEFT_MOTOR_ID,
+                        CANSparkMaxLowLevel.MotorType.kBrushless);
+        followerMotor =
+                new CANSparkMax(
+                        Constants.Intake.Simple.RIGHT_MOTORI_ID,
+                        CANSparkMaxLowLevel.MotorType.kBrushless);
 
         leaderMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
         followerMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);

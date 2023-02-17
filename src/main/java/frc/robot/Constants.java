@@ -68,13 +68,16 @@ public final class Constants {
             public static final double IN_SPEED = 0.2;
             public static final double OUT_SPEED = -0.2;
             // From robot POV
-            public static final int MOTOR_LEFT = 1;
-            public static final int MOTOR_RIGHT = 2;
+            public static final int LEFT_MOTOR_ID = 13;
+            public static final int RIGHT_MOTORI_ID = 14;
         }
 
         public static final class Complex {
-            public static final int FRONT_MOTOR = 13;
-            public static final int BACK_MOTOR = 14;
+            public static final double IN_SPEED = 0.2;
+            public static final double OUT_SPEED = -0.2;
+
+            public static final int FRONT_MOTOR_ID = 13;
+            public static final int BACK_MOTOR_ID = 14;
         }
     }
 

@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -62,13 +61,10 @@ public class ArmIOTalonSpark implements ArmIO {
     }
 
     @Override
-    public void setArmExtension(double meters) {
-    }
+    public void setArmExtension(double meters) {}
 
     @Override
-    public void setWristRotation(Rotation2d rot) {
-
-    }
+    public void setWristRotation(Rotation2d rot) {}
 
     @Override
     public void setArmRotationSpeed(double speed) {
