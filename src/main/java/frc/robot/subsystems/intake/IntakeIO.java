@@ -10,7 +10,13 @@ public interface IntakeIO {
     /** Updates the set of loggable inputs. */
     public default void updateInputs(IntakeIOInputs inputs) {}
 
-    public default void setFront(double speed) {}
+    public default void inCone() {}
 
-    public default void setBack(double speed) {}
+    public default void outCone() {}
+
+    public default void inCube() {}
+
+    public default void outCube() {}
+
+    public default void stop() {}
 }
