@@ -43,10 +43,7 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int FRONT_LEFT_ID = 14; // May need to be adjusted
-        public static final int FRONT_RIGHT_ID = 15;
-        public static final int BACK_LEFT_ID = 16;
-        public static final int BACK_RIGHT_ID = 17;
+
         /*
          * Neo 550
          * 20A Limit - Motor survived full 220s test.
@@ -66,6 +63,19 @@ public final class Constants {
         }
 
         public static final Type type = Type.Simple;
+
+        public static final class Simple {
+            public static final double IN_SPEED = 0.2;
+            public static final double OUT_SPEED = -0.2;
+            // From robot POV
+            public static final int MOTOR_LEFT = 1;
+            public static final int MOTOR_RIGHT = 2;
+        }
+
+        public static final class Complex {
+            public static final int FRONT_MOTOR = 13;
+            public static final int BACK_MOTOR = 14;
+        }
     }
 
     public static final class Arm {
