@@ -58,6 +58,14 @@ public final class Constants {
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
         public static final int CURRENT_LIMIT = 20;
+
+        // Which intake is on the bot?
+        public enum Type {
+            Simple,
+            Complex
+        }
+
+        public static final Type type = Type.Simple;
     }
 
     public static final class Arm {
