@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.lib.oi.ButtonBox;
 import frc.lib.util.COTSSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 import java.util.Arrays;
@@ -293,9 +294,14 @@ public final class Constants {
             // We might not use xbox controller
         }
 
-        public static final class SaitekMappings {}
+        public static final class SaitekMappings {
+        }
 
-        public static final class ButtonBoxMappings {}
+        public static final class ButtonBoxMappings {
+            public static final ButtonBox.Button UP_ARM = ButtonBox.Button.kA;
+            public static final ButtonBox.Button DOWN_ARM = ButtonBox.Button.kB;
+
+        }
     }
 
     // TODO: Calculate needed deadband for controller (should be like 6% or less)

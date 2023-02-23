@@ -1,26 +1,55 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
-    public ArmSubsystem() {}
 
-    public ArmState getPosition() {
-        return null;
+    private final ArmIO io;
+    private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+
+    private double wantedWristRot;
+
+    public ArmSubsystem(ArmIO io) {
+        this.io = io;
     }
 
-    public void goTo(ArmState state) {}
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+    }
+
+    public void goTo(ArmState state) {
+        if (!state.isValid() || !state.isSafe()) {
+            return;
+        }
+        io.setArmRotation(state.rotation);
+        io.setArmExtension(state.extension);
+    }
+
+    public ArmState getState() {
+        return new ArmState(inputs.armRot, inputs.armExtension);
+    }
+
+    public void setWristRot(double degrees) {
+        if (degrees < 0 || degrees > 90) {
+            return;
+        }
+        wantedWristRot = degrees;
+    }
+
+    public void setArmRotationSpeed(double percent) {
+        io.setArmRotationSpeed(percent);
+    }
 
     /** A data class representing a possible state for the arm. */
     public static class ArmState {
-        /** Arm rotation where horizontal is 0, increasing as the arm is raised. */
-        public final Rotation2d rotation;
+        /** Arm rotation in degrees where horizontal is 0, increasing as the arm is raised. */
+        public final double rotation;
         /** Arm extension in meters where 0 is not extended */
         public final double extension;
 
-        public ArmState(Rotation2d rotation, double extension) {
+        public ArmState(double rotation, double extension) {
             this.rotation = rotation;
             this.extension = extension;
         }

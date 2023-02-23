@@ -56,7 +56,7 @@ public class ArmIOTalonSpark implements ArmIO {
     }
 
     @Override
-    public void setArmRotation(Rotation2d rot) {
+    public void setArmRotation(double degrees) {
         // Get sensor position and use that to determine rotations?
     }
 

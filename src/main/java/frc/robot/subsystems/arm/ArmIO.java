@@ -4,13 +4,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
+    /** All units are meters and degrees */
     @AutoLog
-    public class ArmIOInputs {}
+    public class ArmIOInputs {
+        public double armRot;
+        public double armExtension;
+        public double wristRot;
+    }
 
     /** Updates the set of loggable inputs. */
     public default void updateInputs(ArmIOInputs inputs) {}
 
-    public default void setArmRotation(Rotation2d rot) {}
+    public default void setArmRotation(double degrees) {}
 
     public default void setArmExtension(double meters) {}
 
