@@ -68,7 +68,7 @@ public class ArmIOTalonSpark implements ArmIO {
     public void setArmExtension(double meters) {}
 
     @Override
-    public void setWristRotation(Rotation2d rot) {}
+    public void setWristRotation(double rot) {}
 
     @Override
     public void setArmRotationSpeed(double speed) {
