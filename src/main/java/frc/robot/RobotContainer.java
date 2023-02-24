@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.ButtonBox;
 import frc.lib.oi.SaitekX52Joystick;
@@ -26,7 +24,7 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.arm.ArmIOTalonSpark;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
+import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import org.littletonrobotics.junction.Logger;
 
@@ -105,11 +103,12 @@ public class RobotContainer {
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
+                        new SwerveModuleIO() {},
+                        new SwerveModuleIO() {},
+                        new SwerveModuleIO() {},
+                        new SwerveModuleIO() {},
                         new GyroIONavx());
+
         armSubsystem = new ArmSubsystem(new ArmIOTalonSpark());
         buttonBox = new ButtonBox(1);
         driveController = new SaitekX52Joystick(0);
@@ -123,10 +122,10 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         ButtonBinder.bindButton(buttonBox, Constants.OIConstants.ButtonBoxMappings.UP_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.1)));
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
 
         ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.DOWN_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.1)));
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
