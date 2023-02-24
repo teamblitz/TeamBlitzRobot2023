@@ -18,7 +18,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void periodic() {
         io.updateInputs(inputs);
 
-        io.setWristRotation(inputs.armRot);
+        if (wantedWristRot - inputs.armRot > 90 || inputs.armRot < -90) {
+            io.setWristRotation(wantedWristRot - inputs.armRot);
+        }
+
         
     }
 
