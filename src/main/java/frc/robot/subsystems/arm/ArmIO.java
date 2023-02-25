@@ -7,12 +7,14 @@ public interface ArmIO {
     @AutoLog
     public class ArmIOInputs {
         public double armRot;
-        public double armExtension;
+        public double armExtensionL;
+        public double armExtensionF;
         public double wristRot;
     }
 
     /** Updates the set of loggable inputs. */
-    public default void updateInputs(ArmIOInputs inputs) {}
+    public default void updateInputs(ArmIOInputs inputs) {
+    }
 
     public default void setArmRotation(double degrees) {}
 

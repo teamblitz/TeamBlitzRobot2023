@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.ButtonBox;
 import frc.lib.util.COTSSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
@@ -70,7 +71,7 @@ public final class Constants {
             public static final double OUT_SPEED = -0.2;
             // From robot POV
             public static final int LEFT_MOTOR_ID = 14;
-            public static final int RIGHT_MOTOR_ID = 115;
+            public static final int RIGHT_MOTOR_ID = 15;
         }
 
         public static final class Complex {
@@ -90,8 +91,8 @@ public final class Constants {
         public static final int WRIST_ROT_LEADER = 20;
         public static final int WRIST_ROT_FOLLOWER = 21;
 
-        public static final int ARM_EXTENSION_LEADER = 22;
-        public static final int ARM_EXTENSION_FOLLOWER = 23;
+        public static final int ARM_EXTENSION_LEADER = 17;
+        public static final int ARM_EXTENSION_FOLLOWER = 16;
 
         /** The center of the center of rotation for the arm */
         public static final Translation3d ARM_BASE =
@@ -120,7 +121,7 @@ public final class Constants {
     }
 
     public static final class Swerve {
-        public static final int PIGEON_ID = 1;
+        public static final int PIGEON_ID = 30;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSSwerveConstants chosenModule =
@@ -224,7 +225,7 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 7;
             public static final int ANGLE_MOTOR_ID = 8;
             public static final int CAN_CODER_ID = 4;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(19.68);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(235.28 + 90);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -235,7 +236,7 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 5;
             public static final int ANGLE_MOTOR_ID = 6;
             public static final int CAN_CODER_ID = 2;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(258.13);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(19.68 + 90);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -246,7 +247,7 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 11;
             public static final int ANGLE_MOTOR_ID = 12;
             public static final int CAN_CODER_ID = 13;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(235.28);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(18.54 + 90);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -257,7 +258,7 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 9;
             public static final int ANGLE_MOTOR_ID = 10;
             public static final int CAN_CODER_ID = 3;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(18.54);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(258.13 + 90);
             public static final SwerveModuleConstants CONSTANTS =
                     new SwerveModuleConstants(
                             DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET);
@@ -300,8 +301,18 @@ public final class Constants {
         public static final class SaitekMappings {}
 
         public static final class ButtonBoxMappings {
-            public static final ButtonBox.Button UP_ARM = ButtonBox.Button.kA;
-            public static final ButtonBox.Button DOWN_ARM = ButtonBox.Button.kB;
+            public static final ButtonBox.Button UP_ARM = ButtonBox.Button.kL3;
+            public static final ButtonBox.Button DOWN_ARM = ButtonBox.Button.kR3;
+
+            public static final ButtonBox.Button INTAKE_IN = ButtonBox.Button.kA;
+            public static final ButtonBox.Button INTAKE_OUT = ButtonBox.Button.kB;
+
+            public static final ButtonBox.Button ARM_IN = ButtonBox.Button.kX;
+
+            public static final ButtonBox.Button ARM_OUT = ButtonBox.Button.kY;
+
+//            public static final Trigger intake = x
+
         }
     }
 

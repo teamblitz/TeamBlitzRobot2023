@@ -65,7 +65,8 @@ public class ArmIOTalonSpark implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        // TODO: Update inputs
+        inputs.armExtensionL = armExtensionLeader.getSelectedSensorPosition();
+        inputs.armExtensionF = armExtensionFollower.getSelectedSensorPosition();
     }
 
     @Override

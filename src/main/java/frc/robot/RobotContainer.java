@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.ButtonBox;
 import frc.lib.oi.SaitekX52Joystick;
@@ -24,8 +27,10 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.arm.ArmIOTalonSpark;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.SwerveModuleIO;
+import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
+import frc.robot.subsystems.intake.IntakeIOSimple;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -41,6 +46,8 @@ public class RobotContainer {
     private DriveSubsystem driveSubsystem;
 
     private ArmSubsystem armSubsystem;
+
+    private IntakeSubsystem intakeSubsystem;
 
     /* ***** --- Controllers --- ***** */
     private ButtonBox buttonBox;
@@ -103,13 +110,14 @@ public class RobotContainer {
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalonSpark());
+        intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         buttonBox = new ButtonBox(1);
         driveController = new SaitekX52Joystick(0);
     }
@@ -122,15 +130,35 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         ButtonBinder.bindButton(buttonBox, Constants.OIConstants.ButtonBoxMappings.UP_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.2)))
-                .onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
 
         ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.DOWN_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.2)))
-                .onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
+
+        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.ARM_IN.value)
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(.3))).onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
+
+        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.ARM_OUT.value)
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(-.3))).onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
+
+        ButtonBinder.bindButton(buttonBox, ButtonBox.Button.kL1.value)
+                .onTrue(Commands.runOnce(() -> armSubsystem.setMExtensionSpeed(.1))).onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
+
+        ButtonBinder.bindButton(buttonBox, ButtonBox.Button.kL2.value)
+                .onTrue(Commands.runOnce(() -> armSubsystem.setFExtensionSpeed(.1))).onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
+
+
+        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_IN.value)
+                .onTrue(new PrintCommand("IN").andThen(Commands.runOnce(() -> intakeSubsystem.inCone()))).onFalse(Commands.runOnce(() -> intakeSubsystem.stop()));
+
+        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_OUT.value)
+                .onTrue(new PrintCommand("IN").andThen(Commands.runOnce(() -> intakeSubsystem.outCone()))).onFalse(Commands.runOnce(() -> intakeSubsystem.stop()));
+
+
+//        loadingZone.and(foo.leftTrigger()).onTrue(Commands.startEnd())
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
-        return null;
+        return Commands.runOnce(() -> intakeSubsystem.inCone());
     }
 }

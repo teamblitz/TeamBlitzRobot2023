@@ -2,11 +2,14 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final ArmIO io;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+
+    private final Logger logger = Logger.getInstance();
 
     private double wantedWristRot;
 
@@ -21,6 +24,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         if (wantedWristRot - inputs.armRot > 90 || inputs.armRot < -90) {
             io.setWristRotation(wantedWristRot - inputs.armRot);
         }
+        logger.processInputs("arm", inputs);
     }
 
     public void goTo(ArmState state) {
@@ -32,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public ArmState getState() {
-        return new ArmState(inputs.armRot, inputs.armExtension);
+        return new ArmState(inputs.armRot, inputs.armExtensionL);
     }
 
     public void setWristRot(double degrees) {
@@ -44,6 +48,16 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public void setArmRotationSpeed(double percent) {
         io.setArmRotationSpeed(percent);
+    }
+
+    public void setArmExtensionSpeed(double percent) {
+        io.setArmExtensionSpeed(percent);
+    }
+    public void setMExtensionSpeed(double percent) {
+        io.setArmExtensionSpeed(percent);
+    }
+    public void setFExtensionSpeed(double percent) {
+        io.setArmExtensionSpeed(percent);
     }
 
     /** A data class representing a possible state for the arm. */
@@ -64,7 +78,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
          * @return True if the arm state is within its possible range of motion.
          */
         public boolean isValid() {
-            return false;
+            return true;
         }
 
         /**
@@ -74,7 +88,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
          * @return True if the arm state is within the extension range of the robot.
          */
         public boolean isSafe() {
-            return false;
+            return true;
         }
     }
 }
