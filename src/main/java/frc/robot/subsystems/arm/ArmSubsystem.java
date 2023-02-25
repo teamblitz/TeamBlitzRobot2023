@@ -21,8 +21,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         if (wantedWristRot - inputs.armRot > 90 || inputs.armRot < -90) {
             io.setWristRotation(wantedWristRot - inputs.armRot);
         }
-
-        
     }
 
     public void goTo(ArmState state) {
@@ -40,7 +38,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void setWristRot(double degrees) {
         if (degrees < 0 || degrees > 90) {
             return;
-
         }
         wantedWristRot = degrees;
     }

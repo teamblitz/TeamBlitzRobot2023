@@ -108,8 +108,11 @@ public final class Constants {
          */
         public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
 
-        public static final double ROTATION_GEAR_RATIO = 1.0 / 16.0; // TODO: Tune to robot
-        public static final double EXTENSION_GEAR_RATION = 0; // TODO: Tune to robot
+        public static final double ROTATION_GEAR_RATIO = 40.0 / 1.0; // TODO: Tune to robot
+        public static final double EXTENSION_GEAR_RATIO = 20.0 / 1; // TODO: Tune to robot
+        public static final double EXTENTION_PULLEY_CURCUMFRANCE =
+                0.0191 * Math.PI; // diameter in meters
+        public static final double WRIST_GEAR_RATIO = 0;
 
         // Values to determine if a configuration of the arm is legal.
         public static final double MAX_LEGAL_HEIGHT = Units.feetToMeters(6.5);
@@ -294,13 +297,11 @@ public final class Constants {
             // We might not use xbox controller
         }
 
-        public static final class SaitekMappings {
-        }
+        public static final class SaitekMappings {}
 
         public static final class ButtonBoxMappings {
             public static final ButtonBox.Button UP_ARM = ButtonBox.Button.kA;
             public static final ButtonBox.Button DOWN_ARM = ButtonBox.Button.kB;
-
         }
     }
 

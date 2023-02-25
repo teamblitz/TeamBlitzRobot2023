@@ -122,10 +122,12 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         ButtonBinder.bindButton(buttonBox, Constants.OIConstants.ButtonBoxMappings.UP_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.2)))
+                .onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
 
         ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.DOWN_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
+                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.2)))
+                .onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

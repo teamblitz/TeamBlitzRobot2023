@@ -86,4 +86,70 @@ public class Conversions {
         double wheelVelocity = RPMToFalcon(wheelRPM, gearRatio);
         return wheelVelocity;
     }
+
+    /**
+     * @param counts Falcon Counts
+     * @param gearRatio Gear Ratio between Falcon and Mechanism
+     * @return Degrees of Rotation of Mechanism
+     */
+    public static double redlineToDegrees(double counts, double gearRatio) {
+        return counts * (360.0 / (gearRatio * 1024.0));
+    }
+
+    /**
+     * @param degrees Degrees of rotation of Mechanism
+     * @param gearRatio Gear Ratio between Falcon and Mechanism
+     * @return Falcon Counts
+     */
+    public static double degreesToRedline(double degrees, double gearRatio) {
+        double ticks = degrees / (360.0 / (gearRatio * 1024.0));
+        return ticks;
+    }
+
+    /**
+     * @param velocityCounts Falcon Velocity Counts
+     * @param gearRatio Gear Ratio between Falcon and Mechanism (set to 1 for Falcon RPM)
+     * @return RPM of Mechanism
+     */
+    public static double redlineToRPM(double velocityCounts, double gearRatio) {
+        double motorRPM = velocityCounts * (600.0 / 1024.0);
+        double mechRPM = motorRPM / gearRatio;
+        return mechRPM;
+    }
+
+    /**
+     * @param RPM RPM of mechanism
+     * @param gearRatio Gear Ratio between Falcon and Mechanism (set to 1 for Falcon RPM)
+     * @return RPM of Mechanism
+     */
+    public static double RPMToRedline(double RPM, double gearRatio) {
+        double motorRPM = RPM * gearRatio;
+        double sensorCounts = motorRPM * (1024.0 / 600.0);
+        return sensorCounts;
+    }
+
+    /**
+     * @param velocitycounts Falcon Velocity Counts
+     * @param circumference Circumference of Wheel
+     * @param gearRatio Gear Ratio between Falcon and Mechanism (set to 1 for Falcon RPM)
+     * @return Falcon Velocity Counts
+     */
+    public static double redlineToMPS(
+            double velocitycounts, double circumference, double gearRatio) {
+        double wheelRPM = redlineToRPM(velocitycounts, gearRatio);
+        double wheelMPS = (wheelRPM * circumference) / 60;
+        return wheelMPS;
+    }
+
+    /**
+     * @param velocity Velocity MPS
+     * @param circumference Circumference of Wheel
+     * @param gearRatio Gear Ratio between Falcon and Mechanism (set to 1 for Falcon RPM)
+     * @return Falcon Velocity Counts
+     */
+    public static double MPSToRedline(double velocity, double circumference, double gearRatio) {
+        double wheelRPM = ((velocity * 60) / circumference);
+        double wheelVelocity = RPMToRedline(wheelRPM, gearRatio);
+        return wheelVelocity;
+    }
 }

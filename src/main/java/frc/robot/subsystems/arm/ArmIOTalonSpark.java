@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.math.Conversions;
 import frc.robot.Constants;
 
 public class ArmIOTalonSpark implements ArmIO {
@@ -35,7 +35,7 @@ public class ArmIOTalonSpark implements ArmIO {
 
         armRotLeader.configFactoryDefault();
         armRotFollower.configFactoryDefault();
-        
+
         armRotLeader.setNeutralMode(NeutralMode.Brake);
         armRotFollower.setNeutralMode(NeutralMode.Brake);
 
@@ -46,6 +46,15 @@ public class ArmIOTalonSpark implements ArmIO {
         wristRotFollower.restoreFactoryDefaults();
 
         wristRotFollower.follow(wristRotLeader, true);
+
+        wristRotLeader
+                .getEncoder()
+                .setPositionConversionFactor(
+                        (1 / Constants.Swerve.ANGLE_GEAR_RATIO) // We do 1 over the gear ratio
+                                // because 1
+                                // rotation of the motor is < 1 rotation of
+                                // the module
+                                * 360);
 
         armExtensionLeader.configFactoryDefault();
         armExtensionFollower.configFactoryDefault();
@@ -62,13 +71,23 @@ public class ArmIOTalonSpark implements ArmIO {
     @Override
     public void setArmRotation(double degrees) {
         // Get sensor position and use that to determine rotations?
+        armRotLeader.set(ControlMode.Position, Conversions.degreesToFalcon(degrees, Constants.Arm.ROTATION_GEAR_RATIO));
     }
 
     @Override
-    public void setArmExtension(double meters) {}
+    public void setArmExtension(double meters) {
+        // meters/Circumfrace * 360
+        armExtensionLeader.set(
+                ControlMode.Position,
+                Conversions.degreesToFalcon(
+                        (meters / Constants.Arm.EXTENTION_PULLEY_CURCUMFRANCE * 360),
+                        Constants.Arm.EXTENSION_GEAR_RATIO));
+    }
 
     @Override
-    public void setWristRotation(double rot) {}
+    public void setWristRotation(double rot) {
+        wristRotLeader.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
+    }
 
     @Override
     public void setArmRotationSpeed(double speed) {
