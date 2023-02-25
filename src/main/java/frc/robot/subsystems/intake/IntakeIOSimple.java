@@ -20,8 +20,8 @@ public class IntakeIOSimple implements IntakeIO {
                         Constants.Intake.Simple.RIGHT_MOTOR_ID,
                         CANSparkMaxLowLevel.MotorType.kBrushless);
 
-//        leaderMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
-//        followerMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
+        leaderMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
+        followerMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
 
         leaderMotor.setOpenLoopRampRate(.5);
         followerMotor.setOpenLoopRampRate(.5);

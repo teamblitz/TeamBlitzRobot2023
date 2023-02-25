@@ -20,11 +20,11 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     @Override
     public void periodic() {
         io.updateInputs(inputs);
-
-        if (wantedWristRot - inputs.armRot > 90 || inputs.armRot < -90) {
-            io.setWristRotation(wantedWristRot - inputs.armRot);
-        }
         logger.processInputs("arm", inputs);
+
+        //        if (wantedWristRot - inputs.armRot > 90 || inputs.armRot < -90) {
+        //            io.setWristRotation(wantedWristRot - inputs.armRot);
+        //        }
     }
 
     public void goTo(ArmState state) {
@@ -53,9 +53,16 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void setArmExtensionSpeed(double percent) {
         io.setArmExtensionSpeed(percent);
     }
-    public void setMExtensionSpeed(double percent) {
+
+    public void setWristRotationSpeed(double percent) {
+        io.setWristRotationSpeed(percent);
+    }
+
+    // TODO: Make this more specific to left and right over leader/follower.
+    public void setLExtensionSpeed(double percent) {
         io.setArmExtensionSpeed(percent);
     }
+
     public void setFExtensionSpeed(double percent) {
         io.setArmExtensionSpeed(percent);
     }

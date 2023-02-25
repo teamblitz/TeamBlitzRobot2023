@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.ButtonBox;
 import frc.lib.util.COTSSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
@@ -109,20 +108,22 @@ public final class Constants {
          */
         public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
 
-        public static final double ROTATION_GEAR_RATIO = 40.0 / 1.0; // TODO: Tune to robot
-        public static final double EXTENSION_GEAR_RATIO = 20.0 / 1; // TODO: Tune to robot
-        public static final double EXTENTION_PULLEY_CURCUMFRANCE =
+        public static final double ROTATION_GEAR_RATIO = (40.0 / 1.0);
+        public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
+
+        public static final double WRIST_GEAR_RATIO = (20.0 / 1.0); // TODO: Get the actual value
+        public static final double
+                EXTENSION_PULLEY_CIRCUMFERENCE = // This should be good enough for now
                 0.0191 * Math.PI; // diameter in meters
-        public static final double WRIST_GEAR_RATIO = 0;
 
         // Values to determine if a configuration of the arm is legal.
         public static final double MAX_LEGAL_HEIGHT = Units.feetToMeters(6.5);
-        public static final double MAX_EXTENSION_PAST_Frame = Units.inchesToMeters(48);
+        public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(48);
     }
 
     public static final class Swerve {
         public static final int PIGEON_ID = 30;
-        public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSSwerveConstants chosenModule =
                 COTSSwerveConstants.SDSMK4i(COTSSwerveConstants.driveGearRatios.SDSMK4i_L3);
@@ -311,7 +312,7 @@ public final class Constants {
 
             public static final ButtonBox.Button ARM_OUT = ButtonBox.Button.kY;
 
-//            public static final Trigger intake = x
+            //            public static final Trigger intake = x
 
         }
     }
