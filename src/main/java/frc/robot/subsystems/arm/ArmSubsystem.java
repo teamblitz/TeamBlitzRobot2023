@@ -35,6 +35,11 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setArmExtension(state.extension);
     }
 
+    public void rotateTo(double degrees) {
+        // TODO: Make sure it is valid.
+        io.setArmRotation(degrees);
+    }
+
     public ArmState getState() {
         return new ArmState(inputs.armRot, inputs.armExtensionL);
     }
