@@ -15,14 +15,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOTalonSpark;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -85,20 +88,20 @@ public class RobotContainer {
                             armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
                             armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
                             armSubsystem.setWristRotationSpeed(controller.getWristSpeed());
-                        }));
+                        }, armSubsystem));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
 
     private double calculateDriveMultiplier() {
         if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
-            return driveMultiplierLimiter.calculate(.2);
+            return driveMultiplierLimiter.calculate(.3);
         } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
             return driveMultiplierLimiter.calculate(1);
         } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
-            return driveMultiplierLimiter.calculate(.75);
+            return driveMultiplierLimiter.calculate(.80);
         } else {
-            return driveMultiplierLimiter.calculate(.5);
+            return driveMultiplierLimiter.calculate(.60);
         }
     }
 
@@ -111,8 +114,8 @@ public class RobotContainer {
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         new GyroIONavx());
 
-        armSubsystem = new ArmSubsystem(new ArmIOTalonSpark());
-        intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
+        armSubsystem = new ArmSubsystem(new ArmIO() {});
+        intakeSubsystem = new IntakeSubsystem(new IntakeIO() {});
 
         driveController = new SaitekX52Joystick(0); // Move this to Controller
         controller = new Controller(0, 1);
@@ -130,6 +133,8 @@ public class RobotContainer {
         controller.getConeOutTrigger().onTrue(intakeSubsystem.buildConeOutCommand());
         controller.getCubeInTrigger().onTrue(intakeSubsystem.buildCubeInCommand());
         controller.getCubeOutTrigger().onTrue(intakeSubsystem.buildCubeOutCommand());
+
+        ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire).onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
 
         // Below is mostly deprecated as we are using analog control for arm right now.
 
@@ -153,16 +158,16 @@ public class RobotContainer {
         //                .onTrue(Commands.runOnce(() ->
         // armSubsystem.setArmExtensionSpeed(-.3))).onFalse(Commands.runOnce(() ->
         // armSubsystem.setArmExtensionSpeed(0)));
-        //
-        //        ButtonBinder.bindButton(buttonBox, ButtonBox.Button.kL1.value)
-        //                .onTrue(Commands.runOnce(() ->
-        // armSubsystem.setLExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
-        // armSubsystem.setArmExtensionSpeed(0)));
-        //
-        //        ButtonBinder.bindButton(buttonBox, ButtonBox.Button.kL2.value)
-        //                .onTrue(Commands.runOnce(() ->
-        // armSubsystem.setFExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
-        // armSubsystem.setArmExtensionSpeed(0)));
+        
+        controller.getLeftExtendTrigger()
+        .onTrue(Commands.runOnce(() ->
+        armSubsystem.setLeftExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
+        armSubsystem.setArmExtensionSpeed(0)));
+        
+        controller.getLeftExtendTrigger()
+                       .onTrue(Commands.runOnce(() ->
+        armSubsystem.setRightExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
+        armSubsystem.setArmExtensionSpeed(0)));
         //
         //
         //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_IN.value)

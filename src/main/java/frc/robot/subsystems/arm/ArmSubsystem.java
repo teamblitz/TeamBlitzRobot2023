@@ -52,8 +52,17 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setArmRotationSpeed(double percent) {
-        io.setArmRotationSpeed(percent);
+    double percent2 = 0;
+    if (percent != 0) {
+        if (Math.abs(percent) == percent) {
+            percent2 = percent * 90-Math.max(inputs.armRot, 0) * (1.0/90.0);
+        } else {
+            percent2 = percent * Math.min(inputs.armRot, 90) * (1.0/90.0);
+        }
     }
+    io.setArmRotationSpeed(percent);
+    }
+
 
     public void setArmExtensionSpeed(double percent) {
         io.setArmExtensionSpeed(percent);
@@ -64,12 +73,12 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     // TODO: Make this more specific to left and right over leader/follower.
-    public void setLExtensionSpeed(double percent) {
-        io.setArmExtensionSpeed(percent);
+    public void setLeftExtensionSpeed(double percent) {
+        io.setRightExtensionSpeed(percent);
     }
 
-    public void setFExtensionSpeed(double percent) {
-        io.setArmExtensionSpeed(percent);
+    public void setRightExtensionSpeed(double percent) {
+        io.setLeftExtensionSpeed(percent);
     }
 
     /** A data class representing a possible state for the arm. */

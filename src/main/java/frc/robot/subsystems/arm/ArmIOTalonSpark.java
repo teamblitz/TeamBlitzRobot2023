@@ -8,9 +8,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.lib.math.Conversions;
 import frc.robot.Constants;
+import frc.robot.Constants.Arm;
 
 public class ArmIOTalonSpark implements ArmIO {
 
@@ -20,8 +22,8 @@ public class ArmIOTalonSpark implements ArmIO {
     private final CANSparkMax wristRotLeader;
     private final CANSparkMax wristRotFollower;
 
-    private final TalonSRX armExtensionLeader;
-    private final TalonSRX armExtensionFollower;
+    private final TalonSRX armExtensionLeft;
+    private final TalonSRX armExtensionRight;
 
     public ArmIOTalonSpark() {
         /* Arm Rotation */
@@ -34,21 +36,25 @@ public class ArmIOTalonSpark implements ArmIO {
         armRotLeader.setNeutralMode(NeutralMode.Brake);
         armRotFollower.setNeutralMode(NeutralMode.Brake);
 
+        armRotLeader.setSelectedSensorPosition(Conversions.degreesToFalcon(-90, Arm.ROTATION_GEAR_RATIO));
+
+        armRotLeader.configOpenloopRamp(2);
+        armRotFollower.configOpenloopRamp(2);
+
         armRotLeader.setInverted(InvertType.InvertMotorOutput);
         armRotFollower.follow(armRotLeader);
         armRotFollower.setInverted(InvertType.OpposeMaster);
 
         /* Arm Extension */
-        armExtensionLeader = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
-        armExtensionFollower = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_FOLLOWER);
+        armExtensionLeft = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
+        armExtensionRight = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_FOLLOWER);
 
-        armExtensionLeader.configFactoryDefault();
-        armExtensionFollower.configFactoryDefault();
+        armExtensionLeft.configFactoryDefault();
+        armExtensionRight.configFactoryDefault();
 
-        armExtensionLeader.setInverted(
-                InvertType.InvertMotorOutput); // TODO: Change if it goes the wrong way.
-        armExtensionFollower.follow(armExtensionLeader);
-        armExtensionFollower.setInverted(InvertType.OpposeMaster);
+        armExtensionLeft.setInverted(
+                true); // TODO: Change if it goes the wrong way.
+        armExtensionRight.setInverted(false);
 
         /* Wrist Rotation */
         wristRotLeader = new CANSparkMax(Constants.Arm.WRIST_ROT_LEADER, MotorType.kBrushless);
@@ -56,6 +62,8 @@ public class ArmIOTalonSpark implements ArmIO {
 
         wristRotLeader.restoreFactoryDefaults();
         wristRotFollower.restoreFactoryDefaults();
+
+        wristRotLeader.setIdleMode(IdleMode.kBrake);
 
         wristRotFollower.follow(wristRotLeader, true);
 
@@ -70,8 +78,9 @@ public class ArmIOTalonSpark implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.armExtensionL = armExtensionLeader.getSelectedSensorPosition();
-        inputs.armExtensionF = armExtensionFollower.getSelectedSensorPosition();
+        inputs.armExtensionL = armExtensionLeft.getSelectedSensorPosition();
+        inputs.armExtensionF = armExtensionRight.getSelectedSensorPosition();
+        inputs.armRot = Conversions.falconToDegrees(armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
     }
 
     @Override
@@ -85,13 +94,13 @@ public class ArmIOTalonSpark implements ArmIO {
     @Override
     public void setArmExtension(double meters) {
 
-        armExtensionLeader.set(
+        armExtensionLeft.set(
                 ControlMode.Position,
                 Conversions.degreesToFalcon(
                         (meters / Constants.Arm.EXTENSION_PULLEY_CIRCUMFERENCE * 360),
                         Constants.Arm.EXTENSION_GEAR_RATIO));
     }
-
+    
     @Override
     public void setWristRotation(double rot) {
         wristRotLeader.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
@@ -104,7 +113,19 @@ public class ArmIOTalonSpark implements ArmIO {
 
     @Override
     public void setArmExtensionSpeed(double speed) {
-        armExtensionLeader.set(ControlMode.PercentOutput, speed);
+        armExtensionLeft.set(ControlMode.PercentOutput, speed);
+        armExtensionRight.set(ControlMode.PercentOutput, speed);
+    }
+    
+    
+    @Override
+    public void setLeftExtensionSpeed(double speed) {
+        armExtensionLeft.set(ControlMode.PercentOutput, speed);
+    }
+
+    @Override
+    public void setRightExtensionSpeed(double speed) {
+        armExtensionRight.set(ControlMode.PercentOutput, speed);
     }
 
     @Override

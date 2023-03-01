@@ -84,14 +84,14 @@ public final class Constants {
 
     public static final class Arm {
 
-        public static final int ARM_ROT_LEADER = 18; // Like the above IDs, may need to be adjusted
-        public static final int ARM_ROT_FOLLOWER = 19;
+        public static final int ARM_ROT_LEADER = 18; // Right
+        public static final int ARM_ROT_FOLLOWER = 19; // Left
 
         public static final int WRIST_ROT_LEADER = 20;
         public static final int WRIST_ROT_FOLLOWER = 21;
 
-        public static final int ARM_EXTENSION_LEADER = 17;
-        public static final int ARM_EXTENSION_FOLLOWER = 16;
+        public static final int ARM_EXTENSION_LEADER = 17; // Left
+        public static final int ARM_EXTENSION_FOLLOWER = 16; // Right
 
         /** The center of the center of rotation for the arm */
         public static final Translation3d ARM_BASE =
@@ -286,7 +286,7 @@ public final class Constants {
     public static final class OIConstants {
 
         // public static final Function<Double, Double> inputCurve = (x) -> x;
-        public static final Function<Double, Double> inputCurve = (x) -> .6 * x + .4 * (x * x * x);
+        public static final Function<Double, Double> inputCurve = (x) -> .8 * x + .2 * (x * x * x);
 
         // Choose 1, not both.
         public static final boolean USE_XBOX_CONTROLLER = false;

@@ -25,5 +25,9 @@ public interface ArmIO {
 
     public default void setArmExtensionSpeed(double speed) {}
 
+    public default void setLeftExtensionSpeed(double speed) {}
+
+    public default void setRightExtensionSpeed(double speed) {}
+
     public default void setWristRotationSpeed(double speed) {}
 }

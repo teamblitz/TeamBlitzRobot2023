@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -55,6 +56,14 @@ public class Controller {
         return unbound;
     }
 
+    public Trigger getLeftExtendTrigger() {
+        return commandOperatorController.pov(0);
+    }
+
+    public Trigger getRightExtendTrigger() {
+        return commandOperatorController.pov(180);
+    }
+
     public double getArmSpeed() {
         return -.2
                 * Constants.OIConstants.inputCurve.apply(
@@ -62,9 +71,9 @@ public class Controller {
     }
 
     public double getWristSpeed() {
-        return -.2
+        return -.4
                 * Constants.OIConstants.inputCurve.apply(
-                        commandOperatorController.getHID().getRightX());
+                        commandOperatorController.getHID().getRightY());
     }
 
     public double getExtensionSpeed() {
