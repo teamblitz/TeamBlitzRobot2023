@@ -169,6 +169,10 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         };
     }
 
+    public SwerveDriveKinematics getKinematics() {
+        return KINEMATICS;
+    }
+
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
     }

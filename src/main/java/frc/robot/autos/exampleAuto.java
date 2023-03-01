@@ -1,3 +1,10 @@
+// This is for reference
+/*
+ *
+ * DO NOT PUT ANY FILES IN THE autos FOLDER. BAD JUJU. PUT IT IN /robot/commands/auto
+ *
+ */
+
 package frc.robot.autos;
 
 import edu.wpi.first.math.controller.PIDController;

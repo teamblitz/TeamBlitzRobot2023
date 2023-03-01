@@ -175,6 +175,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
-        return null;
+        return null; // add commands into this later, use AutonomousPathCommand
     }
 }
