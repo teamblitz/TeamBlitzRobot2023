@@ -26,7 +26,7 @@ public class IntakeIOSimple implements IntakeIO {
         leaderMotor.setOpenLoopRampRate(.5);
         followerMotor.setOpenLoopRampRate(.5);
 
-        leaderMotor.follow(followerMotor, true);
+        followerMotor.follow(leaderMotor, true);
     }
 
     @Override

@@ -15,17 +15,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.lib.oi.ButtonBinder;
-import frc.lib.oi.ButtonBox;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.SwerveTuning;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.arm.ArmIOTalonSpark;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.SwerveModuleIO;
+import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
+import frc.robot.subsystems.intake.IntakeIOSimple;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -42,25 +41,21 @@ public class RobotContainer {
 
     private ArmSubsystem armSubsystem;
 
+    private IntakeSubsystem intakeSubsystem;
+
     /* ***** --- Controllers --- ***** */
-    private ButtonBox buttonBox;
+
+    private Controller controller;
     private SaitekX52Joystick driveController;
 
-    private SwerveTuning tuningCommand;
     private final Logger logger = Logger.getInstance();
 
     public RobotContainer() {
         configureSubsystems();
 
-        // CameraServer.startAutomaticCapture(); // Ignore warning.
-
-        this.tuningCommand = new SwerveTuning(driveSubsystem);
-
         configureButtonBindings();
         setDefaultCommands();
-        // tuningTab.add("Tuning Command", tuningCommand);
 
-        // tuningCommand.schedule();
         DriverStation.silenceJoystickConnectionWarning(true);
         Shuffleboard.getTab("DriveSubsystem")
                 .add(
@@ -76,42 +71,51 @@ public class RobotContainer {
                                 OIConstants.inputCurve.apply(
                                         -driveController.getRawAxis(
                                                         SaitekX52Joystick.Axis.kYAxis.value)
-                                                * calculateDriveMutiplyer()),
+                                                * calculateDriveMultiplier()),
                         () ->
                                 OIConstants.inputCurve.apply(
                                         -driveController.getRawAxis(
                                                         SaitekX52Joystick.Axis.kXAxis.value)
-                                                * calculateDriveMutiplyer()),
+                                                * calculateDriveMultiplier()),
                         () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .2,
                         () -> false));
+        armSubsystem.setDefaultCommand(
+                Commands.run(
+                        () -> {
+                            armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
+                            armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
+                            armSubsystem.setWristRotationSpeed(controller.getWristSpeed());
+                        }));
     }
 
-    private final SlewRateLimiter driveMultiplyerLimiter = new SlewRateLimiter(.25);
+    private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
 
-    private double calculateDriveMutiplyer() {
+    private double calculateDriveMultiplier() {
         if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
-            return driveMultiplyerLimiter.calculate(.2);
+            return driveMultiplierLimiter.calculate(.2);
         } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
-            return driveMultiplyerLimiter.calculate(1);
+            return driveMultiplierLimiter.calculate(1);
         } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
-            return driveMultiplyerLimiter.calculate(.75);
+            return driveMultiplierLimiter.calculate(.75);
         } else {
-            return driveMultiplyerLimiter.calculate(.5);
+            return driveMultiplierLimiter.calculate(.5);
         }
     }
 
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalonSpark());
-        buttonBox = new ButtonBox(1);
-        driveController = new SaitekX52Joystick(0);
+        intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
+
+        driveController = new SaitekX52Joystick(0); // Move this to Controller
+        controller = new Controller(0, 1);
     }
 
     /**
@@ -121,11 +125,53 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        ButtonBinder.bindButton(buttonBox, Constants.OIConstants.ButtonBoxMappings.UP_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
 
-        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.DOWN_ARM.value)
-                .onTrue(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(-.2))).onFalse(Commands.runOnce(() -> armSubsystem.setArmRotationSpeed(0)));
+        controller.getConeInTrigger().onTrue(intakeSubsystem.buildConeInCommand());
+        controller.getConeOutTrigger().onTrue(intakeSubsystem.buildConeOutCommand());
+        controller.getCubeInTrigger().onTrue(intakeSubsystem.buildCubeInCommand());
+        controller.getCubeOutTrigger().onTrue(intakeSubsystem.buildCubeOutCommand());
+
+        // Below is mostly deprecated as we are using analog control for arm right now.
+
+        //        ButtonBinder.bindButton(buttonBox,
+        // Constants.OIConstants.ButtonBoxMappings.UP_ARM.value)
+        //                .onTrue(Commands.runOnce(() ->
+        // armSubsystem.setArmRotationSpeed(.2))).onFalse(Commands.runOnce(() ->
+        // armSubsystem.setArmRotationSpeed(0)));
+        //
+        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.DOWN_ARM.value)
+        //                .onTrue(Commands.runOnce(() ->
+        // armSubsystem.setArmRotationSpeed(-.2))).onFalse(Commands.runOnce(() ->
+        // armSubsystem.setArmRotationSpeed(0)));
+        //
+        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.ARM_IN.value)
+        //                .onTrue(Commands.runOnce(() ->
+        // armSubsystem.setArmExtensionSpeed(.3))).onFalse(Commands.runOnce(() ->
+        // armSubsystem.setArmExtensionSpeed(0)));
+        //
+        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.ARM_OUT.value)
+        //                .onTrue(Commands.runOnce(() ->
+        // armSubsystem.setArmExtensionSpeed(-.3))).onFalse(Commands.runOnce(() ->
+        // armSubsystem.setArmExtensionSpeed(0)));
+        //
+        //        ButtonBinder.bindButton(buttonBox, ButtonBox.Button.kL1.value)
+        //                .onTrue(Commands.runOnce(() ->
+        // armSubsystem.setLExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
+        // armSubsystem.setArmExtensionSpeed(0)));
+        //
+        //        ButtonBinder.bindButton(buttonBox, ButtonBox.Button.kL2.value)
+        //                .onTrue(Commands.runOnce(() ->
+        // armSubsystem.setFExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
+        // armSubsystem.setArmExtensionSpeed(0)));
+        //
+        //
+        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_IN.value)
+        //                .onTrue(new PrintCommand("IN").andThen(Commands.runOnce(() ->
+        // intakeSubsystem.inCone()))).onFalse(Commands.runOnce(() -> intakeSubsystem.stop()));
+        //
+        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_OUT.value)
+        //                .onTrue(new PrintCommand("IN").andThen(Commands.runOnce(() ->
+        // intakeSubsystem.outCone()))).onFalse(Commands.runOnce(() -> intakeSubsystem.stop()));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
@@ -8,7 +7,8 @@ public interface ArmIO {
     @AutoLog
     public class ArmIOInputs {
         public double armRot;
-        public double armExtension;
+        public double armExtensionL;
+        public double armExtensionF;
         public double wristRot;
     }
 
@@ -19,7 +19,7 @@ public interface ArmIO {
 
     public default void setArmExtension(double meters) {}
 
-    public default void setWristRotation(Rotation2d rot) {}
+    public default void setWristRotation(double rot) {}
 
     public default void setArmRotationSpeed(double speed) {}
 
