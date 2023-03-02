@@ -52,17 +52,16 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setArmRotationSpeed(double percent) {
-    double percent2 = 0;
-    if (percent != 0) {
-        if (Math.abs(percent) == percent) {
-            percent2 = percent * 90-Math.max(inputs.armRot, 0) * (1.0/90.0);
-        } else {
-            percent2 = percent * Math.min(inputs.armRot, 90) * (1.0/90.0);
+        double percent2 = 0;
+        if (percent != 0) {
+            if (Math.abs(percent) == percent) {
+                percent2 = percent * 90 - Math.max(inputs.armRot, 0) * (1.0 / 90.0);
+            } else {
+                percent2 = percent * Math.min(inputs.armRot, 90) * (1.0 / 90.0);
+            }
         }
+        io.setArmRotationSpeed(percent);
     }
-    io.setArmRotationSpeed(percent);
-    }
-
 
     public void setArmExtensionSpeed(double percent) {
         io.setArmExtensionSpeed(percent);

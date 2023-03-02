@@ -19,14 +19,13 @@ import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmIOTalonSpark;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -88,7 +87,8 @@ public class RobotContainer {
                             armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
                             armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
                             armSubsystem.setWristRotationSpeed(controller.getWristSpeed());
-                        }, armSubsystem));
+                        },
+                        armSubsystem));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -134,7 +134,8 @@ public class RobotContainer {
         controller.getCubeInTrigger().onTrue(intakeSubsystem.buildCubeInCommand());
         controller.getCubeOutTrigger().onTrue(intakeSubsystem.buildCubeOutCommand());
 
-        ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire).onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
+        ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
+                .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
 
         // Below is mostly deprecated as we are using analog control for arm right now.
 
@@ -158,16 +159,16 @@ public class RobotContainer {
         //                .onTrue(Commands.runOnce(() ->
         // armSubsystem.setArmExtensionSpeed(-.3))).onFalse(Commands.runOnce(() ->
         // armSubsystem.setArmExtensionSpeed(0)));
-        
-        controller.getLeftExtendTrigger()
-        .onTrue(Commands.runOnce(() ->
-        armSubsystem.setLeftExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
-        armSubsystem.setArmExtensionSpeed(0)));
-        
-        controller.getLeftExtendTrigger()
-                       .onTrue(Commands.runOnce(() ->
-        armSubsystem.setRightExtensionSpeed(.1))).onFalse(Commands.runOnce(() ->
-        armSubsystem.setArmExtensionSpeed(0)));
+
+        controller
+                .getLeftExtendTrigger()
+                .onTrue(Commands.runOnce(() -> armSubsystem.setLeftExtensionSpeed(.1)))
+                .onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
+
+        controller
+                .getLeftExtendTrigger()
+                .onTrue(Commands.runOnce(() -> armSubsystem.setRightExtensionSpeed(.1)))
+                .onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
         //
         //
         //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_IN.value)
@@ -180,6 +181,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
-        return null; // add commands into this later, use AutonomousPathCommand
+        AutonomousPathCommand autonomousPathCommand =
+                new AutonomousPathCommand(driveSubsystem, armSubsystem);
+        return autonomousPathCommand.getFullAuto();
     }
 }

@@ -36,7 +36,8 @@ public class ArmIOTalonSpark implements ArmIO {
         armRotLeader.setNeutralMode(NeutralMode.Brake);
         armRotFollower.setNeutralMode(NeutralMode.Brake);
 
-        armRotLeader.setSelectedSensorPosition(Conversions.degreesToFalcon(-90, Arm.ROTATION_GEAR_RATIO));
+        armRotLeader.setSelectedSensorPosition(
+                Conversions.degreesToFalcon(-90, Arm.ROTATION_GEAR_RATIO));
 
         armRotLeader.configOpenloopRamp(2);
         armRotFollower.configOpenloopRamp(2);
@@ -52,8 +53,7 @@ public class ArmIOTalonSpark implements ArmIO {
         armExtensionLeft.configFactoryDefault();
         armExtensionRight.configFactoryDefault();
 
-        armExtensionLeft.setInverted(
-                true); // TODO: Change if it goes the wrong way.
+        armExtensionLeft.setInverted(true); // TODO: Change if it goes the wrong way.
         armExtensionRight.setInverted(false);
 
         /* Wrist Rotation */
@@ -80,7 +80,9 @@ public class ArmIOTalonSpark implements ArmIO {
     public void updateInputs(ArmIOInputs inputs) {
         inputs.armExtensionL = armExtensionLeft.getSelectedSensorPosition();
         inputs.armExtensionF = armExtensionRight.getSelectedSensorPosition();
-        inputs.armRot = Conversions.falconToDegrees(armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
+        inputs.armRot =
+                Conversions.falconToDegrees(
+                        armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class ArmIOTalonSpark implements ArmIO {
                         (meters / Constants.Arm.EXTENSION_PULLEY_CIRCUMFERENCE * 360),
                         Constants.Arm.EXTENSION_GEAR_RATIO));
     }
-    
+
     @Override
     public void setWristRotation(double rot) {
         wristRotLeader.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
@@ -116,8 +118,7 @@ public class ArmIOTalonSpark implements ArmIO {
         armExtensionLeft.set(ControlMode.PercentOutput, speed);
         armExtensionRight.set(ControlMode.PercentOutput, speed);
     }
-    
-    
+
     @Override
     public void setLeftExtensionSpeed(double speed) {
         armExtensionLeft.set(ControlMode.PercentOutput, speed);
