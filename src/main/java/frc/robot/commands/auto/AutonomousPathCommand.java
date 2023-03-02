@@ -54,6 +54,7 @@ public class AutonomousPathCommand {
                                 ::resetOdometry, // Pose2d consumer, used to reset odometry at the
                         // beginning of auto (this is assuming that reset Odometry is the same as
                         // resetPose)
+                        // Please fix this later at some point lol  
                         Constants.Swerve.KINEMATICS, // SwerveDriveKinematics
                         // Use DrivePID presumably
                         new PIDConstants(
