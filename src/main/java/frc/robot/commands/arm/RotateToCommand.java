@@ -7,10 +7,12 @@ public class RotateToCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final double goal;
+    private final double threshold;
 
-    public RotateToCommand(ArmSubsystem armSubsystem, double goal) {
+    public RotateToCommand(ArmSubsystem armSubsystem, double goal, double threshold) {
         this.armSubsystem = armSubsystem;
         this.goal = goal;
+        this.threshold = threshold;
     }
 
     @Override
@@ -20,7 +22,6 @@ public class RotateToCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return armSubsystem.getState().rotation > 2 * goal - 4
-                && armSubsystem.getState().rotation < 2 * goal;
+        return armSubsystem.getState().rotation > goal - threshold && armSubsystem.getState().rotation < goal + threshold;
     }
 }
