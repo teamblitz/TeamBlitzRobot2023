@@ -10,28 +10,30 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.HashMap;
 import java.util.List;
 
-// If the code is bleeding, try running a gradle.bat spotlessApply and then deploying it
-// This class is mainly just storage for all the other commands we'll use in autonomous or to order
-// them
+// This class is mainly just storage for the autonomous pathing and commands
 public class AutonomousPathCommand {
     private final DriveSubsystem driveSubsystem;
     private final ArmSubsystem armSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
     private final Command fullAuto;
 
     public AutonomousPathCommand(
-            final DriveSubsystem driveSubsystem, final ArmSubsystem armSubsystem) {
+            final DriveSubsystem driveSubsystem,
+            final ArmSubsystem armSubsystem,
+            final IntakeSubsystem intakeSubsystem) {
         this.driveSubsystem = driveSubsystem;
         this.armSubsystem = armSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
         // This will load the file "FullAuto.path" and generate it with a max velocity of 4 m/s and
         // a max acceleration of 3 m/s^2
         // for every path in the group
-        // Except I changed it to "SquarePath.path" with a max velocity of 2 m/s and acceleration of
-        // 1.5 m/s
         // All paths are in /src/main/deploy/pathplanner
         // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
+
         // <-- Initially an ArrayList... may cause errors later -->
         List<PathPlannerTrajectory> pathGroup =
                 PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
@@ -42,20 +44,20 @@ public class AutonomousPathCommand {
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
-        // eventMap.put("intakeDown", new IntakeDown());
+        // eventMap.put("marker3", new ExtendToCommand(this.armSubsystem, 0, 0));
+        // eventMap.put("marker4", new RotateToCommand(this.armSubsystem, 0, 0));
 
         // Create the AutoBuilder. This only needs to be created once when robot code starts, not
         // every time you want to create an auto command. A good place to put this is in
         // RobotContainer along with your subsystems.
         SwerveAutoBuilder autoBuilder =
                 new SwerveAutoBuilder(
-                        driveSubsystem::getPose, // Pose2d supplier
-                        driveSubsystem
-                                ::resetOdometry, // Pose2d consumer, used to reset odometry at the
-                        // beginning of auto (this is assuming that reset Odometry is the same as
-                        // resetPose)
-                        // Please fix this later at some point lol  
-                        Constants.Swerve.KINEMATICS, // SwerveDriveKinematics
+                        // Pose2d supplier
+                        this.driveSubsystem::getPose,
+                        // Pose2d consumer (should be resetPose, fix later)
+                        this.driveSubsystem::resetOdometry,
+                        // SwerveDriveKinematics
+                        Constants.Swerve.KINEMATICS,
                         // Use DrivePID presumably
                         new PIDConstants(
                                 Constants.Swerve.DRIVE_KP,
@@ -66,15 +68,12 @@ public class AutonomousPathCommand {
                                 Constants.Swerve.ANGLE_KP,
                                 Constants.Swerve.ANGLE_KI,
                                 Constants.Swerve.ANGLE_KD),
-                        (states) ->
-                                driveSubsystem.setModuleStates(
-                                        states, false,
-                                        false), // Module states consumer used to output to the
-                        // drive subsystem
+                        // Module states consumer used to output the drive subsystem
+                        (states) -> this.driveSubsystem.setModuleStates(states, false, false),
                         eventMap,
-                        true, // Should the path be automatically mirrored depending on alliance
-                        // color. Optional, defaults to true
-                        driveSubsystem);
+                        // Should the path be automatically mirrored depending on alliance color
+                        true,
+                        this.driveSubsystem);
         this.fullAuto = autoBuilder.fullAuto(pathGroup);
     }
 
@@ -82,39 +81,3 @@ public class AutonomousPathCommand {
         return this.fullAuto;
     }
 }
-
-// Don't delete this yet please it's a last resort
-// Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-// It's not, but it's modified to work here
-//     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-//         return new SequentialCommandGroup(
-//                 new InstantCommand(
-//                         () -> {
-//                             // Reset odometry for the first path you run during auto
-//                             if (isFirstPath) {
-//                                 driveSubsystem.resetOdometry(traj.getInitialHolonomicPose());
-//                             }
-//                         }),
-//                 new PPSwerveControllerCommand(
-//                         traj,
-//                         driveSubsystem::getPose, // Pose supplier
-//                         driveSubsystem.getKinematics(), // SwerveDriveKinematics
-//                         new PIDController(
-//                                 0, 0, 0), // X controller. Tune these values for your robot.
-// Leaving them
-//                         // 0 will only use feedforwards.
-//                         new PIDController(
-//                                 0, 0, 0), // Y controller (usually the same values as X
-// controller)
-//                         new PIDController(
-//                                 0, 0, 0), // Rotation controller. Tune these values for your
-// robot.
-//                         // Leaving them 0 will only use feedforwards.
-//                         (states) ->
-//                                 driveSubsystem.setModuleStates(
-//                                         states, false, false), // Module states consumer
-//                         true, // Should the path be automatically mirrored depending on alliance
-//                         // color. Optional, defaults to true
-//                         driveSubsystem // Requires this drive subsystem
-//                         ));
-//     }

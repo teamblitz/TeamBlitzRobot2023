@@ -182,7 +182,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() { // Autonomous code goes here
         AutonomousPathCommand autonomousPathCommand =
-                new AutonomousPathCommand(driveSubsystem, armSubsystem);
+                new AutonomousPathCommand(driveSubsystem, armSubsystem, intakeSubsystem);
         return autonomousPathCommand.getFullAuto();
     }
 }

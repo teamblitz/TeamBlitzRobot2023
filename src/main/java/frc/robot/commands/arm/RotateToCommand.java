@@ -22,6 +22,7 @@ public class RotateToCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return armSubsystem.getState().rotation > goal - threshold && armSubsystem.getState().rotation < goal + threshold;
+        return armSubsystem.getState().rotation > goal - threshold
+                && armSubsystem.getState().rotation < goal + threshold;
     }
 }
