@@ -23,9 +23,9 @@ import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
+import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
-import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -104,18 +104,21 @@ public class RobotContainer {
             return driveMultiplierLimiter.calculate(.60);
         }
     }
-
+    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
+    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
+    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
+    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS)
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
-                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
+                        new SwerveModuleIO() {},
+                        new SwerveModuleIO() {},
+                        new SwerveModuleIO() {},
+                        new SwerveModuleIO() {},
                         new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIO() {});
-        intakeSubsystem = new IntakeSubsystem(new IntakeIO() {});
+        intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
 
         driveController = new SaitekX52Joystick(0); // Move this to Controller
         controller = new Controller(0, 1);
@@ -129,10 +132,10 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        controller.getConeInTrigger().onTrue(intakeSubsystem.buildConeInCommand());
-        controller.getConeOutTrigger().onTrue(intakeSubsystem.buildConeOutCommand());
-        controller.getCubeInTrigger().onTrue(intakeSubsystem.buildCubeInCommand());
-        controller.getCubeOutTrigger().onTrue(intakeSubsystem.buildCubeOutCommand());
+        controller.getConeInTrigger().whileTrue(intakeSubsystem.buildConeInCommand());
+        controller.getConeOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
+        controller.getCubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
+        controller.getCubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));

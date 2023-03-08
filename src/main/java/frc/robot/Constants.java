@@ -55,7 +55,7 @@ public final class Constants {
          * For NEOs use 40
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
-        public static final int CURRENT_LIMIT = 20;
+        public static final int CURRENT_LIMIT = 30;
 
         // Which intake is on the bot?
         public enum Type {
