@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.lib.math.Conversions;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
@@ -24,6 +26,9 @@ public class ArmIOTalonSpark implements ArmIO {
 
     private final TalonSRX armExtensionLeft;
     private final TalonSRX armExtensionRight;
+
+    private final DigitalInput topLimitSwitch;
+    private final DigitalInput bottomLimitSwitch;
 
     public ArmIOTalonSpark() {
         /* Arm Rotation */
@@ -74,6 +79,10 @@ public class ArmIOTalonSpark implements ArmIO {
                                 // because 1 rotation of the motor is < 1 rotation of
                                 // the wrist
                                 * 360);
+
+        /* Limit Switches */
+        topLimitSwitch = new DigitalInput(1);
+        bottomLimitSwitch = new DigitalInput(2);
     }
 
     @Override
@@ -132,5 +141,23 @@ public class ArmIOTalonSpark implements ArmIO {
     @Override
     public void setWristRotationSpeed(double speed) {
         wristRotLeader.set(speed);
+    }
+
+    @Override
+    public void checkLimitSwitches() {
+        // If velocity 0 return
+        // If velocity == Math.abs velocity and top limit switch hit
+        //Check arm velocity, 
+        armRotLeader.getSelectedSensorVelocity();
+        
+        if (topLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() > 0) armRotLeader.set(ControlMode.PercentOutput, 0);
+        if (bottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0) armRotLeader.set(ControlMode.PercentOutput, 0);
+        
+        
+
+        
+
+
+
     }
 }
