@@ -188,6 +188,10 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         return Rotation2d.fromDegrees(gyroInputs.yaw);
     }
 
+    public double getPitch() {
+        return gyroInputs.pitch;
+    }
+
     @Override
     public void periodic() {
         for (SwerveModule mod : swerveModules) {

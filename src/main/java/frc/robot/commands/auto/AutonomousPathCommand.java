@@ -5,7 +5,9 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -75,6 +77,22 @@ public class AutonomousPathCommand {
                         true,
                         this.driveSubsystem);
         this.fullAuto = autoBuilder.fullAuto(pathGroup);
+    }
+
+    // Needs to account for driving too far/station being tilted by another bot
+    public Command balanceChargeStation() {
+        return Commands.run(
+                        () ->
+                                this.driveSubsystem.drive(
+                                        new Translation2d(0.2, 0), 0, false, true, false),
+                        driveSubsystem)
+                .until(() -> this.driveSubsystem.getPitch() <= 10);
+    }
+
+    public Command emergencyStop() {
+        return Commands.run(
+                () -> this.driveSubsystem.drive(new Translation2d(0, 0), 0, false, true, false),
+                driveSubsystem);
     }
 
     public Command getFullAuto() {
