@@ -84,15 +84,34 @@ public class AutonomousPathCommand {
         return Commands.run(
                         () ->
                                 this.driveSubsystem.drive(
-                                        new Translation2d(0.2, 0), 0, false, true, false),
+                                        new Translation2d(speedCalculation(), 0),
+                                        0,
+                                        false,
+                                        true,
+                                        false),
                         driveSubsystem)
                 .until(() -> this.driveSubsystem.getPitch() <= 10);
     }
 
+    private double speedCalculation() {
+        if (this.driveSubsystem.getPitch() > 10) {
+            return 0.2;
+        } else if (this.driveSubsystem.getPitch() <= -10) {
+            return -0.2;
+        } else {
+            return 0;
+        }
+    }
+
     public Command emergencyStop() {
+        this.armSubsystem.setArmExtensionSpeed(0);
+        this.armSubsystem.setArmRotationSpeed(0);
+        this.armSubsystem.setWristRotationSpeed(0);
+
         return Commands.run(
                 () -> this.driveSubsystem.drive(new Translation2d(0, 0), 0, false, true, false),
-                driveSubsystem);
+                driveSubsystem); // .alongWith...? Or just make this set everything to 0 no command
+        // just void
     }
 
     public Command getFullAuto() {
