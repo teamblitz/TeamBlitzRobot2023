@@ -27,14 +27,16 @@ public class ArmIOTalonSpark implements ArmIO {
     private final RelativeEncoder wristEncoder;
     private final DutyCycleEncoder absWristEncoder;
 
-    private final TalonSRX armExtensionLeft;
-    private final TalonSRX armExtensionRight;
+    private final TalonSRX armExtension;
 
     private final DigitalInput armTopLimitSwitch;
     private final DigitalInput armBottomLimitSwitch;
 
     private final DigitalInput wristTopLimitSwitch;
     private final DigitalInput wristBottomLimitSwitch;
+
+    private final DigitalInput extensionTopLimitSwitch;
+    private final DigitalInput extensionBottomLimitSwitch;
 
     public ArmIOTalonSpark() {
         /* Arm Rotation */
@@ -58,14 +60,11 @@ public class ArmIOTalonSpark implements ArmIO {
         armRotFollower.setInverted(InvertType.OpposeMaster);
 
         /* Arm Extension */
-        armExtensionLeft = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
-        armExtensionRight = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_FOLLOWER);
+        armExtension = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
 
-        armExtensionLeft.configFactoryDefault();
-        armExtensionRight.configFactoryDefault();
+        armExtension.configFactoryDefault();
 
-        armExtensionLeft.setInverted(true); // TODO: Change if it goes the wrong way.
-        armExtensionRight.setInverted(false);
+        armExtension.setInverted(true); // TODO: Change if it goes the wrong way.
 
         absRotationEncoder = new DutyCycleEncoder(Arm.ABS_ROTATION_ENCODER);
 
@@ -92,14 +91,17 @@ public class ArmIOTalonSpark implements ArmIO {
         wristTopLimitSwitch = new DigitalInput(3);
         wristBottomLimitSwitch = new DigitalInput(4);
 
+        extensionTopLimitSwitch = new DigitalInput(5);
+        extensionBottomLimitSwitch = new DigitalInput(6);
+
         seedArmPosition();
         seedWristPosition();
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.armExtensionL = armExtensionLeft.getSelectedSensorPosition();
-        inputs.armExtensionF = armExtensionRight.getSelectedSensorPosition();
+        inputs.armExtensionL = armExtension.getSelectedSensorPosition();
+        inputs.armExtensionF = armExtension.getSelectedSensorPosition();
 
         inputs.armRot =
                 Conversions.falconToDegrees(
@@ -121,7 +123,7 @@ public class ArmIOTalonSpark implements ArmIO {
     @Override
     public void setArmExtension(double meters) {
 
-        armExtensionLeft.set(
+        armExtension.set(
                 ControlMode.Position,
                 Conversions.degreesToFalcon(
                         (meters / Constants.Arm.EXTENSION_PULLEY_CIRCUMFERENCE * 360),
@@ -140,18 +142,17 @@ public class ArmIOTalonSpark implements ArmIO {
 
     @Override
     public void setArmExtensionSpeed(double speed) {
-        armExtensionLeft.set(ControlMode.PercentOutput, speed);
-        armExtensionRight.set(ControlMode.PercentOutput, speed);
+        armExtension.set(ControlMode.PercentOutput, speed);
     }
 
     @Override
     public void setLeftExtensionSpeed(double speed) {
-        armExtensionLeft.set(ControlMode.PercentOutput, speed);
+        armExtension.set(ControlMode.PercentOutput, speed);
     }
 
     @Override
     public void setRightExtensionSpeed(double speed) {
-        armExtensionRight.set(ControlMode.PercentOutput, speed);
+        armExtension.set(ControlMode.PercentOutput, speed);
     }
 
     @Override
@@ -172,8 +173,17 @@ public class ArmIOTalonSpark implements ArmIO {
 
         wrist.getEncoder();
 
-        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0) wrist.set(0);
-        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0) wrist.set(0);
+        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0)
+            wrist.set(0);
+        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0)
+            wrist.set(0);
+
+            armExtension.getSelectedSensorVelocity();
+
+        if (extensionTopLimitSwitch.get() && armExtension.getSelectedSensorVelocity() > 0);
+            armExtension.set(ControlMode.PercentOutput, 0);
+        if (extensionBottomLimitSwitch.get() && armExtension.getSelectedSensorVelocity() < 0);
+            armExtension.set(ControlMode.PercentOutput, 0);
     }
 
     public void seedWristPosition() {
