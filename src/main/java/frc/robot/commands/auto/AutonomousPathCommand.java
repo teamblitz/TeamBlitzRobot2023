@@ -40,12 +40,13 @@ public class AutonomousPathCommand {
         List<PathPlannerTrajectory> pathGroup =
                 PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
 
-        // This is just an example event map. It would be better to have a constant, global event
-        // map
-        // in your code that will be used by all path following commands.
         HashMap<String, Command> eventMap = new HashMap<>();
+        // Use Stop Markers instead of markers because markers run in parallel
+        // Use none
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+        eventMap.put("outCube", this.autoCubeOut());
+        eventMap.put("inCube", this.autoCubeIn());
         // eventMap.put("marker3", new ExtendToCommand(this.armSubsystem, 0, 0));
         // eventMap.put("marker4", new RotateToCommand(this.armSubsystem, 0, 0));
 
@@ -79,7 +80,7 @@ public class AutonomousPathCommand {
         this.fullAuto = autoBuilder.fullAuto(pathGroup);
     }
 
-    // Needs to account for driving too far/station being tilted by another bot
+    // Add vision at some point. To this one specifically, but the whole autonomous would be nice.
     public Command balanceChargeStation() {
         return Commands.run(
                         () ->
@@ -101,6 +102,37 @@ public class AutonomousPathCommand {
         } else {
             return 0;
         }
+    }
+
+    // Intake Commands
+    // ----- TODO: Test timeout -----
+    public Command autoConeIn() {
+        return Commands.run(() -> this.intakeSubsystem.inCone(), intakeSubsystem)
+                .withTimeout(2)
+                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+    }
+
+    public Command autoConeOut() {
+        return Commands.run(() -> this.intakeSubsystem.outCone(), intakeSubsystem)
+                .withTimeout(0.25)
+                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+    }
+
+    public Command autoCubeIn() {
+        return Commands.run(() -> this.intakeSubsystem.inCube(), intakeSubsystem)
+                .withTimeout(2)
+                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+    }
+
+    public Command autoCubeOut() {
+        return Commands.run(() -> this.intakeSubsystem.outCube(), intakeSubsystem)
+                .withTimeout(0.25)
+                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+    }
+
+    // Arm/Wrist Commands
+    public Command autoExtendArm(double distance) {
+        return null;
     }
 
     public Command emergencyStop() {

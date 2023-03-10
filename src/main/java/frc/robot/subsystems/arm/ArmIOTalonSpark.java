@@ -77,16 +77,13 @@ public class ArmIOTalonSpark implements ArmIO {
 
         wrist.setIdleMode(IdleMode.kBrake);
 
-
-        wristEncoder
-                .setPositionConversionFactor(
-                        (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
-                                // because 1 rotation of the motor is < 1 rotation of
-                                // the wrist
-                                * 360);
+        wristEncoder.setPositionConversionFactor(
+                (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
+                        // because 1 rotation of the motor is < 1 rotation of
+                        // the wrist
+                        * 360);
 
         absWristEncoder = new DutyCycleEncoder(Arm.ABS_WRIST_ENCODER);
-
 
         /* Limit Switches */
         armTopLimitSwitch = new DigitalInput(1);
@@ -94,7 +91,6 @@ public class ArmIOTalonSpark implements ArmIO {
 
         wristTopLimitSwitch = new DigitalInput(3);
         wristBottomLimitSwitch = new DigitalInput(4);
-
 
         seedArmPosition();
         seedWristPosition();
@@ -176,12 +172,8 @@ public class ArmIOTalonSpark implements ArmIO {
 
         wrist.getEncoder();
 
-        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0)
-            wrist.set(0);
-        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0)
-            wrist.set(0);
-
-
+        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0) wrist.set(0);
+        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0) wrist.set(0);
     }
 
     public void seedWristPosition() {
@@ -189,6 +181,9 @@ public class ArmIOTalonSpark implements ArmIO {
     }
 
     public void seedArmPosition() {
-        armRotLeader.setSelectedSensorPosition(Conversions.degreesToFalcon(absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET, Arm.ROTATION_GEAR_RATIO));
+        armRotLeader.setSelectedSensorPosition(
+                Conversions.degreesToFalcon(
+                        absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET,
+                        Arm.ROTATION_GEAR_RATIO));
     }
 }
