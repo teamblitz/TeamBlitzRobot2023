@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -41,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public ArmState getState() {
-        return new ArmState(inputs.armRot, inputs.armExtensionL);
+        return new ArmState(inputs.armRot, inputs.armExtension);
     }
 
     public void setArmRotationSpeed(double percent) {
@@ -70,16 +72,23 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setWristRot(double degrees) {
-        if (degrees < 0 || degrees > 90) {
-            return;
-        }
-        wantedWristRot = degrees;
+        System.out.println("DO NOT USE SET WRIST ROT ARM SUBSYSTEM, DOES NOT WORK!!!");
     }
 
     public void setWristRotationSpeed(double percent) {
-        io.setWristRotationSpeed(percent);
+        System.out.println("DO NOT USE SET WRIST SPEED ARM SUBSYSTEM, DOES NOT WORK!!!");
     }
 
+    public CommandBase buildRotateToCommand(double degrees) {
+        return Commands.runOnce(() -> rotateTo(degrees))
+                .until(() -> true);
+    }
+
+    public boolean validRot(double degrees) {
+        return true;
+    }
+
+    // TODO: Move to own class or delete
     /** A data class representing a possible state for the arm. */
     public static class ArmState {
         /** Arm rotation in degrees where horizontal is 0, increasing as the arm is raised. */

@@ -8,10 +8,16 @@ public interface ArmIO {
     public class ArmIOInputs {
         public double armRot;
         public double absArmRot;
-        public double armExtensionL;
-        public double armExtensionF;
+        public double armExtension;
         public double wristRot;
         public double absWristRot;
+
+        public boolean topRotationLimit;
+        public boolean bottomRotationLimit;
+        public boolean topWristLimit;
+        public boolean bottomWristLimit;
+        public boolean maxExtensionLimit;
+        public boolean minExtensionLimit;
     }
 
     /** Updates the set of loggable inputs. */
