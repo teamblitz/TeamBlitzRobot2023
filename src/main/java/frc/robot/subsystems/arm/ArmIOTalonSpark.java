@@ -30,8 +30,11 @@ public class ArmIOTalonSpark implements ArmIO {
     private final TalonSRX armExtensionLeft;
     private final TalonSRX armExtensionRight;
 
-    private final DigitalInput topLimitSwitch;
-    private final DigitalInput bottomLimitSwitch;
+    private final DigitalInput armTopLimitSwitch;
+    private final DigitalInput armBottomLimitSwitch;
+
+    private final DigitalInput wristTopLimitSwitch;
+    private final DigitalInput wristBottomLimitSwitch;
 
     public ArmIOTalonSpark() {
         /* Arm Rotation */
@@ -86,8 +89,11 @@ public class ArmIOTalonSpark implements ArmIO {
 
 
         /* Limit Switches */
-        topLimitSwitch = new DigitalInput(1);
-        bottomLimitSwitch = new DigitalInput(2);
+        armTopLimitSwitch = new DigitalInput(1);
+        armBottomLimitSwitch = new DigitalInput(2);
+
+        wristTopLimitSwitch = new DigitalInput(3);
+        wristBottomLimitSwitch = new DigitalInput(4);
 
 
         seedArmPosition();
@@ -163,10 +169,19 @@ public class ArmIOTalonSpark implements ArmIO {
         // Check arm velocity,
         armRotLeader.getSelectedSensorVelocity();
 
-        if (topLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() > 0)
+        if (armTopLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() > 0)
             armRotLeader.set(ControlMode.PercentOutput, 0);
-        if (bottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0)
+        if (armBottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0)
             armRotLeader.set(ControlMode.PercentOutput, 0);
+
+        wrist.getEncoder();
+
+        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0)
+            wrist.set(0);
+        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0)
+            wrist.set(0);
+
+
     }
 
     public void seedWristPosition() {
