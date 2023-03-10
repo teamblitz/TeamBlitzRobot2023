@@ -88,18 +88,31 @@ public final class Constants {
         public static final int ARM_ROT_FOLLOWER = 19; // Left
 
         public static final int WRIST_ROT_LEADER = 20;
-        public static final int WRIST_ROT_FOLLOWER = 21;
 
         public static final int ARM_EXTENSION_LEADER = 17; // Left
         public static final int ARM_EXTENSION_FOLLOWER = 16; // Right
+
+        public static final int TOP_ROTATION_LIMIT_SWITCH = 0;
+        public static final int BOTTOM_ROTATION_LIMIT_SWITCH = 1;
+
+        public static final int TOP_WRIST_LIMIT_SWITCH = 2;
+        public static final int BOTTOM_WRIST_LIMIT_SWITCH = 3;
+
+        public static final int ABS_ROTATION_ENCODER = 6;
+        public static final int ABS_WRIST_ENCODER = 7;
+
+        public static final double ARM_ROT_OFFSET = 0; // TODO: Tune this
+
+        public static final double WRIST_ROT_OFFSET = 0; // TODO: Tune this
 
         /** The center of the center of rotation for the arm */
         public static final Translation3d ARM_BASE =
                 new Translation3d(0, 0, 0); // TODO: Tune to robot
 
-        public static final Rotation2d LOWEST_ROTATION = new Rotation2d(); // TODO: Tune to robot
-        public static final Rotation2d HIGHEST_ROTATION = new Rotation2d(); // TODO: Tune to robot
+        public static final double MIN_ROT = 0; // TODO: Tune to robot
+        public static final double MAX_ROT = 90; // TODO: Tune to robot
 
+        public static final double ROT_THRESHOLD = 3;
         /** End of arm distance from the center of rotation when the arm is not extended */
         public static final int MIN_EXTENSION = 1;
         /**

@@ -13,6 +13,6 @@ public class ScoreInitialGamePieceCommand extends SequentialCommandGroup {
             final ArmSubsystem armSubsystem, final IntakeSubsystem intakeSubsystem) {
         this.armSubsystem = armSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-        addCommands(Commands.runOnce(() -> this.armSubsystem.goTo(null), this.armSubsystem));
+//        addCommands(Commands.runOnce(() -> armSubsystem.goTo(null), armSubsystem));
     }
 }

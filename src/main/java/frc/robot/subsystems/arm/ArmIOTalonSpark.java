@@ -10,7 +10,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Conversions;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
@@ -19,9 +21,11 @@ public class ArmIOTalonSpark implements ArmIO {
 
     private final TalonFX armRotLeader;
     private final TalonFX armRotFollower;
+    private final DutyCycleEncoder absRotationEncoder;
 
-    private final CANSparkMax wristRotLeader;
-    private final CANSparkMax wristRotFollower;
+    private final CANSparkMax wrist;
+    private final RelativeEncoder wristEncoder;
+    private final DutyCycleEncoder absWristEncoder;
 
     private final TalonSRX armExtensionLeft;
     private final TalonSRX armExtensionRight;
@@ -60,37 +64,48 @@ public class ArmIOTalonSpark implements ArmIO {
         armExtensionLeft.setInverted(true); // TODO: Change if it goes the wrong way.
         armExtensionRight.setInverted(false);
 
+        absRotationEncoder = new DutyCycleEncoder(Arm.ABS_ROTATION_ENCODER);
+
         /* Wrist Rotation */
-        wristRotLeader = new CANSparkMax(Constants.Arm.WRIST_ROT_LEADER, MotorType.kBrushless);
-        wristRotFollower = new CANSparkMax(Constants.Arm.WRIST_ROT_FOLLOWER, MotorType.kBrushless);
+        wrist = new CANSparkMax(Constants.Arm.WRIST_ROT_LEADER, MotorType.kBrushless);
+        wristEncoder = wrist.getEncoder();
 
-        wristRotLeader.restoreFactoryDefaults();
-        wristRotFollower.restoreFactoryDefaults();
+        wrist.restoreFactoryDefaults();
 
-        wristRotLeader.setIdleMode(IdleMode.kBrake);
+        wrist.setIdleMode(IdleMode.kBrake);
 
-        wristRotFollower.follow(wristRotLeader, true);
 
-        wristRotLeader
-                .getEncoder()
+        wristEncoder
                 .setPositionConversionFactor(
-                        (1 / Constants.Swerve.ANGLE_GEAR_RATIO) // We do 1 over the gear ratio
+                        (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
                                 // because 1 rotation of the motor is < 1 rotation of
                                 // the wrist
                                 * 360);
 
+        absWristEncoder = new DutyCycleEncoder(Arm.ABS_WRIST_ENCODER);
+
+
         /* Limit Switches */
         topLimitSwitch = new DigitalInput(1);
         bottomLimitSwitch = new DigitalInput(2);
+
+
+        seedArmPosition();
+        seedWristPosition();
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         inputs.armExtensionL = armExtensionLeft.getSelectedSensorPosition();
         inputs.armExtensionF = armExtensionRight.getSelectedSensorPosition();
+
         inputs.armRot =
                 Conversions.falconToDegrees(
                         armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
+        inputs.absArmRot = absRotationEncoder.getAbsolutePosition();
+
+        inputs.wristRot = wristEncoder.getPosition();
+        inputs.absWristRot = absWristEncoder.getAbsolutePosition();
     }
 
     @Override
@@ -113,7 +128,7 @@ public class ArmIOTalonSpark implements ArmIO {
 
     @Override
     public void setWristRotation(double rot) {
-        wristRotLeader.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
+        wrist.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
     }
 
     @Override
@@ -139,7 +154,7 @@ public class ArmIOTalonSpark implements ArmIO {
 
     @Override
     public void setWristRotationSpeed(double speed) {
-        wristRotLeader.set(speed);
+        wrist.set(speed);
     }
 
     public void checkLimitSwitches() {
@@ -152,5 +167,13 @@ public class ArmIOTalonSpark implements ArmIO {
             armRotLeader.set(ControlMode.PercentOutput, 0);
         if (bottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0)
             armRotLeader.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void seedWristPosition() {
+        wristEncoder.setPosition(absWristEncoder.getAbsolutePosition() - Arm.WRIST_ROT_OFFSET);
+    }
+
+    public void seedArmPosition() {
+        armRotLeader.setSelectedSensorPosition(Conversions.degreesToFalcon(absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET, Arm.ROTATION_GEAR_RATIO));
     }
 }
