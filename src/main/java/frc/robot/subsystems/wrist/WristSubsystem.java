@@ -2,8 +2,6 @@ package frc.robot.subsystems.wrist;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
-import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
@@ -22,5 +20,4 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.updateInputs(inputs);
         logger.processInputs("wrist", inputs);
     }
-
 }

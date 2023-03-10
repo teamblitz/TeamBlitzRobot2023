@@ -139,48 +139,6 @@ public class RobotContainer {
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
-
-        // Below is mostly deprecated as we are using analog control for arm right now.
-
-        //        ButtonBinder.bindButton(buttonBox,
-        // Constants.OIConstants.ButtonBoxMappings.UP_ARM.value)
-        //                .onTrue(Commands.runOnce(() ->
-        // armSubsystem.setArmRotationSpeed(.2))).onFalse(Commands.runOnce(() ->
-        // armSubsystem.setArmRotationSpeed(0)));
-        //
-        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.DOWN_ARM.value)
-        //                .onTrue(Commands.runOnce(() ->
-        // armSubsystem.setArmRotationSpeed(-.2))).onFalse(Commands.runOnce(() ->
-        // armSubsystem.setArmRotationSpeed(0)));
-        //
-        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.ARM_IN.value)
-        //                .onTrue(Commands.runOnce(() ->
-        // armSubsystem.setArmExtensionSpeed(.3))).onFalse(Commands.runOnce(() ->
-        // armSubsystem.setArmExtensionSpeed(0)));
-        //
-        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.ARM_OUT.value)
-        //                .onTrue(Commands.runOnce(() ->
-        // armSubsystem.setArmExtensionSpeed(-.3))).onFalse(Commands.runOnce(() ->
-        // armSubsystem.setArmExtensionSpeed(0)));
-
-        controller
-                .getLeftExtendTrigger()
-                .onTrue(Commands.runOnce(() -> armSubsystem.setLeftExtensionSpeed(.1)))
-                .onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
-
-        controller
-                .getLeftExtendTrigger()
-                .onTrue(Commands.runOnce(() -> armSubsystem.setRightExtensionSpeed(.1)))
-                .onFalse(Commands.runOnce(() -> armSubsystem.setArmExtensionSpeed(0)));
-        //
-        //
-        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_IN.value)
-        //                .onTrue(new PrintCommand("IN").andThen(Commands.runOnce(() ->
-        // intakeSubsystem.inCone()))).onFalse(Commands.runOnce(() -> intakeSubsystem.stop()));
-        //
-        //        ButtonBinder.bindButton(buttonBox, OIConstants.ButtonBoxMappings.INTAKE_OUT.value)
-        //                .onTrue(new PrintCommand("IN").andThen(Commands.runOnce(() ->
-        // intakeSubsystem.outCone()))).onFalse(Commands.runOnce(() -> intakeSubsystem.stop()));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.wrist;
 
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -18,7 +17,6 @@ public class WristIOSpark implements WristIO {
 
     private final DigitalInput wristTopLimitSwitch;
     private final DigitalInput wristBottomLimitSwitch;
-
 
     public WristIOSpark() {
         wrist = new CANSparkMax(Constants.Arm.WRIST_ROT_LEADER, MotorType.kBrushless);
@@ -50,7 +48,6 @@ public class WristIOSpark implements WristIO {
         inputs.absoluteRotation = absWristEncoder.getAbsolutePosition();
     }
 
-
     @Override
     public void setRotation(double rot) {
         wrist.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
@@ -64,10 +61,8 @@ public class WristIOSpark implements WristIO {
     public void checkLimitSwitches() {
         // If velocity == Math.abs velocity and top limit switch hit
 
-        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0)
-            wrist.set(0);
-        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0)
-            wrist.set(0);
+        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0) wrist.set(0);
+        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0) wrist.set(0);
     }
 
     public void seedWristPosition() {

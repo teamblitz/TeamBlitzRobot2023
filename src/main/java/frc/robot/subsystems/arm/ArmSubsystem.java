@@ -13,8 +13,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final Logger logger = Logger.getInstance();
 
-    private double wantedWristRot;
-
     public ArmSubsystem(ArmIO io) {
         this.io = io;
     }
@@ -23,10 +21,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void periodic() {
         io.updateInputs(inputs);
         logger.processInputs("arm", inputs);
-
-        //        if (wantedWristRot - inputs.armRot > 90 || inputs.armRot < -90) {
-        //            io.setWristRotation(wantedWristRot - inputs.armRot);
-        //        }
     }
 
     public void goTo(ArmState state) {
@@ -47,14 +41,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setArmRotationSpeed(double percent) {
-        double percent2 = 0;
-        if (percent != 0) {
-            if (Math.abs(percent) == percent) {
-                percent2 = percent * 90 - Math.max(inputs.armRot, 0) * (1.0 / 90.0);
-            } else {
-                percent2 = percent * Math.min(inputs.armRot, 90) * (1.0 / 90.0);
-            }
-        }
         io.setArmRotationSpeed(percent);
     }
 
@@ -62,26 +48,18 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setArmExtensionSpeed(percent);
     }
 
-    // TODO: Make this more specific to left and right over leader/follower.
-    public void setLeftExtensionSpeed(double percent) {
-        io.setRightExtensionSpeed(percent);
-    }
-
-    public void setRightExtensionSpeed(double percent) {
-        io.setLeftExtensionSpeed(percent);
-    }
-
     public void setWristRot(double degrees) {
         System.out.println("DO NOT USE SET WRIST ROT ARM SUBSYSTEM, DOES NOT WORK!!!");
+        throw new RuntimeException("DONT USE ARM FOR WRIST");
     }
 
     public void setWristRotationSpeed(double percent) {
         System.out.println("DO NOT USE SET WRIST SPEED ARM SUBSYSTEM, DOES NOT WORK!!!");
+        throw new RuntimeException("DONT USE ARM FOR WRIST");
     }
 
     public CommandBase buildRotateToCommand(double degrees) {
-        return Commands.runOnce(() -> rotateTo(degrees))
-                .until(() -> true);
+        return Commands.runOnce(() -> rotateTo(degrees)).until(() -> true);
     }
 
     public boolean validRot(double degrees) {

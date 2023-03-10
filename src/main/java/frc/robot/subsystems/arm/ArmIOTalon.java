@@ -7,17 +7,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Conversions;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
 
-public class ArmIOTalonSpark implements ArmIO {
+public class ArmIOTalon implements ArmIO {
 
     private final TalonFX armRotLeader;
     private final TalonFX armRotFollower;
@@ -28,11 +24,10 @@ public class ArmIOTalonSpark implements ArmIO {
     private final DigitalInput armTopLimitSwitch;
     private final DigitalInput armBottomLimitSwitch;
 
-
     private final DigitalInput extensionTopLimitSwitch;
     private final DigitalInput extensionBottomLimitSwitch;
 
-    public ArmIOTalonSpark() {
+    public ArmIOTalon() {
         /* Arm Rotation */
         armRotLeader = new WPI_TalonFX(Constants.Arm.ARM_ROT_LEADER);
         armRotFollower = new WPI_TalonFX(Constants.Arm.ARM_ROT_FOLLOWER);
@@ -61,7 +56,6 @@ public class ArmIOTalonSpark implements ArmIO {
         armExtension.setInverted(true); // TODO: Change if it goes the wrong way.
 
         absRotationEncoder = new DutyCycleEncoder(Arm.ABS_ROTATION_ENCODER);
-
 
         /* Limit Switches */
         armTopLimitSwitch = new DigitalInput(1);
@@ -111,16 +105,6 @@ public class ArmIOTalonSpark implements ArmIO {
         armExtension.set(ControlMode.PercentOutput, speed);
     }
 
-    @Override
-    public void setLeftExtensionSpeed(double speed) {
-        armExtension.set(ControlMode.PercentOutput, speed);
-    }
-
-    @Override
-    public void setRightExtensionSpeed(double speed) {
-        armExtension.set(ControlMode.PercentOutput, speed);
-    }
-
     public void checkLimitSwitches() {
         // If velocity 0 return
         // If velocity == Math.abs velocity and top limit switch hit
@@ -131,12 +115,12 @@ public class ArmIOTalonSpark implements ArmIO {
         if (armBottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0)
             armRotLeader.set(ControlMode.PercentOutput, 0);
 
-
         if (extensionTopLimitSwitch.get() && armExtension.getSelectedSensorVelocity() > 0)
             armExtension.set(ControlMode.PercentOutput, 0);
         if (extensionBottomLimitSwitch.get() && armExtension.getSelectedSensorVelocity() < 0)
             armExtension.set(ControlMode.PercentOutput, 0);
     }
+
     public void seedArmPosition() {
         armRotLeader.setSelectedSensorPosition(
                 Conversions.degreesToFalcon(
