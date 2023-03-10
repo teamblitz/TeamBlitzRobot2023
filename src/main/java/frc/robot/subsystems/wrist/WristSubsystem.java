@@ -20,4 +20,8 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.updateInputs(inputs);
         logger.processInputs("wrist", inputs);
     }
+
+    public void setRotationSpeed(double speed) {
+        io.setRotationSpeed(speed);
+    }
 }

@@ -64,7 +64,7 @@ public class ArmIOTalon implements ArmIO {
         extensionTopLimitSwitch = new DigitalInput(5);
         extensionBottomLimitSwitch = new DigitalInput(6);
 
-        seedArmPosition();
+        resetToAbsolute();
     }
 
     @Override
@@ -75,11 +75,15 @@ public class ArmIOTalon implements ArmIO {
                 Conversions.falconToDegrees(
                         armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
         inputs.absArmRot = absRotationEncoder.getAbsolutePosition();
+
+        inputs.topRotationLimit = armTopLimitSwitch.get();
+        inputs.bottomRotationLimit = armTopLimitSwitch.get();
+        inputs.minExtensionLimit = extensionBottomLimitSwitch.get();
+        inputs.maxExtensionLimit = extensionTopLimitSwitch.get();
     }
 
     @Override
     public void setArmRotation(double degrees) {
-        // Get sensor position and use that to determine rotations?
         armRotLeader.set(
                 ControlMode.Position,
                 Conversions.degreesToFalcon(degrees, Constants.Arm.ROTATION_GEAR_RATIO));
@@ -105,6 +109,7 @@ public class ArmIOTalon implements ArmIO {
         armExtension.set(ControlMode.PercentOutput, speed);
     }
 
+    @Override
     public void checkLimitSwitches() {
         // If velocity 0 return
         // If velocity == Math.abs velocity and top limit switch hit
@@ -121,7 +126,8 @@ public class ArmIOTalon implements ArmIO {
             armExtension.set(ControlMode.PercentOutput, 0);
     }
 
-    public void seedArmPosition() {
+    @Override
+    public void resetToAbsolute() {
         armRotLeader.setSelectedSensorPosition(
                 Conversions.degreesToFalcon(
                         absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET,

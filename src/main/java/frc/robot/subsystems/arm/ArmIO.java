@@ -9,13 +9,9 @@ public interface ArmIO {
         public double armRot;
         public double absArmRot;
         public double armExtension;
-        public double wristRot;
-        public double absWristRot;
 
         public boolean topRotationLimit;
         public boolean bottomRotationLimit;
-        public boolean topWristLimit;
-        public boolean bottomWristLimit;
         public boolean maxExtensionLimit;
         public boolean minExtensionLimit;
     }
@@ -27,15 +23,11 @@ public interface ArmIO {
 
     public default void setArmExtension(double meters) {}
 
-    public default void setWristRotation(double rot) {}
-
     public default void setArmRotationSpeed(double speed) {}
 
     public default void setArmExtensionSpeed(double speed) {}
 
-    public default void setLeftExtensionSpeed(double speed) {}
+    public default void resetToAbsolute() {}
 
-    public default void setRightExtensionSpeed(double speed) {}
-
-    public default void setWristRotationSpeed(double speed) {}
+    public default void checkLimitSwitches() {}
 }

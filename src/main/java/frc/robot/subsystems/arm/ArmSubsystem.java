@@ -48,16 +48,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setArmExtensionSpeed(percent);
     }
 
-    public void setWristRot(double degrees) {
-        System.out.println("DO NOT USE SET WRIST ROT ARM SUBSYSTEM, DOES NOT WORK!!!");
-        throw new RuntimeException("DONT USE ARM FOR WRIST");
-    }
-
-    public void setWristRotationSpeed(double percent) {
-        System.out.println("DO NOT USE SET WRIST SPEED ARM SUBSYSTEM, DOES NOT WORK!!!");
-        throw new RuntimeException("DONT USE ARM FOR WRIST");
-    }
-
     public CommandBase buildRotateToCommand(double degrees) {
         return Commands.runOnce(() -> rotateTo(degrees)).until(() -> true);
     }

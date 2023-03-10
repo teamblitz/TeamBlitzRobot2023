@@ -27,6 +27,7 @@ import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -42,7 +43,7 @@ public class RobotContainer {
     private DriveSubsystem driveSubsystem;
 
     private ArmSubsystem armSubsystem;
-
+    private WristSubsystem wristSubsystem;
     private IntakeSubsystem intakeSubsystem;
 
     /* ***** --- Controllers --- ***** */
@@ -86,9 +87,13 @@ public class RobotContainer {
                         () -> {
                             armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
                             armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
-                            armSubsystem.setWristRotationSpeed(controller.getWristSpeed());
                         },
                         armSubsystem));
+        wristSubsystem.setDefaultCommand(
+                Commands.run(
+                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed())
+                )
+        );
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
