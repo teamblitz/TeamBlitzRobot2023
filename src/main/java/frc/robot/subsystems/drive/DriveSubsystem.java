@@ -4,6 +4,8 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.Constants.Swerve.*;
 
+import java.util.Set;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -150,7 +152,16 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         }
     }
 
-    //    public void park
+    public void park() {
+        for (SwerveModuleState state : getModuleStates()) {
+            if (state.speedMetersPerSecond > .01) return;
+        }
+//        SwerveModule[] desiredStates = {new SwerveModule(0, getSelectedSensorVelocity 135, 1 angle -135, 2 angle 45, 3 angle -45)};
+//
+//        setModuleStates Mod0; for (SwerveModuleState state : getModuleStates()) {
+//            if (state.speedMetersPerSecond > .01) return;
+//        }
+    }
 
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
