@@ -132,6 +132,9 @@ public final class Constants {
         // Values to determine if a configuration of the arm is legal.
         public static final double MAX_LEGAL_HEIGHT = Units.feetToMeters(6.5);
         public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(48);
+
+        public static final double ACCELERATION_METERS_PER_SECOND_SQUARED = 10;
+        public static final double VELOCITY_METERS_PER_SECOND = 20;
     }
 
     public static final class Swerve {

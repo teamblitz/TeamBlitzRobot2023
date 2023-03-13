@@ -1,15 +1,18 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Conversions;
+import frc.lib.math.controller.TelescopingArmFeedforward;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
 
@@ -48,6 +51,16 @@ public class ArmIOTalon implements ArmIO {
         armRotFollower.follow(armRotLeader);
         armRotFollower.setInverted(InvertType.OpposeMaster);
 
+        // We divide by 10 because the function expects it to be per 100ms (dumb ik)
+        armRotLeader.configMotionAcceleration(
+                Conversions.degreesToFalcon(
+                                Arm.ACCELERATION_METERS_PER_SECOND_SQUARED, Arm.ROTATION_GEAR_RATIO)
+                        / 10);
+        armRotLeader.configMotionCruiseVelocity(
+                Conversions.degreesToFalcon(Arm.VELOCITY_METERS_PER_SECOND, Arm.ROTATION_GEAR_RATIO)
+                        / 10);
+
+
         /* Arm Extension */
         armExtension = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
 
@@ -69,7 +82,7 @@ public class ArmIOTalon implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.armExtension = armExtension.getSelectedSensorPosition();
+        inputs.armExtension = getArmExtension();
 
         inputs.armRot =
                 Conversions.falconToDegrees(
@@ -82,11 +95,15 @@ public class ArmIOTalon implements ArmIO {
         inputs.maxExtensionLimit = extensionTopLimitSwitch.get();
     }
 
-    @Override
-    public void setArmRotation(double degrees) {
+    /**
+     * Updates the arm position setpoint.
+     */
+    public void setRotationSetpoint(double degrees, double arbFFPercent) {
         armRotLeader.set(
                 ControlMode.Position,
-                Conversions.degreesToFalcon(degrees, Constants.Arm.ROTATION_GEAR_RATIO));
+                Conversions.degreesToFalcon(degrees, Constants.Arm.ROTATION_GEAR_RATIO),
+                DemandType.ArbitraryFeedForward,
+                arbFFPercent);
     }
 
     @Override
@@ -107,6 +124,10 @@ public class ArmIOTalon implements ArmIO {
     @Override
     public void setArmExtensionSpeed(double speed) {
         armExtension.set(ControlMode.PercentOutput, speed);
+    }
+
+    private double getArmExtension() {
+        return Conversions.redlineToDegrees(armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO);
     }
 
     @Override

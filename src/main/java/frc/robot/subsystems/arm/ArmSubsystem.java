@@ -1,9 +1,11 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
+import frc.lib.math.controller.TelescopingArmFeedforward;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
@@ -13,8 +15,12 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final Logger logger = Logger.getInstance();
 
+    private final TelescopingArmFeedforward rotationFeedforward;
+
     public ArmSubsystem(ArmIO io) {
         this.io = io;
+
+        rotationFeedforward = new TelescopingArmFeedforward((x) -> 0., (x) -> 0., (x) -> 0., (x) -> 0.); // TODO: Make these actual gains
     }
 
     @Override
@@ -27,13 +33,13 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         if (!state.isValid() || !state.isSafe()) {
             return;
         }
-        io.setArmRotation(state.rotation);
+        io.updateArmRotation(state.rotation);
         io.setArmExtension(state.extension);
     }
 
     public void rotateTo(double degrees) {
         // TODO: Make sure it is valid.
-        io.setArmRotation(degrees);
+        io.updateArmRotation(degrees);
     }
 
     public ArmState getState() {

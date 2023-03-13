@@ -19,7 +19,7 @@ public interface ArmIO {
     /** Updates the set of loggable inputs. */
     public default void updateInputs(ArmIOInputs inputs) {}
 
-    public default void setArmRotation(double degrees) {}
+    public default void updateArmRotation(double degrees) {}
 
     public default void setArmExtension(double meters) {}
 
