@@ -27,6 +27,7 @@ import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -90,10 +91,8 @@ public class RobotContainer {
                         },
                         armSubsystem));
         wristSubsystem.setDefaultCommand(
-                Commands.run(
-                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed())
-                )
-        );
+                Commands.run(() -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+                wristSubsystem));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -123,6 +122,7 @@ public class RobotContainer {
                         new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIO() {});
+        wristSubsystem = new WristSubsystem(new WristIO() {});
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
 
         driveController = new SaitekX52Joystick(0); // Move this to Controller
@@ -144,6 +144,17 @@ public class RobotContainer {
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
+
+        XboxController c = new XboxController(1);
+
+        controller.getStartTrigger().onTrue(
+                Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kRightRumble, .2))
+                        .andThen(Commands.waitSeconds(.5))
+                        .andThen(Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
+                        .andThen(Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kLeftRumble, .2)))
+                        .andThen(Commands.waitSeconds(.5))
+                        .andThen(Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
+        );
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

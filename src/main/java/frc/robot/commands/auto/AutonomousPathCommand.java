@@ -115,7 +115,10 @@ public class AutonomousPathCommand {
     public Command autoConeOut() {
         return Commands.run(() -> this.intakeSubsystem.outCone(), intakeSubsystem)
                 .withTimeout(0.25)
-                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+                .andThen(
+                        () -> this.intakeSubsystem.stop(),
+                        intakeSubsystem); // No need for the stop because intake commands will turn
+        // off the motor.
     }
 
     public Command autoCubeIn() {
@@ -138,7 +141,7 @@ public class AutonomousPathCommand {
     public Command emergencyStop() {
         this.armSubsystem.setArmExtensionSpeed(0);
         this.armSubsystem.setArmRotationSpeed(0);
-        this.armSubsystem.setWristRotationSpeed(0);
+//        this.armSubsystem.setWristRotationSpeed(0);
 
         return Commands.run(
                 () -> this.driveSubsystem.drive(new Translation2d(0, 0), 0, false, true, false),

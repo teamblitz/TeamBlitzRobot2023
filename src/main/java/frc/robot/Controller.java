@@ -83,4 +83,8 @@ public class Controller {
                                         .getHID()
                                         .getRightTriggerAxis())); // Differential arm control
     }
+
+    public Trigger getStartTrigger() {
+        return commandOperatorController.start();
+    }
 }
