@@ -36,8 +36,8 @@ public class WristIOSpark implements WristIO {
 
         /* Limit Switches */
 
-        wristTopLimitSwitch = new DigitalInput(3);
-        wristBottomLimitSwitch = new DigitalInput(4);
+        wristTopLimitSwitch = new DigitalInput(Arm.TOP_WRIST_LIMIT_SWITCH);
+        wristBottomLimitSwitch = new DigitalInput(Arm.BOTTOM_WRIST_LIMIT_SWITCH);
 
         seedWristPosition();
     }

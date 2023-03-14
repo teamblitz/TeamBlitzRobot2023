@@ -95,6 +95,9 @@ public final class Constants {
         public static final int TOP_ROTATION_LIMIT_SWITCH = 0;
         public static final int BOTTOM_ROTATION_LIMIT_SWITCH = 1;
 
+        public static final int TOP_EXTENSTION_LIMIT_SWITCH = 4;
+        public static final int BOTTOM_EXTENSION_LIMIT_SWITCH = 5;
+
         public static final int TOP_WRIST_LIMIT_SWITCH = 2;
         public static final int BOTTOM_WRIST_LIMIT_SWITCH = 3;
 

@@ -21,6 +21,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModuleIO;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -121,8 +123,8 @@ public class RobotContainer {
                         new SwerveModuleIO() {},
                         new GyroIONavx());
 
-        armSubsystem = new ArmSubsystem(new ArmIO() {});
-        wristSubsystem = new WristSubsystem(new WristIO() {});
+        armSubsystem = new ArmSubsystem(new ArmIOTalon());
+        wristSubsystem = new WristSubsystem(new WristIOSpark());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
 
         driveController = new SaitekX52Joystick(0); // Move this to Controller

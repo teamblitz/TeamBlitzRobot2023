@@ -71,11 +71,11 @@ public class ArmIOTalon implements ArmIO {
         absRotationEncoder = new DutyCycleEncoder(Arm.ABS_ROTATION_ENCODER);
 
         /* Limit Switches */
-        armTopLimitSwitch = new DigitalInput(1);
-        armBottomLimitSwitch = new DigitalInput(2);
+        armTopLimitSwitch = new DigitalInput(Arm.TOP_ROTATION_LIMIT_SWITCH);
+        armBottomLimitSwitch = new DigitalInput(Arm.BOTTOM_ROTATION_LIMIT_SWITCH);
 
-        extensionTopLimitSwitch = new DigitalInput(5);
-        extensionBottomLimitSwitch = new DigitalInput(6);
+        extensionTopLimitSwitch = new DigitalInput(Arm.TOP_EXTENSTION_LIMIT_SWITCH);
+        extensionBottomLimitSwitch = new DigitalInput(Arm.BOTTOM_EXTENSION_LIMIT_SWITCH);
 
         resetToAbsolute();
     }
