@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,7 +19,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public ArmSubsystem(ArmIO io) {
         this.io = io;
 
-        rotationFeedforward = new TelescopingArmFeedforward((x) -> 0., (x) -> 0., (x) -> 0., (x) -> 0.); // TODO: Make these actual gains
+        rotationFeedforward =
+                new TelescopingArmFeedforward(
+                        (x) -> 0., (x) -> 0., (x) -> 0.,
+                        (x) -> 0.); // TODO: Make these actual gains
     }
 
     @Override

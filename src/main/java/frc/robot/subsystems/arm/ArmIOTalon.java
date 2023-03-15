@@ -8,11 +8,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Conversions;
-import frc.lib.math.controller.TelescopingArmFeedforward;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
 
@@ -60,7 +58,6 @@ public class ArmIOTalon implements ArmIO {
                 Conversions.degreesToFalcon(Arm.VELOCITY_METERS_PER_SECOND, Arm.ROTATION_GEAR_RATIO)
                         / 10);
 
-
         /* Arm Extension */
         armExtension = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
 
@@ -95,9 +92,7 @@ public class ArmIOTalon implements ArmIO {
         inputs.maxExtensionLimit = extensionTopLimitSwitch.get();
     }
 
-    /**
-     * Updates the arm position setpoint.
-     */
+    /** Updates the arm position setpoint. */
     public void setRotationSetpoint(double degrees, double arbFFPercent) {
         armRotLeader.set(
                 ControlMode.Position,
@@ -127,7 +122,8 @@ public class ArmIOTalon implements ArmIO {
     }
 
     private double getArmExtension() {
-        return Conversions.redlineToDegrees(armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO);
+        return Conversions.redlineToDegrees(
+                armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO);
     }
 
     @Override

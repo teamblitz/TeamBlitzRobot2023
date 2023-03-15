@@ -141,7 +141,7 @@ public class AutonomousPathCommand {
     public Command emergencyStop() {
         this.armSubsystem.setArmExtensionSpeed(0);
         this.armSubsystem.setArmRotationSpeed(0);
-//        this.armSubsystem.setWristRotationSpeed(0);
+        //        this.armSubsystem.setWristRotationSpeed(0);
 
         return Commands.run(
                 () -> this.driveSubsystem.drive(new Translation2d(0, 0), 0, false, true, false),

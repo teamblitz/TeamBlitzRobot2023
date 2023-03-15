@@ -9,10 +9,9 @@ public class TelescopingArmFeedforward {
     private final Function<Double, Double> kaFunction;
 
     /**
-     * Creates a new TelescopingArmFeedforward with the specified gain functions. The gain functions should
-     * calculate the gains at a given position of the arm. Units of the gain values will dictate
-     * units of the computed feedforward.
-     * Acceleration can be omitted by passing in (x) -> 0
+     * Creates a new TelescopingArmFeedforward with the specified gain functions. The gain functions
+     * should calculate the gains at a given position of the arm. Units of the gain values will
+     * dictate units of the computed feedforward. Acceleration can be omitted by passing in (x) -> 0
      *
      * @param ksFunction The static gain function.
      * @param kgFunction The gravity gain function.
@@ -54,18 +53,18 @@ public class TelescopingArmFeedforward {
     }
 
     /**
-     * Calculates the feedforward from the gains and velocity setpoint (acceleration is assumed to be
-     * zero).
+     * Calculates the feedforward from the gains and velocity setpoint (acceleration is assumed to
+     * be zero).
      *
-     * @param armExtension extension of the arm to be passed to the supplied gain calculator function.
+     * @param armExtension extension of the arm to be passed to the supplied gain calculator
+     *     function.
      * @param positionRadians The position (angle) setpoint. This angle should be measured from the
-     *     horizontal (i.e. if the provided angle is 0, the arm should be parallel with the floor). If
-     *     your encoder does not follow this convention, an offset should be added.
+     *     horizontal (i.e. if the provided angle is 0, the arm should be parallel with the floor).
+     *     If your encoder does not follow this convention, an offset should be added.
      * @param velocity The velocity setpoint.
      * @return The computed feedforward.
      */
     public double calculate(double armExtension, double positionRadians, double velocity) {
         return calculate(armExtension, positionRadians, velocity, 0);
     }
-
 }

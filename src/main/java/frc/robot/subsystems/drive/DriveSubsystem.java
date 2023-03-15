@@ -154,11 +154,14 @@ public class DriveSubsystem<setModuleStates> extends SubsystemBase implements Bl
         for (SwerveModuleState state : getModuleStates()) {
             if (state.speedMetersPerSecond > .01) return;
         }
-        SwerveModule[] desiredStates = {new SwerveModule(0, getSelectedSensorVelocity 135, 1 angle -135, 2 angle 45, 3 angle -45)};
-        
-        setModuleStates Mod0; for (SwerveModuleState state : getModuleStates()) {
-            if (state.speedMetersPerSecond > .01) return;
-        }
+        SwerveModuleState[] desiredStates = {
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(45))),
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(315))),
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(45))),
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(315)))
+        };
+
+        setModuleStates(desiredStates, true, false);
     }
 
     public SwerveModuleState[] getModuleStates() {

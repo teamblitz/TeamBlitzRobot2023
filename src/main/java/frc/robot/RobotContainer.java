@@ -20,7 +20,6 @@ import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
-import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -28,7 +27,6 @@ import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -93,8 +91,9 @@ public class RobotContainer {
                         },
                         armSubsystem));
         wristSubsystem.setDefaultCommand(
-                Commands.run(() -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-                wristSubsystem));
+                Commands.run(
+                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+                        wristSubsystem));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -149,14 +148,30 @@ public class RobotContainer {
 
         XboxController c = new XboxController(1);
 
-        controller.getStartTrigger().onTrue(
-                Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kRightRumble, .2))
-                        .andThen(Commands.waitSeconds(.5))
-                        .andThen(Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
-                        .andThen(Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kLeftRumble, .2)))
-                        .andThen(Commands.waitSeconds(.5))
-                        .andThen(Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kBothRumble, 0)))
-        );
+        controller
+                .getStartTrigger()
+                .onTrue(
+                        Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kRightRumble, .2))
+                                .andThen(Commands.waitSeconds(.5))
+                                .andThen(
+                                        Commands.runOnce(
+                                                () ->
+                                                        c.setRumble(
+                                                                GenericHID.RumbleType.kBothRumble,
+                                                                0)))
+                                .andThen(
+                                        Commands.runOnce(
+                                                () ->
+                                                        c.setRumble(
+                                                                GenericHID.RumbleType.kLeftRumble,
+                                                                .2)))
+                                .andThen(Commands.waitSeconds(.5))
+                                .andThen(
+                                        Commands.runOnce(
+                                                () ->
+                                                        c.setRumble(
+                                                                GenericHID.RumbleType.kBothRumble,
+                                                                0))));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
