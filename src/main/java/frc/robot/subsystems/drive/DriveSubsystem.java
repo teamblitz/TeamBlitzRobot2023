@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import frc.robot.subsystems.drive.gyro.GyroIO;
@@ -156,9 +158,9 @@ public class DriveSubsystem<setModuleStates> extends SubsystemBase implements Bl
         }
         SwerveModuleState[] desiredStates = {
             (new SwerveModuleState(0, Rotation2d.fromDegrees(45))),
-            (new SwerveModuleState(0, Rotation2d.fromDegrees(315))),
-            (new SwerveModuleState(0, Rotation2d.fromDegrees(45))),
-            (new SwerveModuleState(0, Rotation2d.fromDegrees(315)))
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(-45))),
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(-45))),
+            (new SwerveModuleState(0, Rotation2d.fromDegrees(45)))
         };
 
         setModuleStates(desiredStates, true, false);
@@ -303,4 +305,9 @@ public class DriveSubsystem<setModuleStates> extends SubsystemBase implements Bl
                                                 CENTER_TO_MODULE.get(BR),
                                                 swerveModuleStates[BR].angle)));
     }
+
+    public CommandBase buildParkCommand() {
+        return Commands.runOnce(this::park, this);
+    }
+    
 }
