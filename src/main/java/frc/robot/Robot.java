@@ -102,6 +102,13 @@ public class Robot extends LoggedRobot {
         robotContainer = new RobotContainer();
 
         System.out.println("Robot Start up at: " + Timer.getFPGATimestamp());
+
+        try {
+            Networker networker = new Networker();
+            networker.start();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
     @Override
