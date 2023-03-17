@@ -106,6 +106,7 @@ public class Robot extends LoggedRobot {
         try {
             Networker networker = new Networker();
             networker.start();
+            System.out.println("Networker Started Successfully");
         } catch (IOException e) {
             System.out.println(e);
         }

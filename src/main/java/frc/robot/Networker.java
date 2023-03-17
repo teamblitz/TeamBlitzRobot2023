@@ -1,41 +1,46 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
-
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 
-public class Networker extends Thread {
+public class Networker {
 
-    private byte[] buf = new byte[256];
-    private DatagramSocket socket;
-    private InetAddress address = InetAddress.getByName("10.20.83.130");
+    private final Notifier notifier;
+    private final DatagramSocket socket;
+    private final InetAddress address;
+    private volatile boolean running;
 
-    private final int port = 5810;
+    public Networker() throws SocketException, UnknownHostException {
+        notifier = new Notifier(this::sendPacket);
+        notifier.startPeriodic(Constants.Networking.INTERVAL);
 
-    public Networker() throws IOException {}
+        socket = new DatagramSocket(Constants.Networking.PORT);
+        address = InetAddress.getByName(Constants.Networking.JETSON_IP_ADDRESS);
+    }
 
-    @Override
-    public void run() {
+    /**
+     * Do NOT Call from the main thread, will induce delays due to io.
+     */
+    private void sendPacket() {
         try {
-            socket = new DatagramSocket(5810);
-        } catch (SocketException e) {
+            byte[] buffer = ByteBuffer.allocate(Long.BYTES).putLong(RobotController.getFPGATime()).array();
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, Constants.Networking.PORT);
+            socket.send(packet);
+        } catch (IOException e) {
             System.out.println(e);
+        } finally {
+            stop();
         }
-        while (true) {
-            buf = ByteBuffer.allocate(Long.BYTES).putLong(RobotController.getFPGATime()).array();
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
-            try {
-                socket.send(packet);
-                Thread.sleep(5*1000);
-            } catch (IOException e) {
-                System.out.println(e);
-            } catch (InterruptedException e) {
-                System.out.println(e);
-                break;
-            }
-        }
+    }
+    public void start() {
+        notifier.startPeriodic(Constants.Networking.INTERVAL);
+    }
+
+    public void stop() {
+        notifier.stop();
+        socket.close();
     }
 }
