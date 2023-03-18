@@ -1,15 +1,9 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import frc.lib.math.controller.TelescopingArmFeedforward;
-import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
@@ -36,7 +30,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void updateRotation(double degrees, double velocity) {
-        io.setRotationSetpoint(degrees, rotationFeedforward.calculate(inputs.armExtension, Math.toRadians(degrees), velocity));
+        io.setRotationSetpoint(
+                degrees,
+                rotationFeedforward.calculate(
+                        inputs.armExtension, Math.toRadians(degrees), Math.toRadians(velocity)));
     }
 
     public ArmState getState() {
@@ -58,7 +55,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void setArmExtensionSpeed(double percent) {
         io.setArmExtensionSpeed(percent);
     }
-
 
     public boolean validRot(double degrees) {
         return true;

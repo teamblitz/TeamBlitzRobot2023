@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
@@ -32,6 +33,12 @@ public class WristIOSpark implements WristIO {
                         // the wrist
                         * 360);
 
+        wristEncoder.setVelocityConversionFactor(
+                (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
+                        // because 1 rotation of the motor is < 1 rotation of
+                        // the wrist
+                        * 360);
+
         absWristEncoder = new DutyCycleEncoder(Arm.ABS_WRIST_ENCODER);
 
         /* Limit Switches */
@@ -46,11 +53,18 @@ public class WristIOSpark implements WristIO {
     public void updateInputs(WristIOInputs inputs) {
         inputs.rotation = wristEncoder.getPosition();
         inputs.absoluteRotation = absWristEncoder.getAbsolutePosition();
+        inputs.rotationSpeed = wristEncoder.getVelocity();
     }
 
     @Override
-    public void setRotation(double rot) {
-        wrist.getPIDController().setReference(rot, CANSparkMax.ControlType.kPosition);
+    public void setRotationSetpoint(double rot, double arbFFPercent) {
+        wrist.getPIDController()
+                .setReference(
+                        rot,
+                        CANSparkMax.ControlType.kPosition,
+                        0,
+                        arbFFPercent,
+                        SparkMaxPIDController.ArbFFUnits.kPercentOut);
     }
 
     @Override

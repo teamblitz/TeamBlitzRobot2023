@@ -84,7 +84,10 @@ public class ArmIOTalon implements ArmIO {
         inputs.armRot =
                 Conversions.falconToDegrees(
                         armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
-        inputs.armSpeed = Conversions.falconToDegrees(armRotLeader.getSelectedSensorVelocity(), Arm.ROTATION_GEAR_RATIO) / 10.0;
+        inputs.armSpeed =
+                Conversions.falconToDegrees(
+                                armRotLeader.getSelectedSensorVelocity(), Arm.ROTATION_GEAR_RATIO)
+                        / 10.0;
         inputs.absArmRot = absRotationEncoder.getAbsolutePosition();
 
         inputs.topRotationLimit = armTopLimitSwitch.get();

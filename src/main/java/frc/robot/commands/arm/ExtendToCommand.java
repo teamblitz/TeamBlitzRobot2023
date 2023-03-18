@@ -13,6 +13,8 @@ public class ExtendToCommand extends CommandBase {
         this.armSubsystem = armSubsystem;
         this.goal = goal;
         this.threshold = threshold;
+
+        addRequirements(armSubsystem);
     }
 
     @Override

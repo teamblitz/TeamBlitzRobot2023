@@ -123,7 +123,7 @@ public class RobotContainer {
                         new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalon());
-        wristSubsystem = new WristSubsystem(new WristIOSpark());
+        wristSubsystem = new WristSubsystem(new WristIOSpark(), armSubsystem);
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
 
         driveController = new SaitekX52Joystick(0); // Move this to Controller

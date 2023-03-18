@@ -1,14 +1,14 @@
-package frc.robot.commands.arm;
+package frc.robot.commands.wrist;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.wrist.WristSubsystem;
 
-public class RotateToCommand extends CommandBase {
+public class RotateWristToCommand extends CommandBase {
+    private final WristSubsystem wristSubsystem;
 
-    private final ArmSubsystem armSubsystem;
     private final double goal;
     private final double threshold;
 
@@ -16,12 +16,14 @@ public class RotateToCommand extends CommandBase {
 
     private double lastTime;
 
-    public RotateToCommand(ArmSubsystem armSubsystem, double goal, double threshold) {
-        this.armSubsystem = armSubsystem;
+    public RotateWristToCommand(WristSubsystem wristSubsystem, double goal, double threshold) {
+        this.wristSubsystem = wristSubsystem;
+
         this.goal = goal;
         this.threshold = threshold;
-
-        addRequirements(armSubsystem);
+        // each subsystem used by the command must be passed into the
+        // addRequirements() method (which takes a vararg of Subsystem)
+        addRequirements(this.wristSubsystem);
     }
 
     @Override
@@ -32,7 +34,8 @@ public class RotateToCommand extends CommandBase {
                                 Constants.Arm.VELOCITY_METERS_PER_SECOND,
                                 Constants.Arm.ACCELERATION_METERS_PER_SECOND_SQUARED),
                         new TrapezoidProfile.State(
-                                armSubsystem.getRotation(), armSubsystem.getRotationSpeed()),
+                                wristSubsystem.getRelativeRotation(),
+                                wristSubsystem.getRotationSpeed()),
                         new TrapezoidProfile.State(goal, 0));
         lastTime = Timer.getFPGATimestamp();
     }
@@ -42,12 +45,12 @@ public class RotateToCommand extends CommandBase {
         double deltaTime = Timer.getFPGATimestamp() - lastTime;
         lastTime = Timer.getFPGATimestamp();
         TrapezoidProfile.State state = profile.calculate(deltaTime);
-        armSubsystem.updateRotation(state.position, state.velocity);
+        wristSubsystem.updateRelativeRotation(state.position, state.velocity);
     }
 
     @Override
     public boolean isFinished() {
-        return armSubsystem.getState().rotation > goal - threshold
-                && armSubsystem.getState().rotation < goal + threshold;
+        return wristSubsystem.getRelativeRotation() > goal - threshold
+                && wristSubsystem.getRelativeRotation() < goal + threshold;
     }
 }

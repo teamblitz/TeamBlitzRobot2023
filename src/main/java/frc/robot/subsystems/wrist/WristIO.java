@@ -8,6 +8,7 @@ public interface WristIO {
     public class WristIOInputs {
         public double rotation;
         public double absoluteRotation;
+        public double rotationSpeed;
 
         public boolean topLimit;
         public boolean bottomLimit;
@@ -16,7 +17,7 @@ public interface WristIO {
     /** Updates the set of loggable inputs. */
     public default void updateInputs(WristIOInputs inputs) {}
 
-    public default void setRotation(double rot) {}
+    public default void setRotationSetpoint(double rot, double arbFFPercent) {}
 
     public default void setRotationSpeed(double speed) {}
 }

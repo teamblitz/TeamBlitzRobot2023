@@ -140,6 +140,15 @@ public final class Constants {
         public static final double VELOCITY_METERS_PER_SECOND = 20;
     }
 
+    public static final class Wrist {
+
+        public static final double MIN_ROTATION = -175; // TODO: TUNE THESE.
+        public static final double MAX_ROTATION = -5;
+        public static final int ks = 0; // TODO: TUNE TO ROBOT
+        public static final int kg = 0; // TODO: TUNE TO ROBOT
+        public static final int kv = 0; // TODO: TUNE TO ROBOT
+    }
+
     public static final class Swerve {
         public static final int PIGEON_ID = 30;
         public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
@@ -343,6 +352,5 @@ public final class Constants {
         public static final String JETSON_IP_ADDRESS = "10.20.83.130";
         public static final int PORT = 5810;
         public static final int INTERVAL = 5;
-
     }
 }

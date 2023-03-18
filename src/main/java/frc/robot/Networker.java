@@ -22,16 +22,16 @@ public class Networker {
         address = InetAddress.getByName(Constants.Networking.JETSON_IP_ADDRESS);
     }
 
-    /**
-     * Do NOT Call from the main thread, will induce delays due to io.
-     */
+    /** Do NOT Call from the main thread, will induce delays due to io. */
     private void sendPacket() {
         try {
-            byte[] buffer = ByteBuffer.allocate(Long.BYTES)
-                    .putLong(RobotController.getFPGATime())
-                    .order(ByteOrder.BIG_ENDIAN)
-                    .array();
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, Constants.Networking.PORT);
+            byte[] buffer =
+                    ByteBuffer.allocate(Long.BYTES)
+                            .putLong(RobotController.getFPGATime())
+                            .order(ByteOrder.BIG_ENDIAN)
+                            .array();
+            DatagramPacket packet =
+                    new DatagramPacket(buffer, buffer.length, address, Constants.Networking.PORT);
             socket.send(packet);
         } catch (IOException e) {
             System.out.println(e);
@@ -39,6 +39,7 @@ public class Networker {
             stop();
         }
     }
+
     public void start() {
         notifier.startPeriodic(Constants.Networking.INTERVAL);
     }
