@@ -22,4 +22,6 @@ public interface WristIO {
     public default void setRotationSetpoint(double rot, double arbFFPercent) {}
 
     public default void setRotationSpeed(double speed) {}
+
+    public default void setPID(double p, double i, double d) {}
 }

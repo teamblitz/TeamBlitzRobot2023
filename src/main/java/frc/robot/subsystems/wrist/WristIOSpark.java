@@ -39,6 +39,10 @@ public class WristIOSpark implements WristIO {
                         // because 1 rotation of the motor is < 1 rotation of
                         // the wrist
                         * 360);
+        
+        wrist.getPIDController().setP(Constants.Wrist.p);
+        wrist.getPIDController().setI(Constants.Wrist.i);
+        wrist.getPIDController().setD(Constants.Wrist.d);
 
         absWristEncoder = new DutyCycleEncoder(Arm.ABS_WRIST_ENCODER);
 
@@ -83,5 +87,12 @@ public class WristIOSpark implements WristIO {
 
     public void seedWristPosition() {
         wristEncoder.setPosition(Angles.wrapAngle(absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET));
+    }
+
+    @Override
+    public void setPID(double p, double i, double d) {
+        wrist.getPIDController().setP(p);
+        wrist.getPIDController().setI(i);
+        wrist.getPIDController().setD(d);
     }
 }

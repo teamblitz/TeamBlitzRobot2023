@@ -21,6 +21,7 @@ import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
+import frc.robot.commands.wrist.RotateWristToCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -146,36 +147,14 @@ public class RobotContainer {
         controller.getConeOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
         controller.getCubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
         controller.getCubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
+        controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateToCommand(0));
+        controller.wristDownTrigger().whileTrue(wristSubsystem.rotateToCommand(-90));
+
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
 
-        XboxController c = new XboxController(1);
 
-        controller
-                .getStartTrigger()
-                .onTrue(
-                        Commands.runOnce(() -> c.setRumble(GenericHID.RumbleType.kRightRumble, .2))
-                                .andThen(Commands.waitSeconds(.5))
-                                .andThen(
-                                        Commands.runOnce(
-                                                () ->
-                                                        c.setRumble(
-                                                                GenericHID.RumbleType.kBothRumble,
-                                                                0)))
-                                .andThen(
-                                        Commands.runOnce(
-                                                () ->
-                                                        c.setRumble(
-                                                                GenericHID.RumbleType.kLeftRumble,
-                                                                .2)))
-                                .andThen(Commands.waitSeconds(.5))
-                                .andThen(
-                                        Commands.runOnce(
-                                                () ->
-                                                        c.setRumble(
-                                                                GenericHID.RumbleType.kBothRumble,
-                                                                0))));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
