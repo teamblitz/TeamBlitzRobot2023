@@ -58,8 +58,8 @@ public class WristIOSpark implements WristIO {
     public void updateInputs(WristIOInputs inputs) {
         inputs.rotation = wristEncoder.getPosition();
         inputs.rotationSpeed = wristEncoder.getVelocity();
-
-        inputs.absEncoder = Angles.wrapAngle(absWristEncoder.getAbsolutePosition() * 360);
+        inputs.absoluteRotation = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET);
+        inputs.absEncoder = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class WristIOSpark implements WristIO {
     }
 
     public void seedWristPosition() {
-        wristEncoder.setPosition(Angles.wrapAngle(absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET));
+        wristEncoder.setPosition(Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET));
     }
 
     @Override

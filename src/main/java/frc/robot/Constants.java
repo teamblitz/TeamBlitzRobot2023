@@ -124,7 +124,7 @@ public final class Constants {
          */
         public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
 
-        public static final double ROTATION_GEAR_RATIO = (40.0 / 1.0);
+        public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
         public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
 
         public static final double WRIST_GEAR_RATIO = (20.0 / 1.0); // TODO: Get the actual value
@@ -155,7 +155,7 @@ public final class Constants {
         public static final double d = 0;
 
 
-        public static final double OFFSET = 0;
+        public static final double OFFSET = -53.7;
     }
 
     public static final class Swerve {
@@ -225,7 +225,7 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double ANGLE_KP = 0.004; // TODO: Tune this.
+        public static final double ANGLE_KP = 0.0035; // TODO: Tune this.
         public static final double ANGLE_KI = 0.0;
         public static final double ANGLE_KD = 0.0;
         public static final double ANGLE_KF = 0.0; // For now, should remain zero
