@@ -144,11 +144,13 @@ public final class Constants {
 
         public static final double MIN_ROTATION = -175; // TODO: TUNE THESE.
         public static final double MAX_ROTATION = -5;
-        public static final double ks = 0.53626; // TODO: TUNE TO ROBOT
-        public static final double kg = 1.255; // TODO: TUNE TO ROBOT
-        public static final double kv = 0.13643; // TODO: TUNE TO ROBOT
+        public static final double ks = 0.53626 / 12; // TODO: TUNE TO ROBOT
+        public static final double kg = 1.255 / 12; // TODO: TUNE TO ROBOT
+        public static final double kv = 0.13643 / 12; // TODO: TUNE TO ROBOT
         // ka = 0.027609
-        // All in volts
+        // All in volts, divide by 12 to percent
+
+        public static final double OFFSET = 0;
     }
 
     public static final class Swerve {

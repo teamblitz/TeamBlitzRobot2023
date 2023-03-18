@@ -7,6 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc.lib.math.Angles;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
 
@@ -52,8 +53,9 @@ public class WristIOSpark implements WristIO {
     @Override
     public void updateInputs(WristIOInputs inputs) {
         inputs.rotation = wristEncoder.getPosition();
-        inputs.absoluteRotation = absWristEncoder.getAbsolutePosition();
         inputs.rotationSpeed = wristEncoder.getVelocity();
+
+        inputs.absEncoder = Angles.wrapAngle(absWristEncoder.getAbsolutePosition() * 360);
     }
 
     @Override
@@ -80,6 +82,6 @@ public class WristIOSpark implements WristIO {
     }
 
     public void seedWristPosition() {
-        wristEncoder.setPosition(absWristEncoder.getAbsolutePosition() - Arm.WRIST_ROT_OFFSET);
+        wristEncoder.setPosition(Angles.wrapAngle(absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET));
     }
 }

@@ -8,6 +8,8 @@ public interface WristIO {
     public class WristIOInputs {
         public double rotation;
         public double absoluteRotation;
+
+        public double absEncoder;
         public double rotationSpeed;
 
         public boolean topLimit;

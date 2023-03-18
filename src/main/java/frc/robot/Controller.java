@@ -63,6 +63,15 @@ public class Controller {
         return commandOperatorController.pov(180);
     }
 
+    public Trigger wristLevelTrigger() {
+        return commandOperatorController.b();
+    }
+    
+    public Trigger wristDownTrigger() {
+        return commandOperatorController.a();
+    }
+
+
     public double getArmSpeed() {
         return -.2
                 * Constants.OIConstants.inputCurve.apply(

@@ -39,9 +39,6 @@ public class ArmIOTalon implements ArmIO {
         armRotLeader.setNeutralMode(NeutralMode.Brake);
         armRotFollower.setNeutralMode(NeutralMode.Brake);
 
-        armRotLeader.setSelectedSensorPosition(
-                Conversions.degreesToFalcon(-90, Arm.ROTATION_GEAR_RATIO));
-
         armRotLeader.configOpenloopRamp(2);
         armRotFollower.configOpenloopRamp(2);
 
@@ -150,9 +147,11 @@ public class ArmIOTalon implements ArmIO {
 
     @Override
     public void resetToAbsolute() {
+//        armRotLeader.setSelectedSensorPosition(
+//                Conversions.degreesToFalcon(
+//                        absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET,
+//                        Arm.ROTATION_GEAR_RATIO));
         armRotLeader.setSelectedSensorPosition(
-                Conversions.degreesToFalcon(
-                        absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET,
-                        Arm.ROTATION_GEAR_RATIO));
+                Conversions.degreesToFalcon(90, Arm.ROTATION_GEAR_RATIO));
     }
 }
