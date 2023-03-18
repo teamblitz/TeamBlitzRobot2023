@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class Networker {
 
@@ -26,7 +27,10 @@ public class Networker {
      */
     private void sendPacket() {
         try {
-            byte[] buffer = ByteBuffer.allocate(Long.BYTES).putLong(RobotController.getFPGATime()).array();
+            byte[] buffer = ByteBuffer.allocate(Long.BYTES)
+                    .putLong(RobotController.getFPGATime())
+                    .order(ByteOrder.BIG_ENDIAN)
+                    .array();
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, Constants.Networking.PORT);
             socket.send(packet);
         } catch (IOException e) {
