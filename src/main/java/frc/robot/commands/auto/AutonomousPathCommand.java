@@ -13,6 +13,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.commands.arm.RotateToCommand;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class AutonomousPathCommand {
         eventMap.put("outCube", this.autoCubeOut());
         eventMap.put("inCube", this.autoCubeIn());
         // eventMap.put("marker3", new ExtendToCommand(this.armSubsystem, 0, 0));
-        // eventMap.put("marker4", new RotateToCommand(this.armSubsystem, 0, 0));
+        eventMap.put("marker4", new RotateToCommand(this.armSubsystem, 0, 0));
 
         // Create the AutoBuilder. This only needs to be created once when robot code starts, not
         // every time you want to create an auto command. A good place to put this is in
@@ -136,7 +137,18 @@ public class AutonomousPathCommand {
     // Arm/Wrist Commands
     public Command autoExtendArm(double distance) {
         return null;
+
+    
     }
+
+    // public Command RotateToCommand(ArmSubsystem armSubsystem, double goal, double threshold, double distance) {
+    //     return Commands.run(() -> this.RotateToCommand.marker4(), RotateToCommand);
+    //             .withTimeout(0.25)
+    //             return null;
+        
+
+        
+    // }
 
     public Command emergencyStop() {
         this.armSubsystem.setArmExtensionSpeed(0);
