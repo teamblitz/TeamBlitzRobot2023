@@ -45,7 +45,7 @@ public class ArmIOTalon implements ArmIO {
         armRotLeader.configOpenloopRamp(2);
         armRotFollower.configOpenloopRamp(2);
 
-        armRotLeader.setInverted(InvertType.InvertMotorOutput);
+        armRotLeader.setInverted(InvertType.None);
         armRotFollower.follow(armRotLeader);
         armRotFollower.setInverted(InvertType.OpposeMaster);
 

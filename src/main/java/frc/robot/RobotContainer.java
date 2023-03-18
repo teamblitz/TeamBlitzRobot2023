@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,6 +25,7 @@ import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModuleIO;
+import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -59,6 +61,8 @@ public class RobotContainer {
 
         configureButtonBindings();
         setDefaultCommands();
+
+        CameraServer.startAutomaticCapture();
 
         DriverStation.silenceJoystickConnectionWarning(true);
         Shuffleboard.getTab("DriveSubsystem")
@@ -116,10 +120,10 @@ public class RobotContainer {
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
-                        new SwerveModuleIO() {},
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
+                        new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalon());

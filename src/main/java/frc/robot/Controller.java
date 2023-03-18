@@ -70,7 +70,7 @@ public class Controller {
     }
 
     public double getWristSpeed() {
-        return -.4
+        return -.2
                 * Constants.OIConstants.inputCurve.apply(
                         commandOperatorController.getHID().getRightY());
     }
