@@ -11,13 +11,12 @@ public class HoldWristAtPositionCommand extends CommandBase {
 
     public HoldWristAtPositionCommand(WristSubsystem wristSubsystem) {
         this.wristSubsystem = wristSubsystem;
+        addRequirements(wristSubsystem);
     }
 
     @Override
     public void initialize() {
         initialPosition = wristSubsystem.getRotation();
-
-        addRequirements(wristSubsystem);
     }
 
     @Override

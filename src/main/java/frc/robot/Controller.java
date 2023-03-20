@@ -86,8 +86,8 @@ public class Controller {
     public double getExtensionSpeed() {
         return .3
                 * (Constants.OIConstants.inputCurve.apply(
-                        commandOperatorController.getHID().getLeftTriggerAxis()
-                                - commandOperatorController
+                        -commandOperatorController.getHID().getLeftTriggerAxis()
+                                + commandOperatorController
                                         .getHID()
                                         .getRightTriggerAxis())); // Differential arm control
     }

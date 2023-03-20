@@ -73,6 +73,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         if (pidChanged) {
             io.setPID(p, i, d);
         }
+        io.seedWristPosition();
     }
 
     public void setRotationSpeed(double speed) {
@@ -94,26 +95,28 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         // Don't do feedforward if we are clamping, so we don't push into ourselves
         io.setRotationSetpoint(
                 clamped,
-                rot == clamped
+                rot == clamped && getRotation() < -10
                         ? feedforward.calculate(
                                 Math.toRadians(relativeRot), Math.toRadians(velocity))
                         : 0);
     }
 
     public void updateRotation(double wristRot, double velocity) {
+        logger.recordOutput("wrist/wanted_rot", wristRot);
+        logger.recordOutput("wrist/wanted_velocity", velocity);
         // Arm Rot + Wrist Rot = Relative Wrist Rot
         // Wrist rot = Relative Wrist Rot - arm rot
         double relativeRot = wristRot + armSubsystem.getRotation();
         double clamped =
                 MathUtil.clamp(
                         relativeRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
+        double ff = feedforward.calculate(
+                Math.toRadians(relativeRot), Math.toRadians(velocity));
         // Don't do feedforward if we are clamping, so we don't push into ourselves
         io.setRotationSetpoint(
                 clamped,
-                relativeRot == clamped
-                        ? feedforward.calculate(
-                                Math.toRadians(relativeRot), Math.toRadians(velocity))
-                        : 0);
+                relativeRot == clamped && getRotation() < -10 && velocity > 0
+                        ? ff : 0);
     }
 
     public double getRotation() {
@@ -156,5 +159,9 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public CommandBase verticalWristCommand() {
         return rotateRelativeToCommand(Constants.Wrist.Position.VERTICAL)
                 .andThen(holdAtRelativeCommand());
+    }
+
+    public void seedWrist() {
+        io.seedWristPosition();
     }
 }

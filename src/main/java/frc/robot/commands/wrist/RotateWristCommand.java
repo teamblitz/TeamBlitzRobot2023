@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.wrist.WristSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class RotateWristCommand extends CommandBase {
     private final WristSubsystem wristSubsystem;
@@ -15,6 +16,8 @@ public class RotateWristCommand extends CommandBase {
     private TrapezoidProfile profile;
 
     private double lastTime;
+
+    private double positive;
 
     public RotateWristCommand(WristSubsystem wristSubsystem, double goal, double threshold) {
         this.wristSubsystem = wristSubsystem;
@@ -28,6 +31,7 @@ public class RotateWristCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        Logger.getInstance().recordOutput("wrist/rotate_to_active", true);
         profile =
                 new TrapezoidProfile(
                         new TrapezoidProfile.Constraints(
@@ -37,6 +41,8 @@ public class RotateWristCommand extends CommandBase {
                                 wristSubsystem.getRotation(), wristSubsystem.getRotationSpeed()),
                         new TrapezoidProfile.State(goal, 0));
         lastTime = Timer.getFPGATimestamp();
+
+        positive = wristSubsystem.getRotation() < goal ? 1 : -1;
     }
 
     @Override
@@ -44,12 +50,17 @@ public class RotateWristCommand extends CommandBase {
         double deltaTime = Timer.getFPGATimestamp() - lastTime;
         lastTime = Timer.getFPGATimestamp();
         TrapezoidProfile.State state = profile.calculate(deltaTime);
-        wristSubsystem.updateRotation(state.position, state.velocity);
+        wristSubsystem.updateRotation(state.position, state.velocity * positive);
     }
 
     @Override
     public boolean isFinished() {
         return wristSubsystem.getRotation() > goal - threshold
                 && wristSubsystem.getRotation() < goal + threshold;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        Logger.getInstance().recordOutput("wrist/rotate_to_active", false);
     }
 }

@@ -88,6 +88,7 @@ public class WristIOSpark implements WristIO {
         if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0) wrist.set(0);
     }
 
+    @Override
     public void seedWristPosition() {
         if (absWristEncoder.isConnected()) {
             wristEncoder.setPosition(getAbsolutePosition());

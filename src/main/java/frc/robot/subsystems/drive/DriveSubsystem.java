@@ -29,7 +29,7 @@ import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
-public class DriveSubsystem<setModuleStates> extends SubsystemBase implements BlitzSubsystem {
+public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] swerveModules;
     private final GyroIO gyroIO;

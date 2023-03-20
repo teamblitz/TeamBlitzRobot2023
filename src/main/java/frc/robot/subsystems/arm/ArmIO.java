@@ -9,6 +9,8 @@ public interface ArmIO {
         public double armRot;
         public double armRotationSpeed;
         public double absArmRot;
+
+        public double absArmEncoder;
         public double armExtension;
         public double armExtensionSpeed;
 

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
@@ -94,10 +95,13 @@ public class RobotContainer {
                             armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
                         },
                         armSubsystem));
+//        wristSubsystem.setDefaultCommand(
+//                Commands.waitSeconds(.5).andThen(wristSubsystem.holdAtCommand()));
         wristSubsystem.setDefaultCommand(
-                Commands.run(
-                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-                        wristSubsystem));
+        Commands.run(
+                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+                wristSubsystem)
+        );
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -146,21 +150,28 @@ public class RobotContainer {
         controller.getConeOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
         controller.getCubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
         controller.getCubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
-        controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateRelativeToCommand(0));
-        controller.wristDownTrigger().whileTrue(wristSubsystem.rotateRelativeToCommand(-90));
+        controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateToCommand(0));
+        controller.wristDownTrigger().whileTrue(wristSubsystem.rotateToCommand(-90));
 
-
-        controller.signalDropCone().whileTrue(LedSubsystem.buildDropConeCommand());
-        controller.signalDropCube().whileTrue(LedSubsystem.buildDropCubeCommand());
-        controller.signalConeSlideDrop().whileTrue(LedSubsystem.buildConeSlideDropCommand());
-        controller.signalCubeSlideDrop().whileTrue(LedSubsystem.buildCubeSlideDropCommand());
-        controller.signalConeLeftShelf().whileTrue(LedSubsystem.buildConeLeftShelfCommand());
-        controller.signalConeRightShelf().whileTrue(LedSubsystem.buildConeRightShelfCommand());
-        controller.signalCubeLeftShelf().whileTrue(LedSubsystem.buildCubeLeftShelfCommand());
-        controller.signalCubeRightShelf().whileTrue(LedSubsystem.buildCubeRightShelfCommand());
+//        controller.signalDropCone().whileTrue(LedSubsystem.buildDropConeCommand());
+//        controller.signalDropCube().whileTrue(LedSubsystem.buildDropCubeCommand());
+//        controller.signalConeSlideDrop().whileTrue(LedSubsystem.buildConeSlideDropCommand());
+//        controller.signalCubeSlideDrop().whileTrue(LedSubsystem.buildCubeSlideDropCommand());
+//        controller.signalConeLeftShelf().whileTrue(LedSubsystem.buildConeLeftShelfCommand());
+//        controller.signalConeRightShelf().whileTrue(LedSubsystem.buildConeRightShelfCommand());
+//        controller.signalCubeLeftShelf().whileTrue(LedSubsystem.buildCubeLeftShelfCommand());
+//        controller.signalCubeRightShelf().whileTrue(LedSubsystem.buildCubeRightShelfCommand());
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
+//        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02).whileTrue(
+//                Commands.run(
+//                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+//                        wristSubsystem)
+//        );
+
+        controller.getStartTrigger().onTrue(Commands.runOnce(wristSubsystem::seedWrist));
+        controller.getStartTrigger().onTrue(Commands.runOnce(armSubsystem::seedArm));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

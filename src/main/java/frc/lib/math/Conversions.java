@@ -93,7 +93,7 @@ public class Conversions {
      * @return Degrees of Rotation of Mechanism
      */
     public static double redlineToDegrees(double counts, double gearRatio) {
-        return counts * (360.0 / (gearRatio * 1024.0));
+        return counts * (360.0 / (gearRatio * 1024.0 * 2));
     }
 
     /**

@@ -59,7 +59,7 @@ public class ArmIOTalon implements ArmIO {
 
         armExtension.configFactoryDefault();
 
-        armExtension.setInverted(true); // TODO: Change if it goes the wrong way.
+        armExtension.setSensorPhase(true);
 
         absRotationEncoder = new DutyCycleEncoder(Arm.ABS_ROTATION_ENCODER);
 
@@ -84,7 +84,9 @@ public class ArmIOTalon implements ArmIO {
                 Conversions.falconToDegrees(
                                 armRotLeader.getSelectedSensorVelocity(), Arm.ROTATION_GEAR_RATIO)
                         / 10.0;
-        inputs.absArmRot = absRotationEncoder.getAbsolutePosition();
+        inputs.absArmRot = getAbsolutePosition();
+        inputs.absArmEncoder = Angles.wrapAngle(-absRotationEncoder.getAbsolutePosition() * 360);
+
 
         inputs.topRotationLimit = armTopLimitSwitch.get();
         inputs.bottomRotationLimit = armTopLimitSwitch.get();
@@ -124,7 +126,7 @@ public class ArmIOTalon implements ArmIO {
 
     private double getArmExtension() {
         return Conversions.redlineToDegrees(
-                armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO);
+                armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO) / 360 * Constants.Arm.EXTENSION_PULLEY_CIRCUMFERENCE;
     }
 
     @Override
@@ -160,6 +162,6 @@ public class ArmIOTalon implements ArmIO {
 
     private double getAbsolutePosition() {
         return Angles.wrapAngle(
-                absRotationEncoder.getAbsolutePosition() * 360 - Arm.ARM_ROT_OFFSET);
+                Angles.wrapAngle(-absRotationEncoder.getAbsolutePosition() * 360 - Arm.ARM_ROT_OFFSET));
     }
 }

@@ -24,4 +24,6 @@ public interface WristIO {
     public default void setRotationSpeed(double speed) {}
 
     public default void setPID(double p, double i, double d) {}
+
+    public default void seedWristPosition() {}
 }

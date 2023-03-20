@@ -104,7 +104,7 @@ public final class Constants {
         public static final int ABS_ROTATION_ENCODER = 6;
         public static final int ABS_WRIST_ENCODER = 7;
 
-        public static final double ARM_ROT_OFFSET = 0; // TODO: Tune this
+        public static final double ARM_ROT_OFFSET = -104 - 90;
 
         public static final double STARTING_ROTATION = 90;
         /** The center of the center of rotation for the arm */
@@ -125,7 +125,7 @@ public final class Constants {
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
         public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
 
-        public static final double WRIST_GEAR_RATIO = (20.0 / 1.0); // TODO: Get the actual value
+        public static final double WRIST_GEAR_RATIO = (27.0 / 1.0); // TODO: Get the actual value
         public static final double
                 EXTENSION_PULLEY_CIRCUMFERENCE = // This should be good enough for now
                 0.0191 * Math.PI; // diameter in meters
@@ -145,9 +145,26 @@ public final class Constants {
                 EXTENSION_VELOCITY / .5; // .5 seconds from 0 to full
 
         public static final class Position {
-            public static final double RETRACTED = 0;
 
-            public static final double VERTICAL = 90;
+            public static final class Extension {
+                public static final double RETRACTED = 0;
+
+                public static final double CONE_HIGH = 1; // TODO: TUNE
+                public static final double CONE_MID = 1; // TODO: TUNE
+                public static final double CUBE_HIGH = 1; // TODO: TUNE
+                public static final double CUBE_MID = 1; // TODO: TUNE
+
+            }
+
+            public static final class Rotation {
+                public static final double LEVEL = 0;
+                public static final double VERTICAL = 90;
+
+                public static final double CONE_HIGH = 45; // TODO: TUNE
+                public static final double CONE_MID = 45; // TODO: TUNE
+                public static final double CUBE_HIGH = 45; // TODO: TUNE
+                public static final double CUBE_MID = 45; // TODO: TUNE
+            }
         }
     }
 
@@ -161,11 +178,11 @@ public final class Constants {
         // ka = 0.027609
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.001;
-        public static final double i = 0;
-        public static final double d = 0;
+        public static final double p = 0.007;
+        public static final double i = 0.000002;
+        public static final double d = 0.000001;
 
-        public static final double OFFSET = -53.7;
+        public static final double OFFSET = -91;
 
         public static final class Position {
             public static final double STARTING = -175;
@@ -174,6 +191,8 @@ public final class Constants {
             public static final double LEVEL = 0;
 
             public static final double VERTICAL = -90;
+
+            public static final double CONE_HIGH_RELATIVE = -45;
         }
     }
 

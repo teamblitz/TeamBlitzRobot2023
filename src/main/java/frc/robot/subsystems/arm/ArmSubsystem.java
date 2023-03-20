@@ -1,8 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.BlitzSubsystem;
 import frc.lib.math.controller.TelescopingArmFeedforward;
 import frc.robot.Constants;
@@ -17,6 +16,14 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final Logger logger = Logger.getInstance();
 
+    // Because of how command scheduler requirements work, 2 commands can't use the same subsystem at the same time,
+    // While this is normally a good thing, we want the 2 mechanisms to work in parallel from 2 separate commands at times.
+    // This could be avoided by creating 2 subsystems, or more closely meshing the control of both extension and rotation,
+    // But my 12:30am brain thinks this is the best way to do it atm.
+    // This assumes that commands requiring extension requirement will only command the extension and vice versa.
+    public final Subsystem ExtensionRequirement = new Subsystem() {};
+    public final Subsystem RotationRequirement = new Subsystem() {};
+
     private final TelescopingArmFeedforward rotationFeedforward;
 
     public ArmSubsystem(ArmIO io) {
@@ -26,6 +33,9 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
                 new TelescopingArmFeedforward(
                         (x) -> 0., (x) -> 0., (x) -> 0.,
                         (x) -> 0.); // TODO: Make these actual gains
+
+        // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and Rotation Requirement subsystems
+        Commands.run(() -> {}).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
     }
 
     @Override
@@ -86,10 +96,18 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public CommandBase retractArmCommand() {
-        return extendToCommand(Constants.Arm.Position.RETRACTED);
+        return extendToCommand(Constants.Arm.Position.Extension.RETRACTED);
     }
 
     public CommandBase homeArmCommand() {
-        return retractArmCommand().andThen(rotateToCommand(Constants.Arm.Position.VERTICAL));
+        return retractArmCommand().andThen(rotateToCommand(Constants.Arm.Position.Rotation.VERTICAL));
+    }
+
+    public CommandBase levelArmCommand() {
+        return rotateToCommand(Constants.Arm.Position.Rotation.LEVEL);
+    }
+
+    public void seedArm() {
+        io.seedArmPosition();
     }
 }

@@ -17,7 +17,7 @@ public class HoldArmAtPositionCommand extends CommandBase {
     public void initialize() {
         initialPosition = armSubsystem.getRotation();
 
-        addRequirements(armSubsystem);
+        addRequirements(armSubsystem.RotationRequirement);
     }
 
     @Override
