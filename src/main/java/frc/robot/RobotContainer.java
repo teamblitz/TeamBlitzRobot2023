@@ -21,6 +21,7 @@ import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
+import frc.robot.subsystems.Leds.LedSubsystem;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -147,6 +148,16 @@ public class RobotContainer {
         controller.getCubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
         controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateRelativeToCommand(0));
         controller.wristDownTrigger().whileTrue(wristSubsystem.rotateRelativeToCommand(-90));
+
+
+        controller.signalDropCone().whileTrue(LedSubsystem.buildDropConeCommand());
+        controller.signalDropCube().whileTrue(LedSubsystem.buildDropCubeCommand());
+        controller.signalConeSlideDrop().whileTrue(LedSubsystem.buildConeSlideDropCommand());
+        controller.signalCubeSlideDrop().whileTrue(LedSubsystem.buildCubeSlideDropCommand());
+        controller.signalConeLeftShelf().whileTrue(LedSubsystem.buildConeLeftShelfCommand());
+        controller.signalConeRightShelf().whileTrue(LedSubsystem.buildConeRightShelfCommand());
+        controller.signalCubeLeftShelf().whileTrue(LedSubsystem.buildCubeLeftShelfCommand());
+        controller.signalCubeRightShelf().whileTrue(LedSubsystem.buildCubeRightShelfCommand());
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));

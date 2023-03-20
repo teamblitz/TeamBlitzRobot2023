@@ -2,6 +2,7 @@ package frc.robot.subsystems.Leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,6 +10,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LedSubsystem extends SubsystemBase {
     private final AddressableLED led;
     private final AddressableLEDBuffer ledBuffer;
+
+
+    led = new AddressableLED(0);
+
+    ledBuffer = new AddressableLEDBuffer(2); 
+
 
     public LedSubsystem() {
 
@@ -126,6 +133,25 @@ public class LedSubsystem extends SubsystemBase {
                     led.setData(ledBuffer);
                 });
     }
+
+    public static Command buildDropConeCommand() {}
+
+    public static Command buildDropCubeCommand() {}
+
+    public static Command buildConeSlideDropCommand() {}
+    
+    public static Command buildCubeSlideDropCommand() {}
+
+    public static Command buildConeLeftShelfCommand() {}
+
+    public static Command buildConeRightShelfCommand() {}
+
+    public static Command buildCubeLeftShelfCommand() {}
+
+    public static Command buildCubeRightShelfCommand() {}
+
+
+
 
     public CommandBase coneLeftShielfDrop() {
         return Commands.repeatingSequence(

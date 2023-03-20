@@ -95,4 +95,38 @@ public class Controller {
     public Trigger getStartTrigger() {
         return commandOperatorController.start();
     }
+
+    public Trigger signalDropCone() {
+        return unbound;
+    }
+
+    public Trigger signalDropCube() {
+        return unbound;
+    }
+
+    public Trigger signalConeSlideDrop() {
+        return unbound;
+    }
+
+    public Trigger signalCubeSlideDrop() {
+        return unbound;
+    }
+
+    public Trigger signalConeLeftShelf() {
+        return unbound;
+    }
+
+    public Trigger signalConeRightShelf() {
+        return unbound;
+    }
+
+    public Trigger signalCubeLeftShelf() {
+        return unbound;
+    }
+
+    public Trigger signalCubeRightShelf() {
+        return unbound;
+    }
+
+    
 }
