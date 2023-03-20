@@ -12,9 +12,7 @@ public class LedSubsystem extends SubsystemBase {
     private final AddressableLEDBuffer ledBuffer;
 
 
-    led = new AddressableLED(0);
-
-    ledBuffer = new AddressableLEDBuffer(2); 
+    
 
 
     public LedSubsystem() {
@@ -133,23 +131,6 @@ public class LedSubsystem extends SubsystemBase {
                     led.setData(ledBuffer);
                 });
     }
-
-    public static Command buildDropConeCommand() {}
-
-    public static Command buildDropCubeCommand() {}
-
-    public static Command buildConeSlideDropCommand() {}
-    
-    public static Command buildCubeSlideDropCommand() {}
-
-    public static Command buildConeLeftShelfCommand() {}
-
-    public static Command buildConeRightShelfCommand() {}
-
-    public static Command buildCubeLeftShelfCommand() {}
-
-    public static Command buildCubeRightShelfCommand() {}
-
 
 
 

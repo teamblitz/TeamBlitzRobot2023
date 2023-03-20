@@ -108,11 +108,11 @@ public class RobotContainer {
 
     private double calculateDriveMultiplier() {
         if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
-            return driveMultiplierLimiter.calculate(.3);
-        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
             return driveMultiplierLimiter.calculate(1);
-        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
-            return driveMultiplierLimiter.calculate(.80);
+        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
+            return driveMultiplierLimiter.calculate(.3);
+        // } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
+        //     return driveMultiplierLimiter.calculate(.80);
         } else {
             return driveMultiplierLimiter.calculate(.60);
         }

@@ -66,8 +66,8 @@ public final class Constants {
         public static final Type type = Type.Simple;
 
         public static final class Simple {
-            public static final double IN_SPEED = 0.2;
-            public static final double OUT_SPEED = -0.2;
+            public static final double IN_SPEED = 0.5;
+            public static final double OUT_SPEED = -0.5;
             // From robot POV
             public static final int LEFT_MOTOR_ID = 14;
             public static final int RIGHT_MOTOR_ID = 15;
@@ -178,9 +178,9 @@ public final class Constants {
         // ka = 0.027609
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.007;
-        public static final double i = 0.000002;
-        public static final double d = 0.000001;
+        public static final double p = 0.005;
+        public static final double i = 0;
+        public static final double d = 0;
 
         public static final double OFFSET = -91;
 
