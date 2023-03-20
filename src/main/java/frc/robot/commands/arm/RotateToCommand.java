@@ -29,8 +29,8 @@ public class RotateToCommand extends CommandBase {
         profile =
                 new TrapezoidProfile(
                         new TrapezoidProfile.Constraints(
-                                Constants.Arm.VELOCITY_METERS_PER_SECOND,
-                                Constants.Arm.ACCELERATION_METERS_PER_SECOND_SQUARED),
+                                Constants.Arm.ROTATION_VELOCITY,
+                                Constants.Arm.ROTATION_ACCELERATION),
                         new TrapezoidProfile.State(
                                 armSubsystem.getRotation(), armSubsystem.getRotationSpeed()),
                         new TrapezoidProfile.State(goal, 0));
@@ -47,7 +47,7 @@ public class RotateToCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return armSubsystem.getState().rotation > goal - threshold
-                && armSubsystem.getState().rotation < goal + threshold;
+        return armSubsystem.getRotation() > goal - threshold
+                && armSubsystem.getRotation() < goal + threshold;
     }
 }

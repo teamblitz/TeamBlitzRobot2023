@@ -7,9 +7,10 @@ public interface ArmIO {
     @AutoLog
     public class ArmIOInputs {
         public double armRot;
-        public double armSpeed;
+        public double armRotationSpeed;
         public double absArmRot;
         public double armExtension;
+        public double armExtensionSpeed;
 
         public boolean topRotationLimit;
         public boolean bottomRotationLimit;
@@ -22,13 +23,13 @@ public interface ArmIO {
 
     public default void setRotationSetpoint(double degrees, double arbFFPercent) {}
 
-    public default void setArmExtension(double meters) {}
+    public default void setExtensionSetpoint(double meters) {}
 
-    public default void setArmRotationSpeed(double speed) {}
+    public default void setArmRotationSpeed(double percent) {}
 
-    public default void setArmExtensionSpeed(double speed) {}
+    public default void setArmExtensionSpeed(double percent) {}
 
-    public default void resetToAbsolute() {}
+    public default void seedArmPosition() {}
 
     public default void checkLimitSwitches() {}
 }

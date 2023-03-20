@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Angles;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
+import org.littletonrobotics.junction.Logger;
 
 public class WristIOSpark implements WristIO {
 
@@ -19,6 +20,8 @@ public class WristIOSpark implements WristIO {
 
     private final DigitalInput wristTopLimitSwitch;
     private final DigitalInput wristBottomLimitSwitch;
+
+    private final Logger logger = Logger.getInstance();
 
     public WristIOSpark() {
         wrist = new CANSparkMax(Constants.Arm.WRIST_ROT_LEADER, MotorType.kBrushless);
@@ -39,7 +42,7 @@ public class WristIOSpark implements WristIO {
                         // because 1 rotation of the motor is < 1 rotation of
                         // the wrist
                         * 360);
-        
+
         wrist.getPIDController().setP(Constants.Wrist.p);
         wrist.getPIDController().setI(Constants.Wrist.i);
         wrist.getPIDController().setD(Constants.Wrist.d);
@@ -58,7 +61,7 @@ public class WristIOSpark implements WristIO {
     public void updateInputs(WristIOInputs inputs) {
         inputs.rotation = wristEncoder.getPosition();
         inputs.rotationSpeed = wristEncoder.getVelocity();
-        inputs.absoluteRotation = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET);
+        inputs.absoluteRotation = Angles.wrapAngle(getAbsolutePosition());
         inputs.absEncoder = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360);
     }
 
@@ -86,7 +89,14 @@ public class WristIOSpark implements WristIO {
     }
 
     public void seedWristPosition() {
-        wristEncoder.setPosition(Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET));
+        if (absWristEncoder.isConnected()) {
+            wristEncoder.setPosition(getAbsolutePosition());
+        } else {
+            System.out.printf(
+                    "Wrist absolute encoder disconnected, assuming position %s%n",
+                    Constants.Wrist.Position.STARTING);
+            wristEncoder.setPosition(Constants.Wrist.Position.STARTING);
+        }
     }
 
     @Override
@@ -94,5 +104,10 @@ public class WristIOSpark implements WristIO {
         wrist.getPIDController().setP(p);
         wrist.getPIDController().setI(i);
         wrist.getPIDController().setD(d);
+    }
+
+    private double getAbsolutePosition() {
+        return Angles.wrapAngle(
+                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET);
     }
 }

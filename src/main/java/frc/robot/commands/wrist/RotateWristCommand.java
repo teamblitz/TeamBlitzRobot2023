@@ -1,14 +1,14 @@
-package frc.robot.commands.arm;
+package frc.robot.commands.wrist;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.wrist.WristSubsystem;
 
-public class ExtendToCommand extends CommandBase {
+public class RotateWristCommand extends CommandBase {
+    private final WristSubsystem wristSubsystem;
 
-    private final ArmSubsystem armSubsystem;
     private final double goal;
     private final double threshold;
 
@@ -16,12 +16,14 @@ public class ExtendToCommand extends CommandBase {
 
     private double lastTime;
 
-    public ExtendToCommand(ArmSubsystem armSubsystem, double goal, double threshold) {
-        this.armSubsystem = armSubsystem;
+    public RotateWristCommand(WristSubsystem wristSubsystem, double goal, double threshold) {
+        this.wristSubsystem = wristSubsystem;
+
         this.goal = goal;
         this.threshold = threshold;
-
-        addRequirements(armSubsystem);
+        // each subsystem used by the command must be passed into the
+        // addRequirements() method (which takes a vararg of Subsystem)
+        addRequirements(this.wristSubsystem);
     }
 
     @Override
@@ -29,10 +31,10 @@ public class ExtendToCommand extends CommandBase {
         profile =
                 new TrapezoidProfile(
                         new TrapezoidProfile.Constraints(
-                                Constants.Arm.EXTENSION_VELOCITY,
-                                Constants.Arm.EXTENSION_ACCELERATION),
+                                Constants.Arm.ROTATION_VELOCITY,
+                                Constants.Arm.ROTATION_ACCELERATION),
                         new TrapezoidProfile.State(
-                                armSubsystem.getExtension(), armSubsystem.getExtensionSpeed()),
+                                wristSubsystem.getRotation(), wristSubsystem.getRotationSpeed()),
                         new TrapezoidProfile.State(goal, 0));
         lastTime = Timer.getFPGATimestamp();
     }
@@ -42,18 +44,12 @@ public class ExtendToCommand extends CommandBase {
         double deltaTime = Timer.getFPGATimestamp() - lastTime;
         lastTime = Timer.getFPGATimestamp();
         TrapezoidProfile.State state = profile.calculate(deltaTime);
-        armSubsystem.updateExtension(state.position, state.velocity);
+        wristSubsystem.updateRotation(state.position, state.velocity);
     }
 
     @Override
     public boolean isFinished() {
-        return armSubsystem.getExtension() > goal - threshold
-                && armSubsystem.getExtension() < goal + threshold;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        armSubsystem.setArmExtensionSpeed(
-                0); // The arm can hold itself extension wise, so no need to waste motor power.
+        return wristSubsystem.getRotation() > goal - threshold
+                && wristSubsystem.getRotation() < goal + threshold;
     }
 }

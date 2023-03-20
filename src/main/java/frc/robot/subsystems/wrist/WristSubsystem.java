@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
-import frc.robot.commands.wrist.RotateWristToCommand;
+import frc.robot.commands.wrist.HoldWristAtPositionCommand;
+import frc.robot.commands.wrist.HoldWristAtRelativePositionCommand;
+import frc.robot.commands.wrist.RotateWristCommand;
+import frc.robot.commands.wrist.RotateWristRelativeCommand;
 import frc.robot.subsystems.arm.ArmSubsystem;
-import frc.robot.subsystems.drive.SwerveModule;
 import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.Constants.Swerve.*;
 
 public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final WristIO io;
@@ -30,20 +30,17 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final Logger logger = Logger.getInstance();
 
     private final ShuffleboardTab tuningTab = Shuffleboard.getTab("DriveTuning");
-    private final ShuffleboardLayout wristPidTuning =
-            tuningTab.getLayout("wristPid", BuiltInLayouts.kList);
 
-    private final GenericEntry pEntry =
-            wristPidTuning.add("p", ANGLE_KP).getEntry("double");
-    private final GenericEntry iEntry =
-            wristPidTuning.add("i", ANGLE_KI).getEntry("double");
-    private final GenericEntry dEntry =
-            wristPidTuning.add("d", ANGLE_KD).getEntry("double");
-    
     double p = Constants.Wrist.p;
     double i = Constants.Wrist.i;
     double d = Constants.Wrist.d;
 
+    private final ShuffleboardLayout wristPidTuning =
+            tuningTab.getLayout("wristPid", BuiltInLayouts.kList);
+
+    private final GenericEntry pEntry = wristPidTuning.add("p", p).getEntry("double");
+    private final GenericEntry iEntry = wristPidTuning.add("i", i).getEntry("double");
+    private final GenericEntry dEntry = wristPidTuning.add("d", d).getEntry("double");
 
     public WristSubsystem(WristIO io, ArmSubsystem armSubsystem) {
         this.io = io;
@@ -57,7 +54,6 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void periodic() {
         io.updateInputs(inputs);
         logger.processInputs("wrist", inputs);
-
 
         boolean pidChanged = false;
 
@@ -73,7 +69,6 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
             pidChanged = true;
             d = dEntry.getDouble(d);
         }
-        
 
         if (pidChanged) {
             io.setPID(p, i, d);
@@ -105,6 +100,22 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
                         : 0);
     }
 
+    public void updateRotation(double wristRot, double velocity) {
+        // Arm Rot + Wrist Rot = Relative Wrist Rot
+        // Wrist rot = Relative Wrist Rot - arm rot
+        double relativeRot = wristRot + armSubsystem.getRotation();
+        double clamped =
+                MathUtil.clamp(
+                        relativeRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
+        // Don't do feedforward if we are clamping, so we don't push into ourselves
+        io.setRotationSetpoint(
+                clamped,
+                relativeRot == clamped
+                        ? feedforward.calculate(
+                                Math.toRadians(relativeRot), Math.toRadians(velocity))
+                        : 0);
+    }
+
     public double getRotation() {
         return inputs.rotation;
     }
@@ -117,7 +128,33 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         return inputs.rotationSpeed;
     }
 
+    public CommandBase rotateRelativeToCommand(double rotation) {
+        return new RotateWristRelativeCommand(this, rotation, 5);
+    }
+
     public CommandBase rotateToCommand(double rotation) {
-        return new RotateWristToCommand(this, rotation, 5);
+        return new RotateWristCommand(this, rotation, 5);
+    }
+
+    public CommandBase holdAtCommand() {
+        return new HoldWristAtPositionCommand(this);
+    }
+
+    public CommandBase holdAtRelativeCommand() {
+        return new HoldWristAtRelativePositionCommand(this);
+    }
+
+    public CommandBase tuckInWristCommand() {
+        return rotateToCommand(Constants.Wrist.Position.TUCKED_IN).andThen(holdAtCommand());
+    }
+
+    public CommandBase levelWristCommand() {
+        return rotateRelativeToCommand(Constants.Wrist.Position.LEVEL)
+                .andThen(holdAtRelativeCommand());
+    }
+
+    public CommandBase verticalWristCommand() {
+        return rotateRelativeToCommand(Constants.Wrist.Position.VERTICAL)
+                .andThen(holdAtRelativeCommand());
     }
 }

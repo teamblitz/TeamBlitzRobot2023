@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.wrist.WristSubsystem;
 
-public class RotateWristToCommand extends CommandBase {
+public class RotateWristRelativeCommand extends CommandBase {
     private final WristSubsystem wristSubsystem;
 
     private final double goal;
@@ -16,7 +16,8 @@ public class RotateWristToCommand extends CommandBase {
 
     private double lastTime;
 
-    public RotateWristToCommand(WristSubsystem wristSubsystem, double goal, double threshold) {
+    public RotateWristRelativeCommand(
+            WristSubsystem wristSubsystem, double goal, double threshold) {
         this.wristSubsystem = wristSubsystem;
 
         this.goal = goal;
@@ -31,8 +32,8 @@ public class RotateWristToCommand extends CommandBase {
         profile =
                 new TrapezoidProfile(
                         new TrapezoidProfile.Constraints(
-                                Constants.Arm.VELOCITY_METERS_PER_SECOND,
-                                Constants.Arm.ACCELERATION_METERS_PER_SECOND_SQUARED),
+                                Constants.Arm.ROTATION_VELOCITY,
+                                Constants.Arm.ROTATION_ACCELERATION),
                         new TrapezoidProfile.State(
                                 wristSubsystem.getRelativeRotation(),
                                 wristSubsystem.getRotationSpeed()),

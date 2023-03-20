@@ -1,8 +1,13 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import frc.lib.math.controller.TelescopingArmFeedforward;
+import frc.robot.Constants;
+import frc.robot.commands.arm.ExtendToCommand;
+import frc.robot.commands.arm.RotateToCommand;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
@@ -32,20 +37,30 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void updateRotation(double degrees, double velocity) {
         io.setRotationSetpoint(
                 degrees,
-                rotationFeedforward.calculate(
-                        inputs.armExtension, Math.toRadians(degrees), Math.toRadians(velocity)));
+                0); // Don't do feed forward as we have no way to model this with the spring-loaded
+        // arm
     }
 
-    public ArmState getState() {
-        return new ArmState(inputs.armRot, inputs.armExtension);
+    // Currently velocity is unused as we do not do feed forward on the telescoping aspect of the
+    // arm
+    public void updateExtension(double meters, double velocity) {
+        io.setExtensionSetpoint(meters);
     }
 
     public double getRotation() {
         return inputs.armRot;
     }
 
+    public double getExtension() {
+        return inputs.armExtension;
+    }
+
     public double getRotationSpeed() {
-        return inputs.armSpeed;
+        return inputs.armRotationSpeed;
+    }
+
+    public double getExtensionSpeed() {
+        return inputs.armExtensionSpeed;
     }
 
     public void setArmRotationSpeed(double percent) {
@@ -56,40 +71,25 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setArmExtensionSpeed(percent);
     }
 
-    public boolean validRot(double degrees) {
-        return true;
+    public CommandBase rotateToCommand(double degrees) {
+        return new RotateToCommand(
+                this,
+                MathUtil.clamp(degrees, Constants.Arm.MIN_ROT, Constants.Arm.MAX_ROT),
+                Constants.Arm.ROT_THRESHOLD);
     }
 
-    // TODO: Move to own class or delete
-    /** A data class representing a possible state for the arm. */
-    public static class ArmState {
-        /** Arm rotation in degrees where horizontal is 0, increasing as the arm is raised. */
-        public final double rotation;
-        /** Arm extension in meters where 0 is not extended */
-        public final double extension;
+    public CommandBase extendToCommand(double meters) {
+        return new ExtendToCommand(
+                this,
+                MathUtil.clamp(meters, Constants.Arm.MIN_EXTENSION, Constants.Arm.MAX_EXTENSION),
+                Constants.Arm.EXTENSION_THRESHOLD);
+    }
 
-        public ArmState(double rotation, double extension) {
-            this.rotation = rotation;
-            this.extension = extension;
-        }
+    public CommandBase retractArmCommand() {
+        return extendToCommand(Constants.Arm.Position.RETRACTED);
+    }
 
-        /**
-         * Checks if the state is within the arms possible range of motion.
-         *
-         * @return True if the arm state is within its possible range of motion.
-         */
-        public boolean isValid() {
-            return true;
-        }
-
-        /**
-         * Checks if the arm is outside the legal height and extension range of the robot. Does not
-         * check if the state is valid, just that it is legal.
-         *
-         * @return True if the arm state is within the extension range of the robot.
-         */
-        public boolean isSafe() {
-            return true;
-        }
+    public CommandBase homeArmCommand() {
+        return retractArmCommand().andThen(rotateToCommand(Constants.Arm.Position.VERTICAL));
     }
 }

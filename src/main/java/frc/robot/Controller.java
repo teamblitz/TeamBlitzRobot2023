@@ -66,11 +66,10 @@ public class Controller {
     public Trigger wristLevelTrigger() {
         return commandOperatorController.b();
     }
-    
+
     public Trigger wristDownTrigger() {
         return commandOperatorController.a();
     }
-
 
     public double getArmSpeed() {
         return -.2

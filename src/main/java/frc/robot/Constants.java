@@ -95,7 +95,7 @@ public final class Constants {
         public static final int TOP_ROTATION_LIMIT_SWITCH = 0;
         public static final int BOTTOM_ROTATION_LIMIT_SWITCH = 1;
 
-        public static final int TOP_EXTENSTION_LIMIT_SWITCH = 4;
+        public static final int TOP_EXTENSION_LIMIT_SWITCH = 4;
         public static final int BOTTOM_EXTENSION_LIMIT_SWITCH = 5;
 
         public static final int TOP_WRIST_LIMIT_SWITCH = 2;
@@ -106,8 +106,7 @@ public final class Constants {
 
         public static final double ARM_ROT_OFFSET = 0; // TODO: Tune this
 
-        public static final double WRIST_ROT_OFFSET = 0; // TODO: Tune this
-
+        public static final double STARTING_ROTATION = 90;
         /** The center of the center of rotation for the arm */
         public static final Translation3d ARM_BASE =
                 new Translation3d(0, 0, 0); // TODO: Tune to robot
@@ -116,12 +115,11 @@ public final class Constants {
         public static final double MAX_ROT = 90; // TODO: Tune to robot
 
         public static final double ROT_THRESHOLD = 3;
-        /** End of arm distance from the center of rotation when the arm is not extended */
-        public static final int MIN_EXTENSION = 1;
-        /**
-         * Distance of the end of the arm from the center of rotation when the arm is fully
-         * extended.
-         */
+
+        public static final double EXTENSION_THRESHOLD =
+                Units.inchesToMeters(.5); // Tight, but achievable.
+        public static final int MIN_EXTENSION = 0;
+
         public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
 
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
@@ -136,8 +134,21 @@ public final class Constants {
         public static final double MAX_LEGAL_HEIGHT = Units.feetToMeters(6.5);
         public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(48);
 
-        public static final double ACCELERATION_METERS_PER_SECOND_SQUARED = 10;
-        public static final double VELOCITY_METERS_PER_SECOND = 20;
+        // Units in degrees per second and degrees per second squared
+        public static final double ROTATION_VELOCITY = 20;
+        public static final double ROTATION_ACCELERATION =
+                ROTATION_VELOCITY / .5; // .5 seconds to full
+
+        // Units in meters per second and meters per second squared
+        public static final double EXTENSION_VELOCITY = 2;
+        public static final double EXTENSION_ACCELERATION =
+                EXTENSION_VELOCITY / .5; // .5 seconds from 0 to full
+
+        public static final class Position {
+            public static final double RETRACTED = 0;
+
+            public static final double VERTICAL = 90;
+        }
     }
 
     public static final class Wrist {
@@ -154,8 +165,16 @@ public final class Constants {
         public static final double i = 0;
         public static final double d = 0;
 
-
         public static final double OFFSET = -53.7;
+
+        public static final class Position {
+            public static final double STARTING = -175;
+            public static final double TUCKED_IN = -170;
+
+            public static final double LEVEL = 0;
+
+            public static final double VERTICAL = -90;
+        }
     }
 
     public static final class Swerve {

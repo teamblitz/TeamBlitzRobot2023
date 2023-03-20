@@ -21,11 +21,9 @@ import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
-import frc.robot.commands.wrist.RotateWristToCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
 import frc.robot.subsystems.intake.IntakeIOSimple;
@@ -147,14 +145,11 @@ public class RobotContainer {
         controller.getConeOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
         controller.getCubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
         controller.getCubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
-        controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateToCommand(0));
-        controller.wristDownTrigger().whileTrue(wristSubsystem.rotateToCommand(-90));
-
+        controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateRelativeToCommand(0));
+        controller.wristDownTrigger().whileTrue(wristSubsystem.rotateRelativeToCommand(-90));
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
-
-
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

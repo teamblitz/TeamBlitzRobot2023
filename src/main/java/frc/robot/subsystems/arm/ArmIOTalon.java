@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc.lib.math.Angles;
 import frc.lib.math.Conversions;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
@@ -48,12 +49,10 @@ public class ArmIOTalon implements ArmIO {
 
         // We divide by 10 because the function expects it to be per 100ms (dumb ik)
         armRotLeader.configMotionAcceleration(
-                Conversions.degreesToFalcon(
-                                Arm.ACCELERATION_METERS_PER_SECOND_SQUARED, Arm.ROTATION_GEAR_RATIO)
+                Conversions.degreesToFalcon(Arm.ROTATION_ACCELERATION, Arm.ROTATION_GEAR_RATIO)
                         / 10);
         armRotLeader.configMotionCruiseVelocity(
-                Conversions.degreesToFalcon(Arm.VELOCITY_METERS_PER_SECOND, Arm.ROTATION_GEAR_RATIO)
-                        / 10);
+                Conversions.degreesToFalcon(Arm.ROTATION_VELOCITY, Arm.ROTATION_GEAR_RATIO) / 10);
 
         /* Arm Extension */
         armExtension = new WPI_TalonSRX(Constants.Arm.ARM_EXTENSION_LEADER);
@@ -68,10 +67,10 @@ public class ArmIOTalon implements ArmIO {
         armTopLimitSwitch = new DigitalInput(Arm.TOP_ROTATION_LIMIT_SWITCH);
         armBottomLimitSwitch = new DigitalInput(Arm.BOTTOM_ROTATION_LIMIT_SWITCH);
 
-        extensionTopLimitSwitch = new DigitalInput(Arm.TOP_EXTENSTION_LIMIT_SWITCH);
+        extensionTopLimitSwitch = new DigitalInput(Arm.TOP_EXTENSION_LIMIT_SWITCH);
         extensionBottomLimitSwitch = new DigitalInput(Arm.BOTTOM_EXTENSION_LIMIT_SWITCH);
 
-        resetToAbsolute();
+        seedArmPosition();
     }
 
     @Override
@@ -81,7 +80,7 @@ public class ArmIOTalon implements ArmIO {
         inputs.armRot =
                 Conversions.falconToDegrees(
                         armRotLeader.getSelectedSensorPosition(), Arm.ROTATION_GEAR_RATIO);
-        inputs.armSpeed =
+        inputs.armRotationSpeed =
                 Conversions.falconToDegrees(
                                 armRotLeader.getSelectedSensorVelocity(), Arm.ROTATION_GEAR_RATIO)
                         / 10.0;
@@ -104,7 +103,7 @@ public class ArmIOTalon implements ArmIO {
     }
 
     @Override
-    public void setArmExtension(double meters) {
+    public void setExtensionSetpoint(double meters) {
 
         armExtension.set(
                 ControlMode.Position,
@@ -114,13 +113,13 @@ public class ArmIOTalon implements ArmIO {
     }
 
     @Override
-    public void setArmRotationSpeed(double speed) {
-        armRotLeader.set(ControlMode.PercentOutput, speed);
+    public void setArmRotationSpeed(double percent) {
+        armRotLeader.set(ControlMode.PercentOutput, percent);
     }
 
     @Override
-    public void setArmExtensionSpeed(double speed) {
-        armExtension.set(ControlMode.PercentOutput, speed);
+    public void setArmExtensionSpeed(double percent) {
+        armExtension.set(ControlMode.PercentOutput, percent);
     }
 
     private double getArmExtension() {
@@ -146,12 +145,21 @@ public class ArmIOTalon implements ArmIO {
     }
 
     @Override
-    public void resetToAbsolute() {
-//        armRotLeader.setSelectedSensorPosition(
-//                Conversions.degreesToFalcon(
-//                        absRotationEncoder.getAbsolutePosition() - Arm.ARM_ROT_OFFSET,
-//                        Arm.ROTATION_GEAR_RATIO));
-        armRotLeader.setSelectedSensorPosition(
-                Conversions.degreesToFalcon(90, Arm.ROTATION_GEAR_RATIO));
+    public void seedArmPosition() {
+        if (absRotationEncoder.isConnected()) {
+            armRotLeader.setSelectedSensorPosition(
+                    Conversions.degreesToFalcon(getAbsolutePosition(), Arm.ROTATION_GEAR_RATIO));
+        } else {
+            System.out.printf(
+                    "Arm absolute rotation encoder disconnected, assuming position %s%n",
+                    Arm.STARTING_ROTATION);
+            armRotLeader.setSelectedSensorPosition(
+                    Conversions.degreesToFalcon(Arm.STARTING_ROTATION, Arm.ROTATION_GEAR_RATIO));
+        }
+    }
+
+    private double getAbsolutePosition() {
+        return Angles.wrapAngle(
+                absRotationEncoder.getAbsolutePosition() * 360 - Arm.ARM_ROT_OFFSET);
     }
 }
