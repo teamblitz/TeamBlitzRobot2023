@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -73,8 +74,8 @@ public class Controller {
 
     public double getArmSpeed() {
         return -.2
-                * Constants.OIConstants.inputCurve.apply(
-                        commandOperatorController.getHID().getLeftY());
+                * MathUtil.applyDeadband(Constants.OIConstants.inputCurve.apply(
+                        commandOperatorController.getHID().getLeftY()), .1);
     }
 
     public double getWristSpeed() {
@@ -128,5 +129,11 @@ public class Controller {
         return unbound;
     }
 
-    
+    public Trigger armTo20Trigger() {
+        return commandOperatorController.x();
+    }
+
+    public Trigger armTo40Trigger() {
+        return commandOperatorController.y();
+    }
 }

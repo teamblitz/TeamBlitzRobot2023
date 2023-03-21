@@ -178,11 +178,12 @@ public final class Constants {
         // ka = 0.027609
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.005;
+        public static final double p = 0.004;
         public static final double i = 0;
         public static final double d = 0;
 
-        public static final double OFFSET = -91;
+        public static final double ENCODER_OFFSET = -91;
+        public static final double CG_OFFSET = 60;
 
         public static final class Position {
             public static final double STARTING = -175;
@@ -269,7 +270,7 @@ public final class Constants {
         public static final double ANGLE_KF = 0.0; // For now, should remain zero
 
         /* Drive Motor PID Values */
-        public static final double DRIVE_KP = 0.05; // TODO: This must be tuned to specific robot
+        public static final double DRIVE_KP = 0.045; // TODO: This must be tuned to specific robot
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
         public static final double DRIVE_KF = 0.0; // Same here.

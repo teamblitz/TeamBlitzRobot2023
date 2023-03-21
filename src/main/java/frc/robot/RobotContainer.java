@@ -172,6 +172,9 @@ public class RobotContainer {
 
         controller.getStartTrigger().onTrue(Commands.runOnce(wristSubsystem::seedWrist));
         controller.getStartTrigger().onTrue(Commands.runOnce(armSubsystem::seedArm));
+
+        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(20));
+        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(40));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

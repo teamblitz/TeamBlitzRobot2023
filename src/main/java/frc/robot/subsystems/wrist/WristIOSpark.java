@@ -109,6 +109,6 @@ public class WristIOSpark implements WristIO {
 
     private double getAbsolutePosition() {
         return Angles.wrapAngle(
-                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.OFFSET);
+                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.ENCODER_OFFSET);
     }
 }

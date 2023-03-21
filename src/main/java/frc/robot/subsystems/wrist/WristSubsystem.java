@@ -97,10 +97,9 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
                 clamped,
                 rot == clamped && getRotation() < -10
                         ? feedforward.calculate(
-                                Math.toRadians(relativeRot), Math.toRadians(velocity))
+                                Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity))
                         : 0);
     }
-
     public void updateRotation(double wristRot, double velocity) {
         logger.recordOutput("wrist/wanted_rot", wristRot);
         logger.recordOutput("wrist/wanted_velocity", velocity);
@@ -111,7 +110,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
                 MathUtil.clamp(
                         relativeRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
         double ff = feedforward.calculate(
-                Math.toRadians(relativeRot), Math.toRadians(velocity));
+                Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity));
         // Don't do feedforward if we are clamping, so we don't push into ourselves
         io.setRotationSetpoint(
                 clamped,
