@@ -54,9 +54,7 @@ public class RobotContainer {
     private IntakeSubsystem intakeSubsystem;
     private LedSubsystem ledSubsystem;
 
-    private CommandBuilder commandBuilder =
-            new CommandBuilder(
-                    armSubsystem, driveSubsystem, intakeSubsystem, ledSubsystem, wristSubsystem);
+    private CommandBuilder commandBuilder;
 
     /* ***** --- Controllers --- ***** */
 
@@ -73,6 +71,14 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureSubsystems();
+
+        commandBuilder =
+                new CommandBuilder(
+                        armSubsystem,
+                        driveSubsystem,
+                        intakeSubsystem,
+                        ledSubsystem,
+                        wristSubsystem);
 
         configureButtonBindings();
         setDefaultCommands();
@@ -190,6 +196,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() { // Autonomous code goes here
         String autoCommand = chooser.getSelected();
+        // System.out.println(autoCommand);
         AutonomousPathCommand autonomousPathCommand =
                 new AutonomousPathCommand(
                         driveSubsystem, armSubsystem, intakeSubsystem, commandBuilder);
@@ -207,7 +214,5 @@ public class RobotContainer {
             default:
                 return null;
         }
-        // private static final String[] autonomousCommands = {"Left", "Middle", "Right",
-        // "Nothing"};
     }
 }

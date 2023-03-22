@@ -107,8 +107,9 @@ public class AutonomousPathCommand {
             case "Test":
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
                 eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-                eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+                eventMap.put("marker2", new PrintCommand("Passed markser 2"));
                 eventMap.put("autoCubeMid", this.autoMidCube());
+                System.out.println("Selected SquarePath");
                 break;
             default:
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
