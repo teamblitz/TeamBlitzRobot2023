@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.BlitzSubsystem;
@@ -63,8 +62,12 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         // Height Protection
         double percentExtended = getExtension() / Constants.Arm.MAX_EXTENSION;
-        double armLength = (Constants.Arm.OUT_LENGTH - Constants.Arm.IN_LENGTH) * percentExtended + Constants.Arm.IN_LENGTH;
-        double height = (Math.sin(Math.toRadians(getRotation())) * armLength) + Constants.Arm.ARM_BASE_HEIGHT;
+        double armLength =
+                (Constants.Arm.OUT_LENGTH - Constants.Arm.IN_LENGTH) * percentExtended
+                        + Constants.Arm.IN_LENGTH;
+        double height =
+                (Math.sin(Math.toRadians(getRotation())) * armLength)
+                        + Constants.Arm.ARM_BASE_HEIGHT;
 
         if (height > Constants.Arm.HEIGHT_PROTECTION) {
             protectArmCommand.schedule();
@@ -76,7 +79,9 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         logger.recordOutput("arm/length", armLength);
         // Extension limit
 
-        double extension = (armLength * Math.cos(Math.toRadians(getRotation()))) - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
+        double extension =
+                (armLength * Math.cos(Math.toRadians(getRotation())))
+                        - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
         logger.recordOutput("arm/extension", extension);
 
         if (extension > Constants.Arm.TUCK_IN_EXTENSION) {
@@ -110,8 +115,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     // arm
     public void updateExtension(double meters, double velocity) {
 
-        if (inputs.minExtensionLimit && meters < .01)
-            setArmExtensionSpeed(0);
+        if (inputs.minExtensionLimit && meters < .01) setArmExtensionSpeed(0);
         io.setExtensionSetpoint(meters);
     }
 

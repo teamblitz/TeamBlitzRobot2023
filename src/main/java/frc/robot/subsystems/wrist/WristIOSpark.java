@@ -2,7 +2,6 @@ package frc.robot.subsystems.wrist;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -106,10 +105,10 @@ public class WristIOSpark implements WristIO {
             wristEncoder.setPosition(getAbsolutePosition());
         } else {
             if (assumeStarting) {
-            System.out.printf(
-                    "Wrist absolute encoder disconnected, assuming position %s%n",
-                    Constants.Wrist.Position.STARTING);
-            wristEncoder.setPosition(Constants.Wrist.Position.STARTING);
+                System.out.printf(
+                        "Wrist absolute encoder disconnected, assuming position %s%n",
+                        Constants.Wrist.Position.STARTING);
+                wristEncoder.setPosition(Constants.Wrist.Position.STARTING);
             }
         }
     }

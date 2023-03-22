@@ -51,8 +51,6 @@ public class ArmIOTalon implements ArmIO {
         armRotLeader.config_kI(0, Arm.ROT_I);
         armRotLeader.config_kD(0, Arm.ROT_D);
 
-
-
         // We divide by 10 because the function expects it to be per 100ms (dumb ik)
         armRotLeader.configMotionAcceleration(
                 Conversions.degreesToFalcon(Arm.ROTATION_ACCELERATION, Arm.ROTATION_GEAR_RATIO)
@@ -146,11 +144,10 @@ public class ArmIOTalon implements ArmIO {
         // If velocity == Math.abs velocity and top limit switch hit
         // Check arm velocity,
 
-//        if (armTopLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() > 0)
-//            armRotLeader.set(ControlMode.PercentOutput, 0);
-//        if (armBottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0)
-//            armRotLeader.set(ControlMode.PercentOutput, 0);
-
+        //        if (armTopLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() > 0)
+        //            armRotLeader.set(ControlMode.PercentOutput, 0);
+        //        if (armBottomLimitSwitch.get() && armRotLeader.getSelectedSensorVelocity() < 0)
+        //            armRotLeader.set(ControlMode.PercentOutput, 0);
 
         if (extensionBottomLimitSwitch.get() && armExtension.getSelectedSensorVelocity() < 0)
             armExtension.set(ControlMode.PercentOutput, 0);

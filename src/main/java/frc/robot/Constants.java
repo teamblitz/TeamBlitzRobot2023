@@ -10,7 +10,6 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -148,8 +147,7 @@ public final class Constants {
 
         // Units in degrees per second and degrees per second squared
         public static final double ROTATION_VELOCITY = 30;
-        public static final double ROTATION_ACCELERATION =
-                60; // 1 seconds to full
+        public static final double ROTATION_ACCELERATION = 60; // 1 seconds to full
 
         // Units in meters per second and meters per second squared
         public static final double EXTENSION_VELOCITY = 1;

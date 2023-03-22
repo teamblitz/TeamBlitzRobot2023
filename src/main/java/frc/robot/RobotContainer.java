@@ -122,13 +122,14 @@ public class RobotContainer {
                         },
                         armSubsystem));
         // wristSubsystem.setDefaultCommand(
-                // Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtCommand()));
-//        wristSubsystem.setDefaultCommand(
-//        Commands.run(
-//                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-//                wristSubsystem)
-//        );
-        wristSubsystem.setDefaultCommand(Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtRelativeCommand()));
+        // Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtCommand()));
+        //        wristSubsystem.setDefaultCommand(
+        //        Commands.run(
+        //                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+        //                wristSubsystem)
+        //        );
+        wristSubsystem.setDefaultCommand(
+                Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtRelativeCommand()));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -184,15 +185,21 @@ public class RobotContainer {
         controller.restGyroTrigger().onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
         controller.xBrakeTrigger().onTrue(driveSubsystem.buildParkCommand());
 
-        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02).whileTrue(
-                Commands.run(
-                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-                        wristSubsystem).alongWith(Commands.run(() -> {
-                            wristSubsystem.lastRelativeGoal = wristSubsystem.getRelativeRotation();
-                            wristSubsystem.lastGoal = wristSubsystem.getRotation();
-                }))
-        );
-
+        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02)
+                .whileTrue(
+                        Commands.run(
+                                        () ->
+                                                wristSubsystem.setRotationSpeed(
+                                                        controller.getWristSpeed()),
+                                        wristSubsystem)
+                                .alongWith(
+                                        Commands.run(
+                                                () -> {
+                                                    wristSubsystem.lastRelativeGoal =
+                                                            wristSubsystem.getRelativeRotation();
+                                                    wristSubsystem.lastGoal =
+                                                            wristSubsystem.getRotation();
+                                                })));
 
         controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
         controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));

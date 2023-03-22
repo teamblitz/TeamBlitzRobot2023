@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 // TODO: After denver change this subsystem to follow the io layer pattern
 public class LedSubsystem extends SubsystemBase {
@@ -27,8 +26,8 @@ public class LedSubsystem extends SubsystemBase {
         ledBuffer.setRGB(1, 200, 200, 200);
         led.setData(ledBuffer);
 
-//        new Trigger(() -> DriverStation.isDSAttached() || DriverStation.isFMSAttached())
-//                .onTrue(Commands.waitSeconds(.5).andThen(solidAllianceColorsCommand()));
+        //        new Trigger(() -> DriverStation.isDSAttached() || DriverStation.isFMSAttached())
+        //                .onTrue(Commands.waitSeconds(.5).andThen(solidAllianceColorsCommand()));
     }
 
     public CommandBase coneSolid() {

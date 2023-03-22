@@ -97,7 +97,6 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setRotationSpeed(speed);
     }
 
-
     /**
      * Update the onboard pid controller based off of the relative angle of the arm
      *
@@ -120,7 +119,8 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
             velocity = 0;
         }
 
-        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit) || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
+        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit)
+                || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
             io.setRotationSpeed(0);
             return;
         }
@@ -128,7 +128,8 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setRotationSetpoint(
                 clamped,
                 feedforward.calculate(
-                                Math.toRadians(clampedRelativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity)));
+                        Math.toRadians(clampedRelativeRot + Constants.Wrist.CG_OFFSET),
+                        Math.toRadians(velocity)));
     }
 
     public void updateRotation(double wristRot, double velocity) {
@@ -145,7 +146,8 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
             velocity = 0;
         }
 
-        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit) || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
+        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit)
+                || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
             io.setRotationSpeed(0);
             return;
         }
@@ -153,8 +155,8 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setRotationSetpoint(
                 clamped,
                 feedforward.calculate(
-                        Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity))
-        );
+                        Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET),
+                        Math.toRadians(velocity)));
     }
 
     public double getRotation() {

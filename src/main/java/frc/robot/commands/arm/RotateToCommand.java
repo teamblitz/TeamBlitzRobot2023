@@ -32,8 +32,7 @@ public class RotateToCommand extends CommandBase {
                                 Constants.Arm.ROTATION_VELOCITY,
                                 Constants.Arm.ROTATION_ACCELERATION),
                         new TrapezoidProfile.State(goal, 0),
-                        new TrapezoidProfile.State(
-                                armSubsystem.getRotation(), 0));
+                        new TrapezoidProfile.State(armSubsystem.getRotation(), 0));
         startTime = Timer.getFPGATimestamp();
     }
 

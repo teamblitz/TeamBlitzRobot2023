@@ -7,8 +7,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public class RotateWristCommand extends CommandBase {
     private final WristSubsystem wristSubsystem;
 
@@ -18,6 +16,7 @@ public class RotateWristCommand extends CommandBase {
     private TrapezoidProfile profile;
 
     private double startTime;
+
     public RotateWristCommand(WristSubsystem wristSubsystem, double goal, double threshold) {
         this.wristSubsystem = wristSubsystem;
 
@@ -40,7 +39,6 @@ public class RotateWristCommand extends CommandBase {
                         new TrapezoidProfile.State(
                                 wristSubsystem.getRotation(), wristSubsystem.getRotationSpeed()));
         startTime = Timer.getFPGATimestamp();
-
     }
 
     @Override
