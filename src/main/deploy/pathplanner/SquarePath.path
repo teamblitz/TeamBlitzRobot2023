@@ -32,17 +32,19 @@
         "y": 4.0
       },
       "nextControl": {
-        "x": 1.9849840905846523,
+        "x": 2.017282375486742,
         "y": 4.0
       },
       "holonomicAngle": 0.0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "autoCubeMid"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }

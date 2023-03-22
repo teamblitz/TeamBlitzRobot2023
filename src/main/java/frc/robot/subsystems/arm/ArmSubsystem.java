@@ -16,11 +16,15 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final Logger logger = Logger.getInstance();
 
-    // Because of how command scheduler requirements work, 2 commands can't use the same subsystem at the same time,
-    // While this is normally a good thing, we want the 2 mechanisms to work in parallel from 2 separate commands at times.
-    // This could be avoided by creating 2 subsystems, or more closely meshing the control of both extension and rotation,
+    // Because of how command scheduler requirements work, 2 commands can't use the same subsystem
+    // at the same time,
+    // While this is normally a good thing, we want the 2 mechanisms to work in parallel from 2
+    // separate commands at times.
+    // This could be avoided by creating 2 subsystems, or more closely meshing the control of both
+    // extension and rotation,
     // But my 12:30am brain thinks this is the best way to do it atm.
-    // This assumes that commands requiring extension requirement will only command the extension and vice versa.
+    // This assumes that commands requiring extension requirement will only command the extension
+    // and vice versa.
     public final Subsystem ExtensionRequirement = new Subsystem() {};
     public final Subsystem RotationRequirement = new Subsystem() {};
 
@@ -34,10 +38,12 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
                         (x) -> 0., (x) -> 0., (x) -> 0.,
                         (x) -> 0.); // TODO: Make these actual gains
 
-        // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and Rotation Requirement subsystems
+        // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and
+        // Rotation Requirement subsystems
         Commands.run(() -> {}).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
 
-        // Schedule a command to seed the arm, as the encoder does not appear to be connected when this class is initiated.
+        // Schedule a command to seed the arm, as the encoder does not appear to be connected when
+        // this class is initiated.
         Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
     }
 
@@ -104,7 +110,8 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public CommandBase homeArmCommand() {
-        return retractArmCommand().andThen(rotateToCommand(Constants.Arm.Position.Rotation.VERTICAL));
+        return retractArmCommand()
+                .andThen(rotateToCommand(Constants.Arm.Position.Rotation.VERTICAL));
     }
 
     public CommandBase levelArmCommand() {

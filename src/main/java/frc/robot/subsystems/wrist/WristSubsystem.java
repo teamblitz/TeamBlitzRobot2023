@@ -83,8 +83,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void openLoopGoTo(double degrees) {
         double relativeRot = degrees + armSubsystem.getRotation();
         logger.recordOutput("wrist/goToRelative", relativeRot);
-        io.setVoltage(feedforward.calculate(
-                Math.toRadians(relativeRot), 0));
+        io.setVoltage(feedforward.calculate(Math.toRadians(relativeRot), 0));
     }
 
     /**
@@ -108,9 +107,11 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
                 clamped,
                 rot == clamped && getRotation() < -10
                         ? feedforward.calculate(
-                                Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity))
+                                Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET),
+                                Math.toRadians(velocity))
                         : 0);
     }
+
     public void updateRotation(double wristRot, double velocity) {
         logger.recordOutput("wrist/wanted_rot", wristRot);
         logger.recordOutput("wrist/wanted_velocity", velocity);
@@ -120,13 +121,13 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         double clamped =
                 MathUtil.clamp(
                         relativeRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
-        double ff = feedforward.calculate(
-                Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity));
+        double ff =
+                feedforward.calculate(
+                        Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET),
+                        Math.toRadians(velocity));
         // Don't do feedforward if we are clamping, so we don't push into ourselves
         io.setRotationSetpoint(
-                clamped,
-                relativeRot == clamped && getRotation() < -10 && velocity > 0
-                        ? ff : 0);
+                clamped, relativeRot == clamped && getRotation() < -10 && velocity > 0 ? ff : 0);
     }
 
     public double getRotation() {

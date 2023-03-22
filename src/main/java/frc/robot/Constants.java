@@ -136,8 +136,7 @@ public final class Constants {
 
         // Units in degrees per second and degrees per second squared
         public static final double ROTATION_VELOCITY = 5;
-        public static final double ROTATION_ACCELERATION =
-                2; // 1 seconds to full
+        public static final double ROTATION_ACCELERATION = 2; // 1 seconds to full
 
         // Units in meters per second and meters per second squared
         public static final double EXTENSION_VELOCITY = 2;
@@ -160,7 +159,6 @@ public final class Constants {
 
                 public static final double CUBE_SHELF = 1; // TODO: TUNE
                 public static final double CONE_SHELF = 1; //  TODO: TUNE
-
             }
 
             public static final class Rotation {
@@ -198,7 +196,7 @@ public final class Constants {
         public static final double d = 0;
 
         public static final double ENCODER_OFFSET = -91;
-//        public static final double CG_OFFSET = Math.toDegrees(1.1423);
+        //        public static final double CG_OFFSET = Math.toDegrees(1.1423);
         public static final double CG_OFFSET = 0;
 
         public static final class Position {
@@ -218,7 +216,6 @@ public final class Constants {
 
             public static final double CONE_SHELF_RELATIVE = -90;
             public static final double CUBE_SHELF_RELATIVE = 0;
-
         }
     }
 

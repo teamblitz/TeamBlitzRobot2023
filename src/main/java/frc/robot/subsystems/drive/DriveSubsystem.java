@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -106,7 +105,8 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         initTelemetry();
 
         // In theory ignoring disabled is unnecessary, but this is a critical command that must run.
-        new Trigger(DriverStation::isAutonomousEnabled).onTrue(Commands.runOnce(() -> gyroIO.preMatchZero(180)).ignoringDisable(true));
+        new Trigger(DriverStation::isAutonomousEnabled)
+                .onTrue(Commands.runOnce(() -> gyroIO.preMatchZero(180)).ignoringDisable(true));
     }
 
     public void drive(

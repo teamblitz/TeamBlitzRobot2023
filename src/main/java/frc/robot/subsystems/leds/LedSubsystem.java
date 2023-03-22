@@ -133,8 +133,6 @@ public class LedSubsystem extends SubsystemBase {
                 });
     }
 
-
-
     public CommandBase coneLeftShielfDrop() {
         return Commands.repeatingSequence(
                 Commands.runOnce(
@@ -231,7 +229,6 @@ public class LedSubsystem extends SubsystemBase {
                         ledBuffer.setRGB(0, 0, 0, 255);
                         ledBuffer.setRGB(1, 0, 0, 255);
                     }
-                }
-        );
+                });
     }
 }

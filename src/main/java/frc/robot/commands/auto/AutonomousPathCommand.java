@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants;
+import frc.robot.commands.CommandBuilder;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -21,63 +22,17 @@ public class AutonomousPathCommand {
     private final DriveSubsystem driveSubsystem;
     private final ArmSubsystem armSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    private final Command fullAuto;
+    private final CommandBuilder commandBuilder;
 
     public AutonomousPathCommand(
             final DriveSubsystem driveSubsystem,
             final ArmSubsystem armSubsystem,
-            final IntakeSubsystem intakeSubsystem) {
+            final IntakeSubsystem intakeSubsystem,
+            final CommandBuilder commandBuilder) {
         this.driveSubsystem = driveSubsystem;
         this.armSubsystem = armSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-        // This will load the file "FullAuto.path" and generate it with a max velocity of 4 m/s and
-        // a max acceleration of 3 m/s^2
-        // for every path in the group
-        // All paths are in /src/main/deploy/pathplanner
-        // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
-
-        // <-- Initially an ArrayList... may cause errors later -->
-        List<PathPlannerTrajectory> pathGroup =
-                PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
-
-        HashMap<String, Command> eventMap = new HashMap<>();
-        // Use Stop Markers instead of markers because markers run in parallel
-        // Use none
-        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-        eventMap.put("marker2", new PrintCommand("Passed marker 2"));
-        eventMap.put("outCube", this.autoCubeOut());
-        eventMap.put("inCube", this.autoCubeIn());
-        // eventMap.put("marker3", new ExtendToCommand(this.armSubsystem, 0, 0));
-        // eventMap.put("marker4", new RotateToCommand(this.armSubsystem, 0, 0));
-
-        // Create the AutoBuilder. This only needs to be created once when robot code starts, not
-        // every time you want to create an auto command. A good place to put this is in
-        // RobotContainer along with your subsystems.
-        SwerveAutoBuilder autoBuilder =
-                new SwerveAutoBuilder(
-                        // Pose2d supplier
-                        this.driveSubsystem::getPose,
-                        // Pose2d consumer (should be resetPose, fix later)
-                        this.driveSubsystem::resetOdometry,
-                        // SwerveDriveKinematics
-                        Constants.Swerve.KINEMATICS,
-                        // Use DrivePID presumably
-                        new PIDConstants(
-                                Constants.Swerve.DRIVE_KP,
-                                Constants.Swerve.DRIVE_KI,
-                                Constants.Swerve.DRIVE_KD),
-                        // Use AnglePID presumably
-                        new PIDConstants(
-                                Constants.Swerve.ANGLE_KP,
-                                Constants.Swerve.ANGLE_KI,
-                                Constants.Swerve.ANGLE_KD),
-                        // Module states consumer used to output the drive subsystem
-                        (states) -> this.driveSubsystem.setModuleStates(states, false, false, false),
-                        eventMap,
-                        // Should the path be automatically mirrored depending on alliance color
-                        true,
-                        this.driveSubsystem);
-        this.fullAuto = autoBuilder.fullAuto(pathGroup);
+        this.commandBuilder = commandBuilder;
     }
 
     // Add vision at some point. To this one specifically, but the whole autonomous would be nice.
@@ -107,49 +62,87 @@ public class AutonomousPathCommand {
     // Intake Commands
     // ----- TODO: Test timeout -----
     public Command autoConeIn() {
-        return Commands.run(() -> this.intakeSubsystem.inCone(), intakeSubsystem)
-                .withTimeout(2)
-                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+        return this.intakeSubsystem.buildConeInCommand().withTimeout(2);
     }
 
     public Command autoConeOut() {
-        return Commands.run(() -> this.intakeSubsystem.outCone(), intakeSubsystem)
-                .withTimeout(0.25)
-                .andThen(
-                        () -> this.intakeSubsystem.stop(),
-                        intakeSubsystem); // No need for the stop because intake commands will turn
-        // off the motor.
+        return this.intakeSubsystem.buildConeOutCommand().withTimeout(0.25);
     }
 
     public Command autoCubeIn() {
-        return Commands.run(() -> this.intakeSubsystem.inCube(), intakeSubsystem)
-                .withTimeout(2)
-                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+        return this.intakeSubsystem.buildCubeInCommand().withTimeout(2);
     }
 
     public Command autoCubeOut() {
-        return Commands.run(() -> this.intakeSubsystem.outCube(), intakeSubsystem)
-                .withTimeout(0.25)
-                .andThen(() -> this.intakeSubsystem.stop(), intakeSubsystem);
+        return this.intakeSubsystem.buildCubeOutCommand().withTimeout(0.25);
     }
 
-    // Arm/Wrist Commands
-    public Command autoExtendArm(double distance) {
-        return null;
+    // Mid Cube command (used in all autonomous)
+    public Command autoMidCube() {
+        return this.commandBuilder
+                .primeCubeMid()
+                .andThen(autoCubeOut())
+                .andThen(this.armSubsystem.homeArmCommand());
     }
 
-    public Command emergencyStop() {
-        this.armSubsystem.setArmExtensionSpeed(0);
-        this.armSubsystem.setArmRotationSpeed(0);
-        //        this.armSubsystem.setWristRotationSpeed(0);
+    public Command generateAutonomous(String path) {
+        final List<PathPlannerTrajectory> pathGroup;
+        HashMap<String, Command> eventMap = new HashMap<>();
+        // This will load the file "FullAuto.path"
+        // All paths are in /src/main/deploy/pathplanner
+        // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
+        switch (path) {
+            case "Left":
+                pathGroup = PathPlanner.loadPathGroup("Left", new PathConstraints(2, 1.5));
+                break;
+            case "Middle":
+                pathGroup = PathPlanner.loadPathGroup("Middle", new PathConstraints(2, 1.5));
+                break;
+            case "Right":
+                pathGroup = PathPlanner.loadPathGroup("Right", new PathConstraints(2, 1.5));
+                break;
+            case "Nothing":
+                pathGroup = PathPlanner.loadPathGroup("Nothing", new PathConstraints(2, 1.5));
+                break;
+            case "Test":
+                pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
+                eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+                eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+                eventMap.put("autoCubeMid", this.autoMidCube());
+                break;
+            default:
+                pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
+                eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+                eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+                break;
+        }
 
-        return Commands.run(
-                () -> this.driveSubsystem.drive(new Translation2d(0, 0), 0, false, true, false),
-                driveSubsystem); // .alongWith...? Or just make this set everything to 0 no command
-        // just void
-    }
-
-    public Command getFullAuto() {
-        return this.fullAuto;
+        // Create the AutoBuilder
+        SwerveAutoBuilder autoBuilder =
+                new SwerveAutoBuilder(
+                        // Pose2d supplier
+                        this.driveSubsystem::getPose,
+                        // Pose2d consumer (should be resetPose, fix later)
+                        this.driveSubsystem::resetOdometry,
+                        // SwerveDriveKinematics
+                        Constants.Swerve.KINEMATICS,
+                        // Use DrivePID presumably
+                        new PIDConstants(
+                                Constants.Swerve.DRIVE_KP,
+                                Constants.Swerve.DRIVE_KI,
+                                Constants.Swerve.DRIVE_KD),
+                        // Use AnglePID presumably
+                        new PIDConstants(
+                                Constants.Swerve.ANGLE_KP,
+                                Constants.Swerve.ANGLE_KI,
+                                Constants.Swerve.ANGLE_KD),
+                        // Module states consumer used to output the drive subsystem
+                        (states) ->
+                                this.driveSubsystem.setModuleStates(states, false, false, false),
+                        eventMap,
+                        // Should the path be automatically mirrored depending on alliance color
+                        true,
+                        this.driveSubsystem);
+        return autoBuilder.fullAuto(pathGroup);
     }
 }

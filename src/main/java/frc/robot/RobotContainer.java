@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.CommandBuilder;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
@@ -53,12 +54,22 @@ public class RobotContainer {
     private IntakeSubsystem intakeSubsystem;
     private LedSubsystem ledSubsystem;
 
+    private CommandBuilder commandBuilder =
+            new CommandBuilder(
+                    armSubsystem, driveSubsystem, intakeSubsystem, ledSubsystem, wristSubsystem);
+
     /* ***** --- Controllers --- ***** */
 
     private Controller controller;
     private SaitekX52Joystick driveController;
 
     private final Logger logger = Logger.getInstance();
+
+    /* ***** --- Autonomous --- ***** */
+    private static final String[] autonomousCommands = {
+        "Left", "Middle", "Right", "Test", "Nothing"
+    };
+    private final SendableChooser<String> chooser = new SendableChooser<>();
 
     public RobotContainer() {
         configureSubsystems();
@@ -73,6 +84,12 @@ public class RobotContainer {
                 .add(
                         "ResetOdometry",
                         Commands.runOnce(() -> driveSubsystem.resetOdometry(new Pose2d())));
+
+        for (String auto : autonomousCommands) {
+            chooser.addOption(auto, auto);
+        }
+        chooser.setDefaultOption("Nothing", "Nothing");
+        SmartDashboard.putData("Autonomous Choices", chooser);
     }
 
     private void setDefaultCommands() {
@@ -100,11 +117,11 @@ public class RobotContainer {
                         armSubsystem));
         wristSubsystem.setDefaultCommand(
                 Commands.waitSeconds(.5).andThen(wristSubsystem.holdAtCommand()));
-//        wristSubsystem.setDefaultCommand(
-//        Commands.run(
-//                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-//                wristSubsystem)
-//        );
+        //        wristSubsystem.setDefaultCommand(
+        //        Commands.run(
+        //                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+        //                wristSubsystem)
+        //        );
         wristSubsystem.setDefaultCommand(wristSubsystem.holdAtRelativeCommand());
     }
 
@@ -121,6 +138,7 @@ public class RobotContainer {
             return driveMultiplierLimiter.calculate(.60);
         }
     }
+
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
@@ -157,26 +175,39 @@ public class RobotContainer {
         controller.signalCube().whileTrue(ledSubsystem.cubeSolid());
         controller.signalCone().whileTrue(ledSubsystem.coneSolid());
 
-        controller.restGyroTrigger()
-                .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
-        controller.xBrakeTrigger()
-                .onTrue(driveSubsystem.buildParkCommand());
+        controller.restGyroTrigger().onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
+        controller.xBrakeTrigger().onTrue(driveSubsystem.buildParkCommand());
 
-        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02).whileTrue(
-                Commands.run(
-                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-                        wristSubsystem)
-        );
+        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02)
+                .whileTrue(
+                        Commands.run(
+                                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+                                wristSubsystem));
 
-
-//        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(20));
-//        controller.armTo40Trigger().whileTrue(armSubsystem.rotateToCommand(40));
+        //        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(20));
+        //        controller.armTo40Trigger().whileTrue(armSubsystem.rotateToCommand(40));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
+        String autoCommand = chooser.getSelected();
         AutonomousPathCommand autonomousPathCommand =
-                new AutonomousPathCommand(driveSubsystem, armSubsystem, intakeSubsystem);
-        return autonomousPathCommand.getFullAuto();
-        // return autonomousPathCommand.balanceChargeStation();
+                new AutonomousPathCommand(
+                        driveSubsystem, armSubsystem, intakeSubsystem, commandBuilder);
+        switch (autoCommand) {
+            case "Left":
+                return autonomousPathCommand.generateAutonomous("Left");
+            case "Middle":
+                return autonomousPathCommand.generateAutonomous("Middle");
+            case "Right":
+                return autonomousPathCommand.generateAutonomous("Right");
+            case "Nothing":
+                return null;
+            case "Test":
+                return autonomousPathCommand.generateAutonomous("Test");
+            default:
+                return null;
+        }
+        // private static final String[] autonomousCommands = {"Left", "Middle", "Right",
+        // "Nothing"};
     }
 }

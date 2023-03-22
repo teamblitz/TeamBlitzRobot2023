@@ -16,7 +16,8 @@ public class Controller {
     private GamePiece mode = GamePiece.CUBE;
 
     public enum GamePiece {
-        CUBE, CONE
+        CUBE,
+        CONE
     }
 
     public Controller(int driverControllerPort, int operatorControllerPort) {
@@ -28,24 +29,29 @@ public class Controller {
     }
 
     public Trigger intake() {
-        return commandOperatorController.leftBumper()
+        return commandOperatorController
+                .leftBumper()
                 .or(commandDriverController.button(SaitekX52Joystick.Button.kA.value));
     }
+
     public Trigger outtake() {
-        return commandOperatorController.rightBumper()
+        return commandOperatorController
+                .rightBumper()
                 .or(commandDriverController.button(SaitekX52Joystick.Button.kC.value));
     }
-
 
     public Trigger coneInTrigger() {
         return intake().and(cone());
     }
+
     public Trigger coneOutTrigger() {
         return outtake().and(cone());
     }
+
     public Trigger cubeInTrigger() {
         return intake().and(cube());
     }
+
     public Trigger cubeOutTrigger() {
         return outtake().and(cube());
     }
@@ -53,6 +59,7 @@ public class Controller {
     public Trigger signalCube() {
         return commandOperatorController.back();
     }
+
     public Trigger signalCone() {
         return commandOperatorController.start();
     }
@@ -60,6 +67,7 @@ public class Controller {
     public Trigger cone() {
         return new Trigger(() -> mode == GamePiece.CONE);
     }
+
     public Trigger cube() {
         return new Trigger(() -> mode == GamePiece.CUBE);
     }
@@ -102,8 +110,10 @@ public class Controller {
 
     public double getArmSpeed() {
         return -.2
-                * MathUtil.applyDeadband(Constants.OIConstants.inputCurve.apply(
-                        commandOperatorController.getHID().getLeftY()), .1);
+                * MathUtil.applyDeadband(
+                        Constants.OIConstants.inputCurve.apply(
+                                commandOperatorController.getHID().getLeftY()),
+                        .1);
     }
 
     public double getWristSpeed() {
@@ -133,11 +143,11 @@ public class Controller {
         return commandOperatorController.y();
     }
 
-
     // Driver Controls
     public Trigger restGyroTrigger() {
         return commandDriverController.button(SaitekX52Joystick.Button.kFire.value);
     }
+
     public Trigger xBrakeTrigger() {
         return commandDriverController.button(SaitekX52Joystick.Button.kB.value);
     }

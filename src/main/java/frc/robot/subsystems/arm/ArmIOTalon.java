@@ -91,7 +91,6 @@ public class ArmIOTalon implements ArmIO {
         inputs.absArmRot = getAbsolutePosition();
         inputs.absArmEncoder = Angles.wrapAngle(-absRotationEncoder.getAbsolutePosition() * 360);
 
-
         inputs.topRotationLimit = armTopLimitSwitch.get();
         inputs.bottomRotationLimit = armTopLimitSwitch.get();
         inputs.minExtensionLimit = extensionBottomLimitSwitch.get();
@@ -130,7 +129,9 @@ public class ArmIOTalon implements ArmIO {
 
     private double getArmExtension() {
         return Conversions.redlineToDegrees(
-                armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO) / 360 * Constants.Arm.EXTENSION_PULLEY_CIRCUMFERENCE;
+                        armExtension.getSelectedSensorPosition(), Arm.EXTENSION_GEAR_RATIO)
+                / 360
+                * Constants.Arm.EXTENSION_PULLEY_CIRCUMFERENCE;
     }
 
     @Override
@@ -166,6 +167,7 @@ public class ArmIOTalon implements ArmIO {
 
     private double getAbsolutePosition() {
         return Angles.wrapAngle(
-                Angles.wrapAngle(-absRotationEncoder.getAbsolutePosition() * 360 - Arm.ARM_ROT_OFFSET));
+                Angles.wrapAngle(
+                        -absRotationEncoder.getAbsolutePosition() * 360 - Arm.ARM_ROT_OFFSET));
     }
 }

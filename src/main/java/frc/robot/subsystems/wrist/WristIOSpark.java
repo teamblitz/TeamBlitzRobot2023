@@ -31,7 +31,7 @@ public class WristIOSpark implements WristIO {
 
         wrist.setIdleMode(IdleMode.kBrake);
 
-//        wrist.setSmartCurrentLimit(30);
+        //        wrist.setSmartCurrentLimit(30);
 
         wristEncoder.setPositionConversionFactor(
                 (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
