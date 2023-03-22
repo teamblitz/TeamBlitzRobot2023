@@ -1,19 +1,17 @@
-package frc.robot.subsystems.Leds;
+package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+// TODO: After denver change this subsystem to follow the io layer pattern
 public class LedSubsystem extends SubsystemBase {
     private final AddressableLED led;
     private final AddressableLEDBuffer ledBuffer;
-
-
-    
-
 
     public LedSubsystem() {
 
@@ -24,9 +22,12 @@ public class LedSubsystem extends SubsystemBase {
         led.setLength(ledBuffer.getLength());
 
         led.start();
+
+        new Trigger(() -> DriverStation.isDSAttached() || DriverStation.isFMSAttached())
+                .onTrue(Commands.waitSeconds(.5).andThen(solidAllianceColorsCommand()));
     }
 
-    public CommandBase coneSlide() {
+    public CommandBase coneSolid() {
         return Commands.runOnce(
                 () -> {
                     ledBuffer.setRGB(0, 255, 255, 0);
@@ -36,7 +37,7 @@ public class LedSubsystem extends SubsystemBase {
                 });
     }
 
-    public CommandBase cubeSlide() {
+    public CommandBase cubeSolid() {
         return Commands.runOnce(
                 () -> {
                     ledBuffer.setRGB(0, 255, 0, 255);
@@ -216,5 +217,21 @@ public class LedSubsystem extends SubsystemBase {
                                         },
                                         this))
                         .andThen(Commands.waitSeconds(.25)));
+    }
+
+    public CommandBase solidAllianceColorsCommand() {
+        return Commands.runOnce(
+                () -> {
+                    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+                        ledBuffer.setRGB(0, 255, 0, 0);
+                        ledBuffer.setRGB(1, 255, 0, 0);
+
+                        led.setData(ledBuffer);
+                    } else if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+                        ledBuffer.setRGB(0, 0, 0, 255);
+                        ledBuffer.setRGB(1, 0, 0, 255);
+                    }
+                }
+        );
     }
 }

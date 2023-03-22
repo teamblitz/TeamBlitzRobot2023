@@ -18,4 +18,6 @@ public interface GyroIO {
     public default void updateInputs(GyroIOInputs inputs) {}
 
     public default void zeroGyro() {}
+
+    public default void preMatchZero(double degrees) {}
 }

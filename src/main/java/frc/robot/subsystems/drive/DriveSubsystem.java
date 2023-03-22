@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
@@ -101,6 +104,9 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         keepHeadingPid = new PIDController(.1, 0, 0);
         keepHeadingPid.enableContinuousInput(-180, 180);
         initTelemetry();
+
+        // In theory ignoring disabled is unnecessary, but this is a critical command that must run.
+        new Trigger(DriverStation::isAutonomousEnabled).onTrue(Commands.runOnce(() -> gyroIO.preMatchZero(180)).ignoringDisable(true));
     }
 
     public void drive(
@@ -137,18 +143,18 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
 
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop, false);
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop, false, false);
         }
     }
 
     /* Used by SwerveControllerCommand in Auto */
     // Use in above method?
     public void setModuleStates(
-            SwerveModuleState[] desiredStates, boolean openLoop, boolean tuning) {
+            SwerveModuleState[] desiredStates, boolean openLoop, boolean tuning, boolean parking) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED);
 
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false, tuning);
+            mod.setDesiredState(desiredStates[mod.moduleNumber], false, tuning, parking);
         }
     }
 
@@ -163,7 +169,7 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
             (new SwerveModuleState(0, Rotation2d.fromDegrees(45)))
         };
 
-        setModuleStates(desiredStates, true, false);
+        setModuleStates(desiredStates, true, false, true);
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -195,7 +201,6 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         gyroIO.zeroGyro();
         keepHeadingSetpointSet = false;
         lastTurnCommandSeconds = Timer.getFPGATimestamp();
-        // TODO: I plan to have 2
     }
 
     public Rotation2d getYaw() {

@@ -41,7 +41,8 @@ public class SwerveTuning extends CommandBase {
                     new SwerveModuleState(speed, Rotation2d.fromDegrees(angle))
                 },
                 true,
-                true);
+                true,
+                false);
         // }
     }
 

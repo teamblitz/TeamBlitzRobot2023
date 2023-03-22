@@ -28,8 +28,10 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.SwerveModuleIOSparkMax;
 import frc.robot.subsystems.drive.gyro.GyroIONavx;
+import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -49,6 +51,7 @@ public class RobotContainer {
     private ArmSubsystem armSubsystem;
     private WristSubsystem wristSubsystem;
     private IntakeSubsystem intakeSubsystem;
+    private LedSubsystem ledSubsystem;
 
     /* ***** --- Controllers --- ***** */
 
@@ -109,19 +112,15 @@ public class RobotContainer {
 
     private double calculateDriveMultiplier() {
         if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
-            return driveMultiplierLimiter.calculate(1);
-        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
             return driveMultiplierLimiter.calculate(.3);
-        // } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
-        //     return driveMultiplierLimiter.calculate(.80);
+        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
+            return driveMultiplierLimiter.calculate(1);
+        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
+            return driveMultiplierLimiter.calculate(.80);
         } else {
             return driveMultiplierLimiter.calculate(.60);
         }
     }
-    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
-    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
-    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
-    // new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS)
     private void configureSubsystems() {
         driveSubsystem =
                 new DriveSubsystem(
@@ -129,11 +128,12 @@ public class RobotContainer {
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
-                        new GyroIONavx());
+                        Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalon());
         wristSubsystem = new WristSubsystem(new WristIOSpark(), armSubsystem);
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
+        ledSubsystem = new LedSubsystem();
 
         driveController = new SaitekX52Joystick(0); // Move this to Controller
         controller = new Controller(0, 1);
@@ -154,21 +154,14 @@ public class RobotContainer {
         controller.wristLevelTrigger().onTrue(wristSubsystem.rotateRelativeToCommand(0));
         controller.wristDownTrigger().onTrue(wristSubsystem.rotateRelativeToCommand(-90));
 
-//        controller.signalDropCone().whileTrue(LedSubsystem.buildDropConeCommand());
-//        controller.signalDropCube().whileTrue(LedSubsystem.buildDropCubeCommand());
-//        controller.signalConeSlideDrop().whileTrue(LedSubsystem.buildConeSlideDropCommand());
-//        controller.signalCubeSlideDrop().whileTrue(LedSubsystem.buildCubeSlideDropCommand());
-//        controller.signalConeLeftShelf().whileTrue(LedSubsystem.buildConeLeftShelfCommand());
-//        controller.signalConeRightShelf().whileTrue(LedSubsystem.buildConeRightShelfCommand());
-//        controller.signalCubeLeftShelf().whileTrue(LedSubsystem.buildCubeLeftShelfCommand());
-//        controller.signalCubeRightShelf().whileTrue(LedSubsystem.buildCubeRightShelfCommand());
+        controller.signalCube().whileTrue(ledSubsystem.cubeSolid());
+        controller.signalCone().whileTrue(ledSubsystem.coneSolid());
 
-        ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
+        controller.restGyroTrigger()
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
+        controller.xBrakeTrigger()
+                .onTrue(driveSubsystem.buildParkCommand());
 
-//        CommandXboxController c = new CommandXboxController(1);
-//        c.x().whileTrue(Commands.run(() -> wristSubsystem.openLoopGoTo(0), wristSubsystem));
-//        c.y().whileTrue(Commands.run(() -> wristSubsystem.openLoopGoTo(-45), wristSubsystem));
         new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02).whileTrue(
                 Commands.run(
                         () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),

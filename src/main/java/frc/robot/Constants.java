@@ -224,7 +224,7 @@ public final class Constants {
 
     public static final class Swerve {
         public static final int PIGEON_ID = 30;
-        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean USE_PIGEON = true;
 
         public static final COTSSwerveConstants chosenModule =
                 COTSSwerveConstants.SDSMK4i(COTSSwerveConstants.driveGearRatios.SDSMK4i_L3);

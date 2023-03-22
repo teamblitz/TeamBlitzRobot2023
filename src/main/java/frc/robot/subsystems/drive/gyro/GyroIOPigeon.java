@@ -23,7 +23,7 @@ public class GyroIOPigeon implements GyroIO {
 
     private final double[] rateArray = new double[3];
 
-    GyroIOPigeon() {
+    public GyroIOPigeon() {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID);
     }
 
@@ -44,5 +44,10 @@ public class GyroIOPigeon implements GyroIO {
     @Override
     public void zeroGyro() {
         gyro.setYaw(0);
+    }
+
+    @Override
+    public void preMatchZero(double degrees) {
+        gyro.setYaw(degrees);
     }
 }

@@ -72,7 +72,7 @@ public class AutonomousPathCommand {
                                 Constants.Swerve.ANGLE_KI,
                                 Constants.Swerve.ANGLE_KD),
                         // Module states consumer used to output the drive subsystem
-                        (states) -> this.driveSubsystem.setModuleStates(states, false, false),
+                        (states) -> this.driveSubsystem.setModuleStates(states, false, false, false),
                         eventMap,
                         // Should the path be automatically mirrored depending on alliance color
                         true,

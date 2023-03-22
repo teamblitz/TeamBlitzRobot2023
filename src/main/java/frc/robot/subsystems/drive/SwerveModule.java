@@ -49,11 +49,11 @@ public class SwerveModule {
     }
 
     public void setDesiredState(
-            SwerveModuleState desiredState, boolean isOpenLoop, boolean tuning) {
+            SwerveModuleState desiredState, boolean isOpenLoop, boolean tuning, boolean parking) {
 
         desiredState = ModuleStateOptimizer.optimize(desiredState, getState().angle);
 
-        setAngle(desiredState, tuning);
+        setAngle(desiredState, tuning, parking);
         setSpeed(desiredState, isOpenLoop);
     }
 
@@ -70,9 +70,9 @@ public class SwerveModule {
         }
     }
 
-    private void setAngle(SwerveModuleState desiredState, boolean tuning) {
+    private void setAngle(SwerveModuleState desiredState, boolean tuning, boolean parking) {
         Rotation2d angle =
-                (!tuning
+                (!(tuning || parking)
                                 && Math.abs(desiredState.speedMetersPerSecond)
                                         <= (Constants.Swerve.MAX_SPEED * 0.01))
                         ? lastAngle

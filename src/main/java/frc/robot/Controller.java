@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.oi.SaitekX52Joystick;
 
 public class Controller {
 
@@ -26,17 +27,27 @@ public class Controller {
         signalCube().onTrue(Commands.runOnce(() -> mode = GamePiece.CUBE).ignoringDisable(true));
     }
 
+    public Trigger intake() {
+        return commandOperatorController.leftBumper()
+                .or(commandDriverController.button(SaitekX52Joystick.Button.kA.value));
+    }
+    public Trigger outtake() {
+        return commandOperatorController.rightBumper()
+                .or(commandDriverController.button(SaitekX52Joystick.Button.kC.value));
+    }
+
+
     public Trigger coneInTrigger() {
-        return commandOperatorController.leftBumper();
+        return intake().and(cone());
     }
     public Trigger coneOutTrigger() {
-        return commandOperatorController.rightBumper();
+        return outtake().and(cone());
     }
     public Trigger cubeInTrigger() {
-        return unbound;
+        return intake().and(cube());
     }
     public Trigger cubeOutTrigger() {
-        return unbound;
+        return outtake().and(cube());
     }
 
     public Trigger signalCube() {
@@ -44,6 +55,13 @@ public class Controller {
     }
     public Trigger signalCone() {
         return commandOperatorController.start();
+    }
+
+    public Trigger cone() {
+        return new Trigger(() -> mode == GamePiece.CONE);
+    }
+    public Trigger cube() {
+        return new Trigger(() -> mode == GamePiece.CUBE);
     }
 
     public Trigger getArmGroundTrigger() {
@@ -59,19 +77,19 @@ public class Controller {
     }
 
     public Trigger primeMidConeTrigger() {
-        return scoreModeTrigger().and(() -> mode == GamePiece.CONE).and(commandOperatorController.x());
+        return scoreModeTrigger().and(cone()).and(commandOperatorController.x());
     }
 
     public Trigger primeHighConeTrigger() {
-        return scoreModeTrigger().and(() -> mode == GamePiece.CONE).and(commandOperatorController.y());
+        return scoreModeTrigger().and(cone()).and(commandOperatorController.y());
     }
 
     public Trigger primeMidCubeTrigger() {
-        return scoreModeTrigger().and(() -> mode == GamePiece.CUBE).and(commandOperatorController.x());
+        return scoreModeTrigger().and(cube()).and(commandOperatorController.x());
     }
 
     public Trigger primeHighCubeTrigger() {
-        return scoreModeTrigger().and(() -> mode == GamePiece.CUBE).and(commandOperatorController.y());
+        return scoreModeTrigger().and(cube()).and(commandOperatorController.y());
     }
 
     public Trigger wristLevelTrigger() {
@@ -107,43 +125,20 @@ public class Controller {
         return commandOperatorController.start();
     }
 
-    public Trigger signalDropCone() {
-        return unbound;
-    }
-
-    public Trigger signalDropCube() {
-        return unbound;
-    }
-
-    public Trigger signalConeSlideDrop() {
-        return unbound;
-    }
-
-    public Trigger signalCubeSlideDrop() {
-        return unbound;
-    }
-
-    public Trigger signalConeLeftShelf() {
-        return unbound;
-    }
-
-    public Trigger signalConeRightShelf() {
-        return unbound;
-    }
-
-    public Trigger signalCubeLeftShelf() {
-        return unbound;
-    }
-
-    public Trigger signalCubeRightShelf() {
-        return unbound;
-    }
-
     public Trigger armTo20Trigger() {
         return commandOperatorController.x();
     }
 
     public Trigger armTo40Trigger() {
         return commandOperatorController.y();
+    }
+
+
+    // Driver Controls
+    public Trigger restGyroTrigger() {
+        return commandDriverController.button(SaitekX52Joystick.Button.kFire.value);
+    }
+    public Trigger xBrakeTrigger() {
+        return commandDriverController.button(SaitekX52Joystick.Button.kB.value);
     }
 }

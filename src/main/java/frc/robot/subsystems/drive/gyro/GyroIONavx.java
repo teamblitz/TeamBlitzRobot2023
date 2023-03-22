@@ -26,7 +26,7 @@ public class GyroIONavx implements GyroIO {
         // WPILIB's coordinate system is X forward Y to the left and Z up
         // Navx is y forward x to the right, and z up.
         inputs.yaw =
-                -gyro.getAngle(); // Maybe this should be get yaw once we confirm the behavior of
+                (-gyro.getAngle() + 180) % 360; // Maybe this should be get yaw once we confirm the behavior of
         // the pigeon
         inputs.pitch = -gyro.getPitch();
         inputs.roll = -gyro.getRoll();
@@ -39,5 +39,11 @@ public class GyroIONavx implements GyroIO {
     @Override
     public void zeroGyro() {
         gyro.zeroYaw();
+    }
+
+    @Override
+    public void preMatchZero(double degrees) {
+        gyro.setAngleAdjustment(degrees - gyro.getAngle());
+        zeroGyro();
     }
 }
