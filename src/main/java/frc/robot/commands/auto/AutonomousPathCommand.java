@@ -78,6 +78,7 @@ public class AutonomousPathCommand {
     }
 
     // Mid Cube command (used in all autonomous)
+    // This does not stop in simulation because encoders don't get values...
     public Command autoMidCube() {
         return this.commandBuilder
                 .primeCubeMid()
@@ -91,6 +92,12 @@ public class AutonomousPathCommand {
         // This will load the file "FullAuto.path"
         // All paths are in /src/main/deploy/pathplanner
         // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
+        eventMap.put("autoCubeMid", this.autoMidCube());
+        eventMap.put("balanceChargeStation", this.balanceChargeStation());
+        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        eventMap.put("marker2", new PrintCommand("Passed markser 2"));
         switch (path) {
             case "Left":
                 pathGroup = PathPlanner.loadPathGroup("Left", new PathConstraints(2, 1.5));
@@ -106,15 +113,9 @@ public class AutonomousPathCommand {
                 break;
             case "Test":
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
-                eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-                eventMap.put("marker2", new PrintCommand("Passed markser 2"));
-                eventMap.put("autoCubeMid", this.autoMidCube());
-                System.out.println("Selected SquarePath");
                 break;
             default:
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
-                eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-                eventMap.put("marker2", new PrintCommand("Passed marker 2"));
                 break;
         }
 
