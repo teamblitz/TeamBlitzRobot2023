@@ -14,7 +14,8 @@ public class RotateToCommand extends CommandBase {
 
     private TrapezoidProfile profile;
 
-    private double lastTime;
+    private double startTime;
+
 
     public RotateToCommand(ArmSubsystem armSubsystem, double goal, double threshold) {
         this.armSubsystem = armSubsystem;
@@ -32,17 +33,15 @@ public class RotateToCommand extends CommandBase {
                                 Constants.Arm.ROTATION_VELOCITY,
                                 Constants.Arm.ROTATION_ACCELERATION),
                         new TrapezoidProfile.State(
-                                armSubsystem.getRotation(), armSubsystem.getRotationSpeed()),
+                                armSubsystem.getRotation(), 0),
                         new TrapezoidProfile.State(goal, 0));
-        lastTime = Timer.getFPGATimestamp();
+        startTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
-        double deltaTime = Timer.getFPGATimestamp() - lastTime;
-        lastTime = Timer.getFPGATimestamp();
-        TrapezoidProfile.State state = profile.calculate(deltaTime);
-        armSubsystem.updateRotation(state.position, state.velocity);
+        TrapezoidProfile.State state = profile.calculate(Timer.getFPGATimestamp() - startTime);
+        armSubsystem.updateRotation(goal, 0);
     }
 
     @Override

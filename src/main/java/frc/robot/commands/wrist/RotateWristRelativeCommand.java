@@ -15,6 +15,7 @@ public class RotateWristRelativeCommand extends CommandBase {
     private TrapezoidProfile profile;
 
     private double lastTime;
+    private double startingTime;
 
     public RotateWristRelativeCommand(
             WristSubsystem wristSubsystem, double goal, double threshold) {
@@ -39,6 +40,7 @@ public class RotateWristRelativeCommand extends CommandBase {
                                 wristSubsystem.getRotationSpeed()),
                         new TrapezoidProfile.State(goal, 0));
         lastTime = Timer.getFPGATimestamp();
+        startingTime = Timer.getFPGATimestamp();
     }
 
     @Override

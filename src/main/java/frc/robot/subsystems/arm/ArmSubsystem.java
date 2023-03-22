@@ -36,6 +36,9 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and Rotation Requirement subsystems
         Commands.run(() -> {}).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
+
+        // Schedule a command to seed the arm, as the encoder does not appear to be connected when this class is initiated.
+        Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
     }
 
     @Override
@@ -45,6 +48,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void updateRotation(double degrees, double velocity) {
+        logger.recordOutput("arm/wanted_rotation", degrees);
         io.setRotationSetpoint(
                 degrees,
                 0); // Don't do feed forward as we have no way to model this with the spring-loaded

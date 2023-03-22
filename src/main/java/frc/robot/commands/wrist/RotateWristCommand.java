@@ -49,7 +49,7 @@ public class RotateWristCommand extends CommandBase {
     public void execute() {
         double deltaTime = Timer.getFPGATimestamp() - lastTime;
         lastTime = Timer.getFPGATimestamp();
-        TrapezoidProfile.State state = profile.calculate(deltaTime);
+        TrapezoidProfile.State state = profile.calculate(.02);
         wristSubsystem.updateRotation(state.position, state.velocity * positive);
     }
 

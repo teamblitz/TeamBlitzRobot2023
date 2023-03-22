@@ -80,6 +80,13 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.setRotationSpeed(speed);
     }
 
+    public void openLoopGoTo(double degrees) {
+        double relativeRot = degrees + armSubsystem.getRotation();
+        logger.recordOutput("wrist/goToRelative", relativeRot);
+        io.setVoltage(feedforward.calculate(
+                Math.toRadians(relativeRot), 0));
+    }
+
     /**
      * Update the onboard pid controller based off of the relative angle of the arm
      *
@@ -90,6 +97,10 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         // Arm Rot + Wrist Rot = Relative Wrist Rot
         // Wrist rot = Relative Wrist Rot - arm rot
         double rot = relativeRot - armSubsystem.getRotation();
+
+        logger.recordOutput("wrist/wanted_rot", rot);
+        logger.recordOutput("wrist/wanted_velocity", velocity);
+
         double clamped =
                 MathUtil.clamp(rot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
         // Don't do feedforward if we are clamping, so we don't push into ourselves

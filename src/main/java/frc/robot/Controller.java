@@ -1,67 +1,77 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controller {
+
+    private final CommandGenericHID commandDriverController;
     private final CommandXboxController commandOperatorController;
     private final Trigger unbound = new Trigger(() -> false);
 
-    public Controller(int driverControllerPort, int operatorControllerPort) {
-        this.commandOperatorController = new CommandXboxController(operatorControllerPort);
+    private GamePiece mode = GamePiece.CUBE;
+
+    public enum GamePiece {
+        CUBE, CONE
     }
 
-    public Trigger getConeInTrigger() {
+    public Controller(int driverControllerPort, int operatorControllerPort) {
+        this.commandDriverController = new CommandGenericHID(driverControllerPort);
+        this.commandOperatorController = new CommandXboxController(operatorControllerPort);
+
+        signalCone().onTrue(Commands.runOnce(() -> mode = GamePiece.CONE).ignoringDisable(true));
+        signalCube().onTrue(Commands.runOnce(() -> mode = GamePiece.CUBE).ignoringDisable(true));
+    }
+
+    public Trigger coneInTrigger() {
         return commandOperatorController.leftBumper();
     }
-
-    public Trigger getConeOutTrigger() {
+    public Trigger coneOutTrigger() {
         return commandOperatorController.rightBumper();
     }
-
-    public Trigger getCubeInTrigger() {
+    public Trigger cubeInTrigger() {
+        return unbound;
+    }
+    public Trigger cubeOutTrigger() {
         return unbound;
     }
 
-    public Trigger getCubeOutTrigger() {
-        return unbound;
+    public Trigger signalCube() {
+        return commandOperatorController.back();
+    }
+    public Trigger signalCone() {
+        return commandOperatorController.start();
     }
 
     public Trigger getArmGroundTrigger() {
         return unbound;
     }
 
-    public Trigger getArmLowConeTrigger() {
-        return unbound;
+    public Trigger scoreModeTrigger() {
+        return commandOperatorController.povDown();
     }
 
-    public Trigger getArmMidConeTrigger() {
-        return unbound;
+    public Trigger primeHybridTrigger() {
+        return scoreModeTrigger().and(commandOperatorController.a());
     }
 
-    public Trigger getArmHighConeTrigger() {
-        return unbound;
+    public Trigger primeMidConeTrigger() {
+        return scoreModeTrigger().and(() -> mode == GamePiece.CONE).and(commandOperatorController.x());
     }
 
-    public Trigger getArmLowCubeTrigger() {
-        return unbound;
+    public Trigger primeHighConeTrigger() {
+        return scoreModeTrigger().and(() -> mode == GamePiece.CONE).and(commandOperatorController.y());
     }
 
-    public Trigger getArmMidCubeTrigger() {
-        return unbound;
+    public Trigger primeMidCubeTrigger() {
+        return scoreModeTrigger().and(() -> mode == GamePiece.CUBE).and(commandOperatorController.x());
     }
 
-    public Trigger getArmHighCubeTrigger() {
-        return unbound;
-    }
-
-    public Trigger getLeftExtendTrigger() {
-        return commandOperatorController.pov(0);
-    }
-
-    public Trigger getRightExtendTrigger() {
-        return commandOperatorController.pov(180);
+    public Trigger primeHighCubeTrigger() {
+        return scoreModeTrigger().and(() -> mode == GamePiece.CUBE).and(commandOperatorController.y());
     }
 
     public Trigger wristLevelTrigger() {

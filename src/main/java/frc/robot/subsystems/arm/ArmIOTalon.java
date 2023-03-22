@@ -47,6 +47,10 @@ public class ArmIOTalon implements ArmIO {
         armRotFollower.follow(armRotLeader);
         armRotFollower.setInverted(InvertType.OpposeMaster);
 
+        armRotLeader.config_kP(0, Arm.ROT_P);
+        armRotLeader.config_kI(0, Arm.ROT_I);
+        armRotLeader.config_kD(0, Arm.ROT_D);
+
         // We divide by 10 because the function expects it to be per 100ms (dumb ik)
         armRotLeader.configMotionAcceleration(
                 Conversions.degreesToFalcon(Arm.ROTATION_ACCELERATION, Arm.ROTATION_GEAR_RATIO)
@@ -98,7 +102,7 @@ public class ArmIOTalon implements ArmIO {
     @Override
     public void setRotationSetpoint(double degrees, double arbFFPercent) {
         armRotLeader.set(
-                ControlMode.Position,
+                ControlMode.MotionMagic,
                 Conversions.degreesToFalcon(degrees, Constants.Arm.ROTATION_GEAR_RATIO),
                 DemandType.ArbitraryFeedForward,
                 arbFFPercent);

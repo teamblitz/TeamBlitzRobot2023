@@ -135,14 +135,18 @@ public final class Constants {
         public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(48);
 
         // Units in degrees per second and degrees per second squared
-        public static final double ROTATION_VELOCITY = 20;
+        public static final double ROTATION_VELOCITY = 5;
         public static final double ROTATION_ACCELERATION =
-                ROTATION_VELOCITY / .5; // .5 seconds to full
+                2; // 1 seconds to full
 
         // Units in meters per second and meters per second squared
         public static final double EXTENSION_VELOCITY = 2;
         public static final double EXTENSION_ACCELERATION =
                 EXTENSION_VELOCITY / .5; // .5 seconds from 0 to full
+
+        public static final double ROT_P = .05;
+        public static final double ROT_I = 0;
+        public static final double ROT_D = 0.01;
 
         public static final class Position {
 
@@ -154,6 +158,9 @@ public final class Constants {
                 public static final double CUBE_HIGH = 1; // TODO: TUNE
                 public static final double CUBE_MID = 1; // TODO: TUNE
 
+                public static final double CUBE_SHELF = 1; // TODO: TUNE
+                public static final double CONE_SHELF = 1; //  TODO: TUNE
+
             }
 
             public static final class Rotation {
@@ -164,6 +171,14 @@ public final class Constants {
                 public static final double CONE_MID = 45; // TODO: TUNE
                 public static final double CUBE_HIGH = 45; // TODO: TUNE
                 public static final double CUBE_MID = 45; // TODO: TUNE
+
+                public static final double HYBRID = -10; // TODO: TUNE
+
+                public static final double RAMP = 30; // TODO: TUNE
+
+                public static final double CUBE_SHELF = 50; // TODO: TUNE
+
+                public static final double CONE_SHELF = 50; //  TODO: TUNE
             }
         }
     }
@@ -183,7 +198,8 @@ public final class Constants {
         public static final double d = 0;
 
         public static final double ENCODER_OFFSET = -91;
-        public static final double CG_OFFSET = 60;
+//        public static final double CG_OFFSET = Math.toDegrees(1.1423);
+        public static final double CG_OFFSET = 0;
 
         public static final class Position {
             public static final double STARTING = -175;
@@ -194,6 +210,15 @@ public final class Constants {
             public static final double VERTICAL = -90;
 
             public static final double CONE_HIGH_RELATIVE = -45;
+            public static final double CONE_MID_RELATIVE = -90;
+            public static final double CUBE_HIGH_RELATIVE = 0;
+            public static final double CUBE_MID_RELATIVE = 0;
+
+            public static final double RAMP = -5; // TODO: TUNE
+
+            public static final double CONE_SHELF_RELATIVE = -90;
+            public static final double CUBE_SHELF_RELATIVE = 0;
+
         }
     }
 

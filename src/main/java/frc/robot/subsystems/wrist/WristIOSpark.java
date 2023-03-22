@@ -31,6 +31,8 @@ public class WristIOSpark implements WristIO {
 
         wrist.setIdleMode(IdleMode.kBrake);
 
+//        wrist.setSmartCurrentLimit(30);
+
         wristEncoder.setPositionConversionFactor(
                 (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
                         // because 1 rotation of the motor is < 1 rotation of
@@ -66,19 +68,24 @@ public class WristIOSpark implements WristIO {
     }
 
     @Override
-    public void setRotationSetpoint(double rot, double arbFFPercent) {
+    public void setRotationSetpoint(double rot, double arbFFVolts) {
         wrist.getPIDController()
                 .setReference(
                         rot,
                         CANSparkMax.ControlType.kPosition,
                         0,
-                        arbFFPercent,
-                        SparkMaxPIDController.ArbFFUnits.kPercentOut);
+                        arbFFVolts,
+                        SparkMaxPIDController.ArbFFUnits.kVoltage);
     }
 
     @Override
     public void setRotationSpeed(double speed) {
         wrist.set(speed);
+    }
+
+    @Override
+    public void setVoltage(double voltage) {
+        wrist.setVoltage(voltage);
     }
 
     public void checkLimitSwitches() {

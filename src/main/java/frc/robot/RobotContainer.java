@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.ButtonBinder;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.auto.AutonomousPathCommand;
-import frc.robot.subsystems.Leds.LedSubsystem;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -95,13 +95,14 @@ public class RobotContainer {
                             armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
                         },
                         armSubsystem));
-//        wristSubsystem.setDefaultCommand(
-//                Commands.waitSeconds(.5).andThen(wristSubsystem.holdAtCommand()));
         wristSubsystem.setDefaultCommand(
-        Commands.run(
-                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-                wristSubsystem)
-        );
+                Commands.waitSeconds(.5).andThen(wristSubsystem.holdAtCommand()));
+//        wristSubsystem.setDefaultCommand(
+//        Commands.run(
+//                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+//                wristSubsystem)
+//        );
+        wristSubsystem.setDefaultCommand(wristSubsystem.holdAtRelativeCommand());
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -146,12 +147,12 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        controller.getConeInTrigger().whileTrue(intakeSubsystem.buildConeInCommand());
-        controller.getConeOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
-        controller.getCubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
-        controller.getCubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
-        controller.wristLevelTrigger().whileTrue(wristSubsystem.rotateToCommand(0));
-        controller.wristDownTrigger().whileTrue(wristSubsystem.rotateToCommand(-90));
+        controller.coneInTrigger().whileTrue(intakeSubsystem.buildConeInCommand());
+        controller.coneOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
+        controller.cubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
+        controller.cubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
+        controller.wristLevelTrigger().onTrue(wristSubsystem.rotateRelativeToCommand(0));
+        controller.wristDownTrigger().onTrue(wristSubsystem.rotateRelativeToCommand(-90));
 
 //        controller.signalDropCone().whileTrue(LedSubsystem.buildDropConeCommand());
 //        controller.signalDropCube().whileTrue(LedSubsystem.buildDropCubeCommand());
@@ -164,17 +165,19 @@ public class RobotContainer {
 
         ButtonBinder.bindButton(driveController, SaitekX52Joystick.Button.kFire)
                 .onTrue(Commands.runOnce(driveSubsystem::zeroGyro));
-//        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02).whileTrue(
-//                Commands.run(
-//                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-//                        wristSubsystem)
-//        );
 
-        controller.getStartTrigger().onTrue(Commands.runOnce(wristSubsystem::seedWrist));
-        controller.getStartTrigger().onTrue(Commands.runOnce(armSubsystem::seedArm));
+//        CommandXboxController c = new CommandXboxController(1);
+//        c.x().whileTrue(Commands.run(() -> wristSubsystem.openLoopGoTo(0), wristSubsystem));
+//        c.y().whileTrue(Commands.run(() -> wristSubsystem.openLoopGoTo(-45), wristSubsystem));
+        new Trigger(() -> Math.abs(controller.getWristSpeed()) > .02).whileTrue(
+                Commands.run(
+                        () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
+                        wristSubsystem)
+        );
 
-        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(20));
-        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(40));
+
+//        controller.armTo20Trigger().whileTrue(armSubsystem.rotateToCommand(20));
+//        controller.armTo40Trigger().whileTrue(armSubsystem.rotateToCommand(40));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
