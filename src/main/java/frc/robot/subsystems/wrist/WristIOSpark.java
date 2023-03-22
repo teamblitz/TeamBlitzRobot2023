@@ -2,6 +2,7 @@ package frc.robot.subsystems.wrist;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -31,7 +32,7 @@ public class WristIOSpark implements WristIO {
 
         wrist.setIdleMode(IdleMode.kBrake);
 
-        //        wrist.setSmartCurrentLimit(30);
+        wrist.setSmartCurrentLimit(40, 0);
 
         wristEncoder.setPositionConversionFactor(
                 (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
@@ -56,7 +57,7 @@ public class WristIOSpark implements WristIO {
         wristTopLimitSwitch = new DigitalInput(Arm.TOP_WRIST_LIMIT_SWITCH);
         wristBottomLimitSwitch = new DigitalInput(Arm.BOTTOM_WRIST_LIMIT_SWITCH);
 
-        seedWristPosition();
+        seedWristPosition(true);
     }
 
     @Override
@@ -65,6 +66,9 @@ public class WristIOSpark implements WristIO {
         inputs.rotationSpeed = wristEncoder.getVelocity();
         inputs.absoluteRotation = Angles.wrapAngle(getAbsolutePosition());
         inputs.absEncoder = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360);
+
+        inputs.topLimit = wristTopLimitSwitch.get();
+        inputs.bottomLimit = wristBottomLimitSwitch.get();
     }
 
     @Override
@@ -88,22 +92,25 @@ public class WristIOSpark implements WristIO {
         wrist.setVoltage(voltage);
     }
 
+    @Override
     public void checkLimitSwitches() {
         // If velocity == Math.abs velocity and top limit switch hit
 
-        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0) wrist.set(0);
-        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0) wrist.set(0);
+        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0.01) wrist.set(0);
+        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 00.1) wrist.set(0);
     }
 
     @Override
-    public void seedWristPosition() {
+    public void seedWristPosition(boolean assumeStarting) {
         if (absWristEncoder.isConnected()) {
             wristEncoder.setPosition(getAbsolutePosition());
         } else {
+            if (assumeStarting) {
             System.out.printf(
                     "Wrist absolute encoder disconnected, assuming position %s%n",
                     Constants.Wrist.Position.STARTING);
             wristEncoder.setPosition(Constants.Wrist.Position.STARTING);
+            }
         }
     }
 

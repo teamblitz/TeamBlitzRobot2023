@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
 import frc.robot.commands.wrist.HoldWristAtPositionCommand;
@@ -42,18 +43,30 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final GenericEntry iEntry = wristPidTuning.add("i", i).getEntry("double");
     private final GenericEntry dEntry = wristPidTuning.add("d", d).getEntry("double");
 
+    public double lastGoal;
+    public double lastRelativeGoal;
+
     public WristSubsystem(WristIO io, ArmSubsystem armSubsystem) {
         this.io = io;
         this.armSubsystem = armSubsystem;
         // The wrist is basically an arm, so we treat it as such.
         feedforward =
                 new ArmFeedforward(Constants.Wrist.ks, Constants.Wrist.kg, Constants.Wrist.kv);
+
+        lastGoal = getRotation();
+        lastRelativeGoal = getRelativeRotation();
+
+        new Trigger(armSubsystem::shouldWristTuck).whileTrue(tuckInWristCommand());
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         logger.processInputs("wrist", inputs);
+
+        logger.recordOutput("wrist/lastGoal", lastGoal);
+        logger.recordOutput("wrist/lastRelativeGoal", lastRelativeGoal);
+        logger.recordOutput("wrist/relative", getRelativeRotation());
 
         boolean pidChanged = false;
 
@@ -73,18 +86,17 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         if (pidChanged) {
             io.setPID(p, i, d);
         }
-        io.seedWristPosition();
+        io.seedWristPosition(false);
+        io.checkLimitSwitches();
     }
 
     public void setRotationSpeed(double speed) {
+        if ((speed > 0 && inputs.topLimit) || (speed < 0 && inputs.bottomLimit)) {
+            io.setRotationSpeed(0);
+        }
         io.setRotationSpeed(speed);
     }
 
-    public void openLoopGoTo(double degrees) {
-        double relativeRot = degrees + armSubsystem.getRotation();
-        logger.recordOutput("wrist/goToRelative", relativeRot);
-        io.setVoltage(feedforward.calculate(Math.toRadians(relativeRot), 0));
-    }
 
     /**
      * Update the onboard pid controller based off of the relative angle of the arm
@@ -102,14 +114,21 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         double clamped =
                 MathUtil.clamp(rot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
-        // Don't do feedforward if we are clamping, so we don't push into ourselves
+        double clampedRelativeRot = clamped + armSubsystem.getRotation();
+
+        if (rot != clamped) {
+            velocity = 0;
+        }
+
+        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit) || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
+            io.setRotationSpeed(0);
+            return;
+        }
+
         io.setRotationSetpoint(
                 clamped,
-                rot == clamped && getRotation() < -10
-                        ? feedforward.calculate(
-                                Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET),
-                                Math.toRadians(velocity))
-                        : 0);
+                feedforward.calculate(
+                                Math.toRadians(clampedRelativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity)));
     }
 
     public void updateRotation(double wristRot, double velocity) {
@@ -117,17 +136,25 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         logger.recordOutput("wrist/wanted_velocity", velocity);
         // Arm Rot + Wrist Rot = Relative Wrist Rot
         // Wrist rot = Relative Wrist Rot - arm rot
-        double relativeRot = wristRot + armSubsystem.getRotation();
         double clamped =
                 MathUtil.clamp(
-                        relativeRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
-        double ff =
-                feedforward.calculate(
-                        Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET),
-                        Math.toRadians(velocity));
-        // Don't do feedforward if we are clamping, so we don't push into ourselves
+                        wristRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
+        double relativeRot = clamped + armSubsystem.getRotation();
+
+        if (wristRot != clamped) {
+            velocity = 0;
+        }
+
+        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit) || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
+            io.setRotationSpeed(0);
+            return;
+        }
+
         io.setRotationSetpoint(
-                clamped, relativeRot == clamped && getRotation() < -10 && velocity > 0 ? ff : 0);
+                clamped,
+                feedforward.calculate(
+                        Math.toRadians(relativeRot + Constants.Wrist.CG_OFFSET), Math.toRadians(velocity))
+        );
     }
 
     public double getRotation() {
@@ -170,9 +197,5 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public CommandBase verticalWristCommand() {
         return rotateRelativeToCommand(Constants.Wrist.Position.VERTICAL)
                 .andThen(holdAtRelativeCommand());
-    }
-
-    public void seedWrist() {
-        io.seedWristPosition();
     }
 }

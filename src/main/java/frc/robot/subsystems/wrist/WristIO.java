@@ -27,5 +27,7 @@ public interface WristIO {
 
     public default void setPID(double p, double i, double d) {}
 
-    public default void seedWristPosition() {}
+    public default void seedWristPosition(boolean assumeStarting) {}
+
+    public default void checkLimitSwitches() {}
 }

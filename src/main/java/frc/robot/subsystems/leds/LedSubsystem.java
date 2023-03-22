@@ -23,8 +23,12 @@ public class LedSubsystem extends SubsystemBase {
 
         led.start();
 
-        new Trigger(() -> DriverStation.isDSAttached() || DriverStation.isFMSAttached())
-                .onTrue(Commands.waitSeconds(.5).andThen(solidAllianceColorsCommand()));
+        ledBuffer.setRGB(0, 200, 200, 200);
+        ledBuffer.setRGB(1, 200, 200, 200);
+        led.setData(ledBuffer);
+
+//        new Trigger(() -> DriverStation.isDSAttached() || DriverStation.isFMSAttached())
+//                .onTrue(Commands.waitSeconds(.5).andThen(solidAllianceColorsCommand()));
     }
 
     public CommandBase coneSolid() {

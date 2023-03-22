@@ -14,7 +14,7 @@ public class ExtendToCommand extends CommandBase {
 
     private TrapezoidProfile profile;
 
-    private double lastTime;
+    private double startTime;
 
     public ExtendToCommand(ArmSubsystem armSubsystem, double goal, double threshold) {
         this.armSubsystem = armSubsystem;
@@ -31,17 +31,15 @@ public class ExtendToCommand extends CommandBase {
                         new TrapezoidProfile.Constraints(
                                 Constants.Arm.EXTENSION_VELOCITY,
                                 Constants.Arm.EXTENSION_ACCELERATION),
+                        new TrapezoidProfile.State(goal, 0),
                         new TrapezoidProfile.State(
-                                armSubsystem.getExtension(), armSubsystem.getExtensionSpeed()),
-                        new TrapezoidProfile.State(goal, 0));
-        lastTime = Timer.getFPGATimestamp();
+                                armSubsystem.getExtension(), armSubsystem.getExtensionSpeed()));
+        startTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
-        double deltaTime = Timer.getFPGATimestamp() - lastTime;
-        lastTime = Timer.getFPGATimestamp();
-        TrapezoidProfile.State state = profile.calculate(deltaTime);
+        TrapezoidProfile.State state = profile.calculate(Timer.getFPGATimestamp() - startTime);
         armSubsystem.updateExtension(state.position, state.velocity);
     }
 

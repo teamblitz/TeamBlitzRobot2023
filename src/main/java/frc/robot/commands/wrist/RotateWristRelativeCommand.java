@@ -35,10 +35,10 @@ public class RotateWristRelativeCommand extends CommandBase {
                         new TrapezoidProfile.Constraints(
                                 Constants.Arm.ROTATION_VELOCITY,
                                 Constants.Arm.ROTATION_ACCELERATION),
+                        new TrapezoidProfile.State(goal, 0),
                         new TrapezoidProfile.State(
                                 wristSubsystem.getRelativeRotation(),
-                                wristSubsystem.getRotationSpeed()),
-                        new TrapezoidProfile.State(goal, 0));
+                                wristSubsystem.getRotationSpeed()));
         lastTime = Timer.getFPGATimestamp();
         startingTime = Timer.getFPGATimestamp();
     }
@@ -55,5 +55,11 @@ public class RotateWristRelativeCommand extends CommandBase {
     public boolean isFinished() {
         return wristSubsystem.getRelativeRotation() > goal - threshold
                 && wristSubsystem.getRelativeRotation() < goal + threshold;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        wristSubsystem.lastRelativeGoal = goal;
+        wristSubsystem.lastGoal = wristSubsystem.getRotation();
     }
 }

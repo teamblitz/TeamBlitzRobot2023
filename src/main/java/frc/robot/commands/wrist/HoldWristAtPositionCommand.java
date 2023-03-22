@@ -16,7 +16,7 @@ public class HoldWristAtPositionCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        initialPosition = wristSubsystem.getRotation();
+        initialPosition = wristSubsystem.lastGoal;
     }
 
     @Override

@@ -31,15 +31,16 @@ public class RotateToCommand extends CommandBase {
                         new TrapezoidProfile.Constraints(
                                 Constants.Arm.ROTATION_VELOCITY,
                                 Constants.Arm.ROTATION_ACCELERATION),
-                        new TrapezoidProfile.State(armSubsystem.getRotation(), 0),
-                        new TrapezoidProfile.State(goal, 0));
+                        new TrapezoidProfile.State(goal, 0),
+                        new TrapezoidProfile.State(
+                                armSubsystem.getRotation(), 0));
         startTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
         TrapezoidProfile.State state = profile.calculate(Timer.getFPGATimestamp() - startTime);
-        armSubsystem.updateRotation(goal, 0);
+        armSubsystem.updateRotation(state.position, 0);
     }
 
     @Override

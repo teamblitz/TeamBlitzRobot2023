@@ -108,19 +108,31 @@ public final class Constants {
 
         public static final double STARTING_ROTATION = 90;
         /** The center of the center of rotation for the arm */
-        public static final Translation3d ARM_BASE =
-                new Translation3d(0, 0, 0); // TODO: Tune to robot
+        public static final double ARM_BASE_HEIGHT =
+                Units.inchesToMeters(19); // TODO: Tune to robot
 
-        public static final double MIN_ROT = 0; // TODO: Tune to robot
+        public static final double ARM_BASE_DISTANCE_FROM_FRAME = Units.inchesToMeters(14);
+
+        public static final double MIN_ROT = -25; // TODO: Tune to robot
         public static final double MAX_ROT = 90; // TODO: Tune to robot
 
         public static final double ROT_THRESHOLD = 3;
 
         public static final double EXTENSION_THRESHOLD =
                 Units.inchesToMeters(.5); // Tight, but achievable.
-        public static final int MIN_EXTENSION = 0;
+        public static final double MIN_EXTENSION = 0;
 
-        public static final int MAX_EXTENSION = 2; // TODO: Tune to robot
+        public static final double MAX_EXTENSION = 1.10; // TODO: Tune to robot
+
+        public static final double IN_LENGTH = Units.inchesToMeters(32);
+        public static final double OUT_LENGTH = Units.inchesToMeters(60);
+
+        public static final double HEIGHT_PROTECTION = Units.feetToMeters(6);
+        public static final double PULL_TO = .4;
+
+        public static final double TUCK_IN_EXTENSION = Units.inchesToMeters(40); // TODO: TUNE
+
+        public static final double STOP_EXTENSION = Units.inchesToMeters(46);
 
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
         public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
@@ -135,17 +147,22 @@ public final class Constants {
         public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(48);
 
         // Units in degrees per second and degrees per second squared
-        public static final double ROTATION_VELOCITY = 5;
-        public static final double ROTATION_ACCELERATION = 2; // 1 seconds to full
+        public static final double ROTATION_VELOCITY = 30;
+        public static final double ROTATION_ACCELERATION =
+                60; // 1 seconds to full
 
         // Units in meters per second and meters per second squared
-        public static final double EXTENSION_VELOCITY = 2;
+        public static final double EXTENSION_VELOCITY = 1;
         public static final double EXTENSION_ACCELERATION =
                 EXTENSION_VELOCITY / .5; // .5 seconds from 0 to full
 
-        public static final double ROT_P = .05;
+        public static final double ROT_P = .07;
         public static final double ROT_I = 0;
         public static final double ROT_D = 0.01;
+
+        public static final double EXT_P = .007;
+        public static final double EXT_I = 0;
+        public static final double EXT_D = 0;
 
         public static final class Position {
 
@@ -183,7 +200,7 @@ public final class Constants {
 
     public static final class Wrist {
 
-        public static final double MIN_ROTATION = -175; // TODO: TUNE THESE.
+        public static final double MIN_ROTATION = -160; // TODO: TUNE THESE.
         public static final double MAX_ROTATION = -5;
         public static final double ks = 0.41856;
         public static final double kg = 0.89932;
@@ -191,9 +208,9 @@ public final class Constants {
         // ka = 0.013184
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.004;
+        public static final double p = 0.005;
         public static final double i = 0;
-        public static final double d = 0;
+        public static final double d = 0.0001;
 
         public static final double ENCODER_OFFSET = -91;
         //        public static final double CG_OFFSET = Math.toDegrees(1.1423);

@@ -7,6 +7,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public class RotateWristCommand extends CommandBase {
     private final WristSubsystem wristSubsystem;
 
@@ -15,10 +17,7 @@ public class RotateWristCommand extends CommandBase {
 
     private TrapezoidProfile profile;
 
-    private double lastTime;
-
-    private double positive;
-
+    private double startTime;
     public RotateWristCommand(WristSubsystem wristSubsystem, double goal, double threshold) {
         this.wristSubsystem = wristSubsystem;
 
@@ -37,20 +36,17 @@ public class RotateWristCommand extends CommandBase {
                         new TrapezoidProfile.Constraints(
                                 Constants.Arm.ROTATION_VELOCITY,
                                 Constants.Arm.ROTATION_ACCELERATION),
+                        new TrapezoidProfile.State(goal, 0),
                         new TrapezoidProfile.State(
-                                wristSubsystem.getRotation(), wristSubsystem.getRotationSpeed()),
-                        new TrapezoidProfile.State(goal, 0));
-        lastTime = Timer.getFPGATimestamp();
+                                wristSubsystem.getRotation(), wristSubsystem.getRotationSpeed()));
+        startTime = Timer.getFPGATimestamp();
 
-        positive = wristSubsystem.getRotation() < goal ? 1 : -1;
     }
 
     @Override
     public void execute() {
-        double deltaTime = Timer.getFPGATimestamp() - lastTime;
-        lastTime = Timer.getFPGATimestamp();
-        TrapezoidProfile.State state = profile.calculate(.02);
-        wristSubsystem.updateRotation(state.position, state.velocity * positive);
+        TrapezoidProfile.State state = profile.calculate(Timer.getFPGATimestamp() - startTime);
+        wristSubsystem.updateRotation(state.position, state.velocity);
     }
 
     @Override
@@ -62,5 +58,7 @@ public class RotateWristCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         Logger.getInstance().recordOutput("wrist/rotate_to_active", false);
+        wristSubsystem.lastGoal = goal;
+        wristSubsystem.lastRelativeGoal = wristSubsystem.getRelativeRotation();
     }
 }
