@@ -56,7 +56,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         lastGoal = getRotation();
         lastRelativeGoal = getRelativeRotation();
 
-        new Trigger(armSubsystem::shouldWristTuck).whileTrue(tuckInWristCommand());
+        
     }
 
     @Override
@@ -88,6 +88,11 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         }
         io.seedWristPosition(false);
         io.checkLimitSwitches();
+
+        // if (armSubsystem.shouldWristTuck()) {
+        //     tuckInWristCommand().schedule();
+        // }
+        armSubsystem.setWristPos(getRotation());
     }
 
     public void setRotationSpeed(double speed) {
@@ -150,11 +155,13 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
             velocity = 0;
         }
 
-        if ((clamped > Constants.Wrist.MAX_ROTATION - 10 && inputs.topLimit)
-                || (clamped < Constants.Wrist.MIN_ROTATION + 10 && inputs.bottomLimit)) {
+        if (inputs.topLimit && velocity > 0 || inputs.bottomLimit && velocity < 0) {
             io.setRotationSpeed(0);
+            logger.recordOutput("wrist/limit_overide", true);
             return;
         }
+
+        logger.recordOutput("wrist/limit_overide", false);
 
         io.setRotationSetpoint(
                 clamped,
@@ -192,7 +199,10 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public CommandBase tuckInWristCommand() {
-        return rotateToCommand(Constants.Wrist.Position.TUCKED_IN).andThen(holdAtCommand());
+        return rotateToCommand(Constants.Wrist.Position.TUCKED_IN)
+        .beforeStarting(() -> logger.recordOutput("wrist/tuck_in_active", true))
+        .finallyDo((b) -> logger.recordOutput("wrist/tuck_in_active", false))
+        .andThen(holdAtCommand());
     }
 
     public CommandBase levelWristCommand() {
