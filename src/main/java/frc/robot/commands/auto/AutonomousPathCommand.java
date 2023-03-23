@@ -82,8 +82,8 @@ public class AutonomousPathCommand {
     public Command autoMidCube() {
         return this.commandBuilder
                 .primeCubeMid()
-                .andThen(autoCubeOut())
-                .andThen(this.armSubsystem.homeArmCommand());
+                .andThen(this.intakeSubsystem.buildCubeOutCommand().withTimeout(1))
+                .andThen(this.armSubsystem.homeArmCommand().withTimeout(3));
     }
 
     public Command generateAutonomous(String path) {
