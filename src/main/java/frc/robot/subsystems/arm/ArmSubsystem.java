@@ -113,8 +113,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     // Currently velocity is unused as we do not do feed forward on the telescoping aspect of the
     // arm
     public void updateExtension(double meters, double velocity) {
-
-        if (inputs.minExtensionLimit && meters < .01) setArmExtensionSpeed(0);
+        logger.recordOutput("arm/wanted_extension", meters);
         io.setExtensionSetpoint(meters);
     }
 

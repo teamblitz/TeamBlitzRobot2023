@@ -48,7 +48,7 @@ public class CommandBuilder {
      */
     public CommandBase primeFor(
             double rotation, double extension, double wristRot, boolean tuckIn) {
-        return levelAndTuck(tuckIn)
+        return levelAndTuck(tuckIn).withTimeout(3)
                 .andThen(armSubsystem.extendToCommand(extension))
                 .andThen(
                         armSubsystem

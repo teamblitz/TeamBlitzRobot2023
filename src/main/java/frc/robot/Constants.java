@@ -115,10 +115,10 @@ public final class Constants {
         public static final double MIN_ROT = -25; // TODO: Tune to robot
         public static final double MAX_ROT = 90; // TODO: Tune to robot
 
-        public static final double ROT_THRESHOLD = 3;
+        public static final double ROT_THRESHOLD = 10;
 
         public static final double EXTENSION_THRESHOLD =
-                Units.inchesToMeters(.5); // Tight, but achievable.
+                Units.inchesToMeters(1); // Tight, but achievable.
         public static final double MIN_EXTENSION = 0;
 
         public static final double MAX_EXTENSION = 1.10; // TODO: Tune to robot
@@ -167,7 +167,7 @@ public final class Constants {
             public static final class Extension {
                 public static final double RETRACTED = .05;
 
-                public static final double CONE_HIGH = .7; // or .73
+                public static final double CONE_HIGH = .76; // or .73
                 public static final double CONE_MID = .23;
                 public static final double CUBE_HIGH = .4; // TODO: TUNE
                 public static final double CUBE_MID = 0;

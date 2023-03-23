@@ -206,7 +206,7 @@ public class RobotContainer {
                         armSubsystem.RotationRequirement)
                 );
         
-        new Trigger(() -> Math.abs(controller.getExtensionSpeed()) > .02)
+        new Trigger(() -> Math.abs(controller.getExtensionSpeed()) > .05)
                 .whileTrue(
                         Commands.run(
                         () -> {
@@ -220,10 +220,10 @@ public class RobotContainer {
         
         controller.primeHybridTrigger().onTrue(commandBuilder.primeHybrid());
         controller.primeMidConeTrigger().onTrue(commandBuilder.primeConeMid());
-        controller.primeHighConeTrigger().onTrue(commandBuilder.primeConeMid());
+        controller.primeHighConeTrigger().onTrue(commandBuilder.primeConeHigh());
 
         controller.primeMidCubeTrigger().onTrue(commandBuilder.primeCubeMid());
-        controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeMid());
+        controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeHigh());
 
         controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
     }
