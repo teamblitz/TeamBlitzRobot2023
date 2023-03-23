@@ -129,7 +129,7 @@ public class RobotContainer {
         //                wristSubsystem)
         //        );
         wristSubsystem.setDefaultCommand(
-                Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtRelativeCommand()));
+                Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -201,8 +201,15 @@ public class RobotContainer {
                                                             wristSubsystem.getRotation();
                                                 })));
 
-        controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
-        controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));
+        // controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
+        // controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));
+        
+        controller.primeHybridTrigger().onTrue(commandBuilder.primeHybrid());
+        controller.primeMidConeTrigger().onTrue(commandBuilder.primeConeMid());
+        controller.primeHighConeTrigger().onTrue(commandBuilder.primeConeMid());
+
+        controller.primeMidCubeTrigger().onTrue(commandBuilder.primeCubeMid());
+        controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeMid());
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

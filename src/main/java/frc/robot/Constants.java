@@ -30,7 +30,7 @@ import java.util.function.Function;
  */
 public final class Constants {
 
-    public static final Mode simMode = Mode.SIM;
+    public static final Mode simMode = Mode.REPLAY;
 
     public static final boolean tuningMode = true;
 
@@ -126,12 +126,12 @@ public final class Constants {
         public static final double IN_LENGTH = Units.inchesToMeters(32);
         public static final double OUT_LENGTH = Units.inchesToMeters(60);
 
-        public static final double HEIGHT_PROTECTION = Units.feetToMeters(6);
-        public static final double PULL_TO = .4;
+        public static final double HEIGHT_PROTECTION = Units.feetToMeters(5.5);
+        public static final double PULL_TO = .3;
 
-        public static final double TUCK_IN_EXTENSION = Units.inchesToMeters(40); // TODO: TUNE
+        public static final double TUCK_IN_EXTENSION = Units.inchesToMeters(25); // TODO: TUNE
 
-        public static final double STOP_EXTENSION = Units.inchesToMeters(46);
+        public static final double STOP_EXTENSION = Units.inchesToMeters(41);
 
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
         public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
@@ -167,10 +167,10 @@ public final class Constants {
             public static final class Extension {
                 public static final double RETRACTED = 0;
 
-                public static final double CONE_HIGH = 1; // TODO: TUNE
-                public static final double CONE_MID = 1; // TODO: TUNE
-                public static final double CUBE_HIGH = 1; // TODO: TUNE
-                public static final double CUBE_MID = 1; // TODO: TUNE
+                public static final double CONE_HIGH = .7; // or .73
+                public static final double CONE_MID = .23;
+                public static final double CUBE_HIGH = .4; // TODO: TUNE
+                public static final double CUBE_MID = 0;
 
                 public static final double CUBE_SHELF = 1; // TODO: TUNE
                 public static final double CONE_SHELF = 1; //  TODO: TUNE
@@ -180,10 +180,10 @@ public final class Constants {
                 public static final double LEVEL = 0;
                 public static final double VERTICAL = 90;
 
-                public static final double CONE_HIGH = 45; // TODO: TUNE
-                public static final double CONE_MID = 45; // TODO: TUNE
-                public static final double CUBE_HIGH = 45; // TODO: TUNE
-                public static final double CUBE_MID = 45; // TODO: TUNE
+                public static final double CONE_HIGH = 31;
+                public static final double CONE_MID = 34;
+                public static final double CUBE_HIGH = 23.7;
+                public static final double CUBE_MID = 17.5;
 
                 public static final double HYBRID = -10; // TODO: TUNE
 
@@ -198,19 +198,22 @@ public final class Constants {
 
     public static final class Wrist {
 
-        public static final double MIN_ROTATION = -160; // TODO: TUNE THESE.
-        public static final double MAX_ROTATION = -5;
+        public static final double MIN_ROTATION = -177; // TODO: TUNE THESE.
+        public static final double MAX_ROTATION = -23;
         public static final double ks = 0.41856;
         public static final double kg = 0.89932;
         public static final double kv = 0.24084;
         // ka = 0.013184
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.005;
+        public static final double p = 0.006;
         public static final double i = 0;
         public static final double d = 0.0001;
 
-        public static final double ENCODER_OFFSET = -91;
+        public static final double ROTATION_VELOCITY = 60;
+        public static final double ROTATION_ACCELERATION = 120; // 1 seconds to full
+
+        public static final double ENCODER_OFFSET = -165 + 90;
         //        public static final double CG_OFFSET = Math.toDegrees(1.1423);
         public static final double CG_OFFSET = 0;
 
@@ -222,8 +225,8 @@ public final class Constants {
 
             public static final double VERTICAL = -90;
 
-            public static final double CONE_HIGH_RELATIVE = -45;
-            public static final double CONE_MID_RELATIVE = -90;
+            public static final double CONE_HIGH_RELATIVE = -50;
+            public static final double CONE_MID_RELATIVE = -52;
             public static final double CUBE_HIGH_RELATIVE = 0;
             public static final double CUBE_MID_RELATIVE = 0;
 
@@ -301,7 +304,7 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double ANGLE_KP = 0.0035; // TODO: Tune this.
+        public static final double ANGLE_KP = 0.003; // TODO: Tune this.
         public static final double ANGLE_KI = 0.0;
         public static final double ANGLE_KD = 0.0;
         public static final double ANGLE_KF = 0.0; // For now, should remain zero

@@ -101,11 +101,11 @@ public class Controller {
     }
 
     public Trigger wristLevelTrigger() {
-        return commandOperatorController.b();
+        return commandOperatorController.b().and(scoreModeTrigger().negate());
     }
 
     public Trigger wristDownTrigger() {
-        return commandOperatorController.a();
+        return commandOperatorController.a().and(scoreModeTrigger().negate());
     }
 
     public double getArmSpeed() {

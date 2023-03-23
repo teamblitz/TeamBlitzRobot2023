@@ -31,7 +31,7 @@ public class WristIOSpark implements WristIO {
 
         wrist.setIdleMode(IdleMode.kBrake);
 
-        wrist.setSmartCurrentLimit(40, 0);
+        wrist.setSmartCurrentLimit(30, 0);
 
         wristEncoder.setPositionConversionFactor(
                 (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
@@ -43,7 +43,7 @@ public class WristIOSpark implements WristIO {
                 (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
                         // because 1 rotation of the motor is < 1 rotation of
                         // the wrist
-                        * 360);
+                        * 360 * (1/60));             
 
         wrist.getPIDController().setP(Constants.Wrist.p);
         wrist.getPIDController().setI(Constants.Wrist.i);
@@ -63,8 +63,8 @@ public class WristIOSpark implements WristIO {
     public void updateInputs(WristIOInputs inputs) {
         inputs.rotation = wristEncoder.getPosition();
         inputs.rotationSpeed = wristEncoder.getVelocity();
-        inputs.absoluteRotation = Angles.wrapAngle(getAbsolutePosition());
-        inputs.absEncoder = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360);
+        inputs.absoluteRotation = getAbsolutePosition();
+        inputs.absEncoder = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360, -270, 90);
 
         inputs.topLimit = wristTopLimitSwitch.get();
         inputs.bottomLimit = wristBottomLimitSwitch.get();
@@ -95,8 +95,8 @@ public class WristIOSpark implements WristIO {
     public void checkLimitSwitches() {
         // If velocity == Math.abs velocity and top limit switch hit
 
-        if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0.01) wrist.set(0);
-        if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 00.1) wrist.set(0);
+        // if (wristTopLimitSwitch.get() && wristEncoder.getVelocity() > 0.01) wrist.set(0);
+        // if (wristBottomLimitSwitch.get() && wristEncoder.getVelocity() < 0.01) wrist.set(0);
     }
 
     @Override
@@ -122,6 +122,6 @@ public class WristIOSpark implements WristIO {
 
     private double getAbsolutePosition() {
         return Angles.wrapAngle(
-                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.ENCODER_OFFSET);
+                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.ENCODER_OFFSET, -270, 90);
     }
 }

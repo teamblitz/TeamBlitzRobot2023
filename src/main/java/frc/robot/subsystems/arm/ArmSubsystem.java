@@ -31,7 +31,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final TelescopingArmFeedforward rotationFeedforward;
 
     private final CommandBase protectArmCommand;
-    private final CommandBase stopArmExtensionCommand;
+    private boolean stopExtendingOut;
 
     private boolean shouldTuck;
 
@@ -52,7 +52,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
 
         protectArmCommand = extendToCommand(Constants.Arm.PULL_TO);
-        stopArmExtensionCommand = Commands.run(() -> {}, ExtensionRequirement);
     }
 
     @Override
@@ -91,10 +90,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         }
 
         if (extension > Constants.Arm.STOP_EXTENSION) {
-            stopArmExtensionCommand.schedule();
+            stopExtendingOut = true;
             logger.recordOutput("arm/extension_protection_enabled", true);
         } else {
-            stopArmExtensionCommand.cancel();
+            stopExtendingOut = false;
             logger.recordOutput("arm/extension_protection_enabled", false);
         }
     }
@@ -140,8 +139,9 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setArmExtensionSpeed(double percent) {
-        if (inputs.minExtensionLimit && percent < 0) {
+        if (stopExtendingOut && percent > 0) {
             io.setArmExtensionSpeed(0);
+            return;
         }
         io.setArmExtensionSpeed(percent);
     }

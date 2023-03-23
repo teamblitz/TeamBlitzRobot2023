@@ -88,17 +88,15 @@ public class CommandBuilder {
     }
 
     public CommandBase primeCubeMid() {
-        return primeFor(
-                Constants.Arm.Position.Rotation.CUBE_MID,
-                Constants.Arm.Position.Extension.CUBE_MID,
-                Constants.Wrist.Position.CUBE_MID_RELATIVE,
-                false);
+        return armSubsystem
+                .rotateToCommand(Constants.Arm.Position.Rotation.CUBE_MID)
+                .alongWith(wristSubsystem.rotateToCommand(Constants.Wrist.Position.CUBE_MID_RELATIVE));
     }
 
     public CommandBase primeHybrid() {
         return armSubsystem
                 .rotateToCommand(Constants.Arm.Position.Rotation.HYBRID)
-                .alongWith(wristSubsystem.rotateToCommand(-5));
+                .alongWith(wristSubsystem.rotateToCommand(Constants.Wrist.MAX_ROTATION));
     }
 
     public CommandBase primeCubeRamp() {

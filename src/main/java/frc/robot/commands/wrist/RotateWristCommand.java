@@ -33,8 +33,8 @@ public class RotateWristCommand extends CommandBase {
         profile =
                 new TrapezoidProfile(
                         new TrapezoidProfile.Constraints(
-                                Constants.Arm.ROTATION_VELOCITY,
-                                Constants.Arm.ROTATION_ACCELERATION),
+                                Constants.Wrist.ROTATION_VELOCITY,
+                                Constants.Wrist.ROTATION_ACCELERATION),
                         new TrapezoidProfile.State(goal, 0),
                         new TrapezoidProfile.State(
                                 wristSubsystem.getRotation(), wristSubsystem.getRotationSpeed()));

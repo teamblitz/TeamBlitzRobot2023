@@ -93,6 +93,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void setRotationSpeed(double speed) {
         if ((speed > 0 && inputs.topLimit) || (speed < 0 && inputs.bottomLimit)) {
             io.setRotationSpeed(0);
+            return;
         }
         io.setRotationSpeed(speed);
     }
@@ -106,6 +107,9 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void updateRelativeRotation(double relativeRot, double velocity) {
         // Arm Rot + Wrist Rot = Relative Wrist Rot
         // Wrist rot = Relative Wrist Rot - arm rot
+
+        logger.recordOutput("wrist/wanted_rot_relative", relativeRot);
+
         double rot = relativeRot - armSubsystem.getRotation();
 
         logger.recordOutput("wrist/wanted_rot", rot);
