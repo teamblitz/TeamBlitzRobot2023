@@ -36,4 +36,6 @@ public interface SwerveModuleIO {
 
     /** Configure the PID constants for the angle controller */
     public default void configureAnglePID(double p, double i, double d) {}
+
+    public default void setBrakeMode(boolean enabled) {}
 }

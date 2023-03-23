@@ -2,6 +2,8 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.*;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.CTREConfigs;
@@ -19,6 +21,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
 
     private final SparkMaxPIDController drivePIDController;
     private final SparkMaxPIDController anglePIDController;
+
+    private boolean lastBrake = false;
 
     public SwerveModuleIOSparkMax(SwerveModuleConstants moduleConstants) {
         this.angleOffset = moduleConstants.angleOffset;
@@ -151,5 +155,13 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
 
         // TODO: Remove after we know the pid loop isn't wild
         // drivePIDController.setOutputRange(-.5, .5);
+    }
+
+    @Override
+    public void setBrakeMode(boolean enabled) {
+        if (lastBrake != enabled) {
+            driveMotor.setIdleMode(enabled ? IdleMode.kBrake : IdleMode.kCoast);
+            lastBrake = enabled;
+        }
     }
 }

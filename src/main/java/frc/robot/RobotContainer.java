@@ -226,6 +226,9 @@ public class RobotContainer {
         controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeHigh());
 
         controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
+
+        controller.brakeModeTrigger().onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(true)));
+        controller.coastModeTrigger().onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(false)));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

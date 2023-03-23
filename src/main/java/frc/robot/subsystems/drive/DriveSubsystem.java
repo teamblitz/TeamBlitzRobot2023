@@ -172,6 +172,12 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         setModuleStates(desiredStates, true, false, true);
     }
 
+    public void setBrakeMode(boolean enabled) {
+        for (SwerveModule swerveModule : swerveModules) {
+            swerveModule.setBrakeMode(enabled);
+        }
+    }
+
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : swerveModules) {

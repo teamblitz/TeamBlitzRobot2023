@@ -31,7 +31,7 @@ public class Controller {
     public Trigger intake() {
         return commandOperatorController
                 .leftBumper()
-                .or(commandDriverController.button(SaitekX52Joystick.Button.kA.value));
+                .or(commandDriverController.button(SaitekX52Joystick.Button.kB.value));
     }
 
     public Trigger outtake() {
@@ -158,6 +158,14 @@ public class Controller {
     }
 
     public Trigger xBrakeTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kB.value);
+        return commandDriverController.button(SaitekX52Joystick.Button.kA.value);
+    }
+
+    public Trigger brakeModeTrigger() {
+        return commandDriverController.button(SaitekX52Joystick.Button.kModeBlue.value);
+    }
+
+    public Trigger coastModeTrigger() {
+        return brakeModeTrigger().negate();
     }
 }
