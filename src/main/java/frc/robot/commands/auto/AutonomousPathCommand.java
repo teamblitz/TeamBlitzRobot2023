@@ -96,6 +96,7 @@ public class AutonomousPathCommand {
                         this.armSubsystem
                                 .homeArmCommand()
                                 .withTimeout(2)
+                                .andThen(Commands.run(() -> {}))
                                 .beforeStarting(
                                         () -> logger.recordOutput("auto/state", "homeArm")));
     }
