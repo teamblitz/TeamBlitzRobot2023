@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
 import frc.robot.commands.wrist.HoldWristAtPositionCommand;
@@ -55,8 +54,6 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         lastGoal = getRotation();
         lastRelativeGoal = getRelativeRotation();
-
-        
     }
 
     @Override
@@ -200,9 +197,9 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public CommandBase tuckInWristCommand() {
         return rotateToCommand(Constants.Wrist.Position.TUCKED_IN)
-        .beforeStarting(() -> logger.recordOutput("wrist/tuck_in_active", true))
-        .finallyDo((b) -> logger.recordOutput("wrist/tuck_in_active", false))
-        .andThen(holdAtCommand());
+                .beforeStarting(() -> logger.recordOutput("wrist/tuck_in_active", true))
+                .finallyDo((b) -> logger.recordOutput("wrist/tuck_in_active", false))
+                .andThen(holdAtCommand());
     }
 
     public CommandBase levelWristCommand() {

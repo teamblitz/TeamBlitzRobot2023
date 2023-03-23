@@ -16,6 +16,7 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import java.util.HashMap;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 // This class is mainly just storage for the autonomous pathing and commands
 public class AutonomousPathCommand {
@@ -23,6 +24,8 @@ public class AutonomousPathCommand {
     private final ArmSubsystem armSubsystem;
     private final IntakeSubsystem intakeSubsystem;
     private final CommandBuilder commandBuilder;
+
+    private final Logger logger = Logger.getInstance();
 
     public AutonomousPathCommand(
             final DriveSubsystem driveSubsystem,
@@ -82,8 +85,19 @@ public class AutonomousPathCommand {
     public Command autoMidCube() {
         return this.commandBuilder
                 .primeCubeMid()
-                .andThen(this.intakeSubsystem.buildCubeOutCommand().withTimeout(1))
-                .andThen(this.armSubsystem.homeArmCommand().withTimeout(3));
+                .withTimeout(2)
+                .beforeStarting(() -> logger.recordOutput("auto/state", "prime"))
+                .andThen(
+                        this.intakeSubsystem
+                                .buildCubeOutCommand()
+                                .withTimeout(0.5)
+                                .beforeStarting(() -> logger.recordOutput("auto/state", "cubeOut")))
+                .andThen(
+                        this.armSubsystem
+                                .homeArmCommand()
+                                .withTimeout(2)
+                                .beforeStarting(
+                                        () -> logger.recordOutput("auto/state", "homeArm")));
     }
 
     public Command generateAutonomous(String path) {

@@ -92,7 +92,8 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         // }
         logger.recordOutput("arm/shouldTuck", shouldTuck);
 
-        double max = Constants.Arm.STOP_EXTENSION + (wristPos > -160 ? Units.inchesToMeters(-10) : 0);
+        double max =
+                Constants.Arm.STOP_EXTENSION + (wristPos > -160 ? Units.inchesToMeters(-10) : 0);
 
         if (extension > max) {
             stopExtendingOut = true;
@@ -184,6 +185,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public void seedArm() {
         io.seedArmPosition();
     }
+
     double wristPos;
 
     public void setWristPos(double p) {
