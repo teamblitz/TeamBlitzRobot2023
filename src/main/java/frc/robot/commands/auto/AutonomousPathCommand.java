@@ -113,13 +113,13 @@ public class AutonomousPathCommand {
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
         switch (path) {
             case "Left":
-                pathGroup = PathPlanner.loadPathGroup("Left", new PathConstraints(2, 1.5));
+                pathGroup = PathPlanner.loadPathGroup("Left Copy", new PathConstraints(2, 1.5));
                 break;
             case "Middle":
                 pathGroup = PathPlanner.loadPathGroup("Middle", new PathConstraints(2, 1.5));
                 break;
             case "Right":
-                pathGroup = PathPlanner.loadPathGroup("Right", new PathConstraints(2, 1.5));
+                pathGroup = PathPlanner.loadPathGroup("Right Copy", new PathConstraints(2, 1.5));
                 break;
             case "Nothing":
                 pathGroup = PathPlanner.loadPathGroup("Nothing", new PathConstraints(2, 1.5));
