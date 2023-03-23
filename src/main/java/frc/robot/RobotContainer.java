@@ -226,6 +226,7 @@ public class RobotContainer {
         controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeHigh());
 
         controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
+        controller.homeArmTrigger().onTrue(armSubsystem.retractArmCommand());
 
         controller.brakeModeTrigger().onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(true)));
         controller.coastModeTrigger().onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(false)));

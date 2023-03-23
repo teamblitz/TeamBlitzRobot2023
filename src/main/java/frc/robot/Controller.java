@@ -116,6 +116,10 @@ public class Controller {
         return commandOperatorController.a().and(basicModeTrigger());
     }
 
+    public Trigger retractArmTrigger() {
+       return commandOperatorController.y().and(basicModeTrigger());
+    }
+
 
     public double getArmSpeed() {
         return -.2
@@ -142,14 +146,6 @@ public class Controller {
 
     public Trigger getStartTrigger() {
         return commandOperatorController.start();
-    }
-
-    public Trigger armTo20Trigger() {
-        return commandOperatorController.x();
-    }
-
-    public Trigger armTo40Trigger() {
-        return commandOperatorController.y();
     }
 
     // Driver Controls
