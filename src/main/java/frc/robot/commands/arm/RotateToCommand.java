@@ -44,7 +44,6 @@ public class RotateToCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return armSubsystem.getRotation() > goal - threshold
-                && armSubsystem.getRotation() < goal + threshold;
+        return profile.isFinished(Timer.getFPGATimestamp() - startTime);
     }
 }

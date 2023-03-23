@@ -66,7 +66,7 @@ public class AutonomousPathCommand {
     }
 
     public Command autoConeOut() {
-        return this.intakeSubsystem.buildConeOutCommand().withTimeout(0.25);
+        return this.intakeSubsystem.buildConeOutCommand().withTimeout(0.50);
     }
 
     public Command autoCubeIn() {
@@ -74,7 +74,7 @@ public class AutonomousPathCommand {
     }
 
     public Command autoCubeOut() {
-        return this.intakeSubsystem.buildCubeOutCommand().withTimeout(0.25);
+        return this.intakeSubsystem.buildCubeOutCommand().withTimeout(0.50);
     }
 
     // Mid Cube command (used in all autonomous)
