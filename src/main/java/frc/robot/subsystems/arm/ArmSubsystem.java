@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.BlitzSubsystem;
 import frc.lib.math.controller.TelescopingArmFeedforward;
@@ -34,6 +35,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     private boolean stopExtendingOut;
 
     private boolean shouldTuck;
+    private double extension;
 
     public ArmSubsystem(ArmIO io) {
         this.io = io;
@@ -78,18 +80,21 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         logger.recordOutput("arm/length", armLength);
         // Extension limit
 
-        double extension =
+        extension =
                 (armLength * Math.cos(Math.toRadians(getRotation())))
                         - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
         logger.recordOutput("arm/extension", extension);
 
-        if (extension > Constants.Arm.TUCK_IN_EXTENSION) {
-            shouldTuck = true;
-        } else {
-            shouldTuck = false;
-        }
+        // if (extension > Constants.Arm.TUCK_IN_EXTENSION) {
+        //     shouldTuck = true;
+        // } else {
+        //     shouldTuck = false;
+        // }
+        logger.recordOutput("arm/shouldTuck", shouldTuck);
 
-        if (extension > Constants.Arm.STOP_EXTENSION) {
+        double max = Constants.Arm.STOP_EXTENSION + (wristPos > -160 ? Units.inchesToMeters(-10) : 0);
+
+        if (extension > max) {
             stopExtendingOut = true;
             logger.recordOutput("arm/extension_protection_enabled", true);
         } else {
@@ -142,6 +147,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
             io.setArmExtensionSpeed(0);
             return;
         }
+        // if (extension > Constants.Arm.SLOW_DOWN_AT) {
+        //     io.setArmExtensionSpeed(percent * .5);
+
+        // }
         io.setArmExtensionSpeed(percent);
     }
 
@@ -174,5 +183,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public void seedArm() {
         io.seedArmPosition();
+    }
+    double wristPos;
+
+    public void setWristPos(double p) {
+        wristPos = p;
     }
 }

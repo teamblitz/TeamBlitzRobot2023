@@ -131,6 +131,8 @@ public final class Constants {
 
         public static final double TUCK_IN_EXTENSION = Units.inchesToMeters(25); // TODO: TUNE
 
+        public static final double SLOW_DOWN_AT = Units.inchesToMeters(30);
+
         public static final double STOP_EXTENSION = Units.inchesToMeters(41);
 
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
@@ -206,7 +208,7 @@ public final class Constants {
         // ka = 0.013184
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.006;
+        public static final double p = 0.008;
         public static final double i = 0;
         public static final double d = 0.0001;
 
