@@ -97,4 +97,8 @@ public class SwerveModule {
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(inputs.drivePositionMeters, getAngle());
     }
+
+    public void setBrakeMode(boolean enabled) {
+        io.setBrakeMode(enabled);
+    }
 }
