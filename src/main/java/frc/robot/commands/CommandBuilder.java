@@ -48,7 +48,8 @@ public class CommandBuilder {
      */
     public CommandBase primeFor(
             double rotation, double extension, double wristRot, boolean tuckIn) {
-        return levelAndTuck(tuckIn).withTimeout(3)
+        return levelAndTuck(tuckIn)
+                .withTimeout(3)
                 .andThen(armSubsystem.extendToCommand(extension))
                 .andThen(
                         armSubsystem
@@ -90,7 +91,8 @@ public class CommandBuilder {
     public CommandBase primeCubeMid() {
         return armSubsystem
                 .rotateToCommand(Constants.Arm.Position.Rotation.CUBE_MID)
-                .alongWith(wristSubsystem.rotateToCommand(Constants.Wrist.Position.CUBE_MID_RELATIVE));
+                .alongWith(
+                        wristSubsystem.rotateToCommand(Constants.Wrist.Position.CUBE_MID_RELATIVE));
     }
 
     public CommandBase primeHybrid() {

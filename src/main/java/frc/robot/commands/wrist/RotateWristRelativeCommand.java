@@ -1,12 +1,11 @@
 package frc.robot.commands.wrist;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.wrist.WristSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class RotateWristRelativeCommand extends CommandBase {
     private final WristSubsystem wristSubsystem;
@@ -32,8 +31,10 @@ public class RotateWristRelativeCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        Logger.getInstance().recordOutput("wrist/commands/rot_rel", wristSubsystem.getRelativeRotation());
-        Logger.getInstance().recordOutput("wrist/commands/speed", wristSubsystem.getRotationSpeed());
+        Logger.getInstance()
+                .recordOutput("wrist/commands/rot_rel", wristSubsystem.getRelativeRotation());
+        Logger.getInstance()
+                .recordOutput("wrist/commands/speed", wristSubsystem.getRotationSpeed());
         profile =
                 new TrapezoidProfile(
                         new TrapezoidProfile.Constraints(

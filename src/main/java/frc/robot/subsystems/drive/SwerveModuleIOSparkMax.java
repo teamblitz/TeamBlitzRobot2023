@@ -3,7 +3,6 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.CTREConfigs;

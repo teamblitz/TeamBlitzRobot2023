@@ -200,24 +200,24 @@ public class RobotContainer {
         new Trigger(() -> Math.abs(controller.getArmSpeed()) > .02)
                 .whileTrue(
                         Commands.run(
-                        () -> {
-                            armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
-                        },
-                        armSubsystem.RotationRequirement)
-                );
-        
+                                () -> {
+                                    armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
+                                },
+                                armSubsystem.RotationRequirement));
+
         new Trigger(() -> Math.abs(controller.getExtensionSpeed()) > .05)
                 .whileTrue(
                         Commands.run(
-                        () -> {
-                            armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
-                        },
-                        armSubsystem.ExtensionRequirement).finallyDo((b) -> armSubsystem.setArmExtensionSpeed(0))
-                );
+                                        () -> {
+                                            armSubsystem.setArmExtensionSpeed(
+                                                    controller.getExtensionSpeed());
+                                        },
+                                        armSubsystem.ExtensionRequirement)
+                                .finallyDo((b) -> armSubsystem.setArmExtensionSpeed(0)));
 
         // controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
         // controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));
-        
+
         controller.primeHybridTrigger().onTrue(commandBuilder.primeHybrid());
         controller.primeMidConeTrigger().onTrue(commandBuilder.primeConeMid());
         controller.primeHighConeTrigger().onTrue(commandBuilder.primeConeHigh());
@@ -228,8 +228,12 @@ public class RobotContainer {
         controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
         controller.homeArmTrigger().onTrue(armSubsystem.retractArmCommand());
 
-        controller.brakeModeTrigger().onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(true)));
-        controller.coastModeTrigger().onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(false)));
+        controller
+                .brakeModeTrigger()
+                .onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(true)));
+        controller
+                .coastModeTrigger()
+                .onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(false)));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

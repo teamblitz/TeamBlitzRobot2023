@@ -43,7 +43,8 @@ public class WristIOSpark implements WristIO {
                 (1 / Arm.WRIST_GEAR_RATIO) // We do 1 over the gear ratio
                         // because 1 rotation of the motor is < 1 rotation of
                         // the wrist
-                        * 360 * (1/60));             
+                        * 360
+                        * (1 / 60));
 
         wrist.getPIDController().setP(Constants.Wrist.p);
         wrist.getPIDController().setI(Constants.Wrist.i);
@@ -64,7 +65,8 @@ public class WristIOSpark implements WristIO {
         inputs.rotation = wristEncoder.getPosition();
         inputs.rotationSpeed = wristEncoder.getVelocity();
         inputs.absoluteRotation = getAbsolutePosition();
-        inputs.absEncoder = Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360, -270, 90);
+        inputs.absEncoder =
+                Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360, -270, 90);
 
         inputs.topLimit = wristTopLimitSwitch.get();
         inputs.bottomLimit = wristBottomLimitSwitch.get();
@@ -122,6 +124,8 @@ public class WristIOSpark implements WristIO {
 
     private double getAbsolutePosition() {
         return Angles.wrapAngle(
-                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.ENCODER_OFFSET, -270, 90);
+                -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.ENCODER_OFFSET,
+                -270,
+                90);
     }
 }

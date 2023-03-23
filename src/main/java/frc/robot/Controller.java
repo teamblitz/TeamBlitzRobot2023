@@ -117,9 +117,8 @@ public class Controller {
     }
 
     public Trigger retractArmTrigger() {
-       return commandOperatorController.y().and(basicModeTrigger());
+        return commandOperatorController.y().and(basicModeTrigger());
     }
-
 
     public double getArmSpeed() {
         return -.2
