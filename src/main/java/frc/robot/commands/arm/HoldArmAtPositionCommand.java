@@ -11,13 +11,12 @@ public class HoldArmAtPositionCommand extends CommandBase {
 
     public HoldArmAtPositionCommand(ArmSubsystem armSubsystem) {
         this.armSubsystem = armSubsystem;
+        addRequirements(armSubsystem.RotationRequirement);
     }
 
     @Override
     public void initialize() {
         initialPosition = armSubsystem.getRotation();
-
-        addRequirements(armSubsystem.RotationRequirement);
     }
 
     @Override

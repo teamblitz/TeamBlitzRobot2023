@@ -80,6 +80,10 @@ public class Controller {
         return commandOperatorController.povDown();
     }
 
+    public Trigger basicModeTrigger() {
+        return commandDriverController.povCenter();
+    }
+
     public Trigger primeHybridTrigger() {
         return scoreModeTrigger().and(commandOperatorController.a());
     }
@@ -96,17 +100,22 @@ public class Controller {
         return scoreModeTrigger().and(cube()).and(commandOperatorController.x());
     }
 
+    public Trigger homeArmTrigger() {
+        return scoreModeTrigger().and(commandOperatorController.b());
+    }
+
     public Trigger primeHighCubeTrigger() {
         return scoreModeTrigger().and(cube()).and(commandOperatorController.y());
     }
 
     public Trigger wristLevelTrigger() {
-        return commandOperatorController.b().and(scoreModeTrigger().negate());
+        return commandOperatorController.b().and(basicModeTrigger());
     }
 
     public Trigger wristDownTrigger() {
-        return commandOperatorController.a().and(scoreModeTrigger().negate());
+        return commandOperatorController.a().and(basicModeTrigger());
     }
+
 
     public double getArmSpeed() {
         return -.2

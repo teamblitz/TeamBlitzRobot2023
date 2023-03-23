@@ -23,6 +23,7 @@ import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandBuilder;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.arm.HoldArmAtPositionCommand;
 import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -114,13 +115,8 @@ public class RobotContainer {
                                                 * calculateDriveMultiplier()),
                         () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .2,
                         () -> false));
-        armSubsystem.setDefaultCommand(
-                Commands.run(
-                        () -> {
-                            armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
-                            armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
-                        },
-                        armSubsystem));
+        armSubsystem.RotationRequirement.setDefaultCommand(
+                new HoldArmAtPositionCommand(armSubsystem));
         // wristSubsystem.setDefaultCommand(
         // Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtCommand()));
         //        wristSubsystem.setDefaultCommand(
@@ -201,6 +197,24 @@ public class RobotContainer {
                                                             wristSubsystem.getRotation();
                                                 })));
 
+        new Trigger(() -> Math.abs(controller.getArmSpeed()) > .02)
+                .whileTrue(
+                        Commands.run(
+                        () -> {
+                            armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
+                        },
+                        armSubsystem.RotationRequirement)
+                );
+        
+        new Trigger(() -> Math.abs(controller.getExtensionSpeed()) > .02)
+                .whileTrue(
+                        Commands.run(
+                        () -> {
+                            armSubsystem.setArmExtensionSpeed(controller.getExtensionSpeed());
+                        },
+                        armSubsystem.ExtensionRequirement).finallyDo((b) -> armSubsystem.setArmExtensionSpeed(0))
+                );
+
         // controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
         // controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));
         
@@ -210,6 +224,8 @@ public class RobotContainer {
 
         controller.primeMidCubeTrigger().onTrue(commandBuilder.primeCubeMid());
         controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeMid());
+
+        controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here

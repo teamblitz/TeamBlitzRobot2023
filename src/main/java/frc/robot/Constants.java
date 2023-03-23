@@ -165,7 +165,7 @@ public final class Constants {
         public static final class Position {
 
             public static final class Extension {
-                public static final double RETRACTED = 0;
+                public static final double RETRACTED = .05;
 
                 public static final double CONE_HIGH = .7; // or .73
                 public static final double CONE_MID = .23;
