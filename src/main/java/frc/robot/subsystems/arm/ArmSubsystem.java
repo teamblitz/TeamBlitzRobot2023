@@ -78,8 +78,8 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
             logger.recordOutput("arm/height_protection_enabled", false);
         }
         logger.recordOutput("arm/length", armLength);
-        // Extension limit
 
+        // Extension limit
         extension =
                 (armLength * Math.cos(Math.toRadians(getRotation())))
                         - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;

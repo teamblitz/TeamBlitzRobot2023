@@ -66,7 +66,7 @@ public class RobotContainer {
 
     /* ***** --- Autonomous --- ***** */
     private static final String[] autonomousCommands = {
-        "Left", "Middle", "Right", "Test", "Nothing", "Score"
+        "Left", "Middle", "Right", "Test", "Nothing", "Score", "Balance"
     };
     private final SendableChooser<String> chooser = new SendableChooser<>();
 
@@ -84,7 +84,7 @@ public class RobotContainer {
         configureButtonBindings();
         setDefaultCommands();
 
-        CameraServer.startAutomaticCapture(); 
+        CameraServer.startAutomaticCapture();
 
         DriverStation.silenceJoystickConnectionWarning(true);
         Shuffleboard.getTab("DriveSubsystem")
@@ -237,8 +237,6 @@ public class RobotContainer {
         controller.cone().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", true)));
         controller.cube().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", false)));
 
-
-
         controller
                 .brakeModeTrigger()
                 .onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(true)));
@@ -260,6 +258,8 @@ public class RobotContainer {
                 return autonomousPathCommand.generateAutonomous("Middle");
             case "Right":
                 return autonomousPathCommand.generateAutonomous("Right");
+            case "Balance":
+                return autonomousPathCommand.generateAutonomous("Balance");
             case "Nothing":
                 return null;
             case "Test":

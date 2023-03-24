@@ -103,13 +103,13 @@ public class Robot extends LoggedRobot {
 
         System.out.println("Robot Start up at: " + Timer.getFPGATimestamp());
 
-        try {
-            Networker networker = new Networker();
-            networker.start();
-            System.out.println("Networker Started Successfully");
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        // try {
+        //     Networker networker = new Networker();
+        //     networker.start();
+        //     System.out.println("Networker Started Successfully");
+        // } catch (IOException e) {
+        //     System.out.println(e);
+        // }
     }
 
     @Override
@@ -153,6 +153,9 @@ public class Robot extends LoggedRobot {
     @Override
     public void teleopInit() {
         System.out.println("TeleopInit");
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
+        }
     }
 
     // Called periodically during teleop

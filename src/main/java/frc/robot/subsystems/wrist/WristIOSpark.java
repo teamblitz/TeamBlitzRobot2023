@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Angles;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
-import org.littletonrobotics.junction.Logger;
 
 public class WristIOSpark implements WristIO {
 
@@ -20,8 +19,6 @@ public class WristIOSpark implements WristIO {
 
     private final DigitalInput wristTopLimitSwitch;
     private final DigitalInput wristBottomLimitSwitch;
-
-    private final Logger logger = Logger.getInstance();
 
     public WristIOSpark() {
         wrist = new CANSparkMax(Constants.Arm.WRIST_ROT_LEADER, MotorType.kBrushless);

@@ -54,9 +54,9 @@ public class AutonomousPathCommand {
 
     private double speedCalculation() {
         if (this.driveSubsystem.getPitch() > 10) {
-            return 0.2;
-        } else if (this.driveSubsystem.getPitch() <= -10) {
             return -0.2;
+        } else if (this.driveSubsystem.getPitch() <= -10) {
+            return 0.2;
         } else {
             return 0;
         }
@@ -81,14 +81,22 @@ public class AutonomousPathCommand {
     }
 
     public Command driveOutDistance(double distance) {
-        Commands.runOnce(() -> driveSubsystem.drive(new Translation2d(1, 0), 0, true, true, false))
-                .until(() -> Math.abs(driveSubsystem.getPose().getX()) > distance || Math.abs(driveSubsystem.getPose().getY()) > distance)
+        return Commands.run(
+                        () -> driveSubsystem.drive(new Translation2d(1, 0), 0, true, true, false),
+                        driveSubsystem)
+                .until(
+                        () ->
+                                Math.abs(driveSubsystem.getPose().getX()) > distance
+                                        || Math.abs(driveSubsystem.getPose().getY()) > distance)
                 .finallyDo((b) -> driveSubsystem.drive(new Translation2d(), 0, false, true, false));
     }
 
     public Command driveBackDistance(double distance) {
-        Commands.runOnce(() -> driveSubsystem.drive(new Translation2d(-1, 0), 0, true, true, false))
-                .until(() -> Math.abs(driveSubsystem.getPose().getX()) < distance || Math.abs(driveSubsystem.getPose().getY()) < distance)
+        return Commands.run(
+                        () -> driveSubsystem.drive(new Translation2d(-1, 0), 0, true, true, false),
+                        driveSubsystem)
+                // .until(() -> Math.abs(driveSubsystem.getPose().getX()) < distance ||
+                // Math.abs(driveSubsystem.getPose().getY()) < distance)
                 .finallyDo((b) -> driveSubsystem.drive(new Translation2d(), 0, false, true, false));
     }
 
@@ -117,7 +125,6 @@ public class AutonomousPathCommand {
         if (true) {
             return generateBackupAuto(path);
         }
-
 
         final List<PathPlannerTrajectory> pathGroup;
         HashMap<String, Command> eventMap = new HashMap<>();
@@ -181,32 +188,89 @@ public class AutonomousPathCommand {
     public Command generateBackupAuto(String path) {
         switch (path) {
             case "Score":
-                return autoMidCube();
+                return autoMidCube().andThen(() -> System.out.println("Score"));
             case "Left":
                 return autoMidCube()
+                        .andThen(() -> System.out.println("Left pre drive"))
                         .andThen(
-                                driveOutDistance(2).withTimeout(2),
-                                driveBackDistance(1.5).withTimeout(1.5)
-                        );
+                                driveOutDistance(2.5).withTimeout(2.5),
+                                driveBackDistance(2).withTimeout(2))
+                        .andThen(driveSubsystem.buildParkCommand().repeatedly());
             case "Right":
                 return autoMidCube()
+                        .andThen(() -> System.out.println("Right pre drive"))
                         .andThen(
-                                driveOutDistance(4).withTimeout(4),
-                                driveBackDistance(2).withTimeout(2)
-                        );
+                                driveOutDistance(4.5).withTimeout(4.5),
+                                driveBackDistance(3).withTimeout(3))
+                        .andThen(driveSubsystem.buildParkCommand().repeatedly());
             case "Middle":
                 return autoMidCube()
+                        .andThen(driveOutDistance(6).withTimeout(6))
                         .andThen(
-                                driveOutDistance(4).withTimeout(4),
-                        ).andThen(
-                                Commands.runOnce(
-                                        () -> driveSubsystem.drive(new Translation2d(-1, 0), 0, true, true, false)
-                                ).until(() -> Math.abs(driveSubsystem.getPitch()) > 10)
-                                        .finallyDo((b) -> driveSubsystem.drive(new Translation2d(0, 0), 0, true, true, false))
-                                        .andThen(
-                                                driveSubsystem.buildParkCommand().repeatedly()
-                                        )
-                        );
+                                Commands.run(
+                                                () ->
+                                                        driveSubsystem.drive(
+                                                                new Translation2d(-1, 0),
+                                                                0,
+                                                                true,
+                                                                true,
+                                                                false),
+                                                driveSubsystem)
+                                        .until(() -> Math.abs(driveSubsystem.getPitch()) < -10)
+                                        .finallyDo(
+                                                (b) ->
+                                                        driveSubsystem.drive(
+                                                                new Translation2d(0, 0),
+                                                                0,
+                                                                true,
+                                                                true,
+                                                                false))
+                                        .andThen(driveSubsystem.buildParkCommand().repeatedly()));
+            case "Balance":
+                // return autoMidCube()
+                // .andThen(
+                //         driveOutDistance(4).withTimeout(4)
+                // ).andThen(
+                //         Commands.run(
+                //                 () -> driveSubsystem.drive(new Translation2d(-1, 0), 0, true,
+                // true, false), driveSubsystem
+                //         ).until(() -> Math.abs(driveSubsystem.getPitch()) < -10)
+                //         .andThen(() -> driveSubsystem.drive(new Translation2d(speedCalculation(),
+                // 0), 0, false, true, false))
+                // );
+
+                return autoMidCube()
+                        .andThen(
+                                Commands.run(
+                                                () ->
+                                                        driveSubsystem.drive(
+                                                                new Translation2d(1, 0),
+                                                                0,
+                                                                true,
+                                                                true,
+                                                                false),
+                                                driveSubsystem)
+                                        .withTimeout(6))
+                        .until(() -> driveSubsystem.getPitch() > 15)
+                        .andThen(
+                                Commands.run(
+                                                () ->
+                                                        driveSubsystem.drive(
+                                                                new Translation2d(.75, 0),
+                                                                0,
+                                                                true,
+                                                                true,
+                                                                false),
+                                                driveSubsystem)
+                                        .withTimeout(4))
+                        .until(() -> driveSubsystem.getPitch() < 10)
+                        .finallyDo(
+                                (b) ->
+                                        driveSubsystem.drive(
+                                                new Translation2d(0, 0), 0, false, true, false))
+                        .andThen(driveSubsystem.buildParkCommand().repeatedly());
+            default:
+                return null;
         }
     }
 }
