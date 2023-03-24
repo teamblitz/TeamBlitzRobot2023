@@ -107,6 +107,8 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         // In theory ignoring disabled is unnecessary, but this is a critical command that must run.
         new Trigger(DriverStation::isAutonomousEnabled)
                 .onTrue(Commands.runOnce(() -> gyroIO.preMatchZero(180)).ignoringDisable(true));
+
+        gyroIO.preMatchZero(180);
     }
 
     public void drive(
