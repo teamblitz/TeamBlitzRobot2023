@@ -122,4 +122,10 @@ public class CommandBuilder {
                 Constants.Wrist.Position.CONE_SHELF_RELATIVE,
                 true);
     }
+
+    public CommandBase groundCubePickup() {
+        return armSubsystem
+        .rotateToCommand(Constants.Arm.Position.Rotation.PICKUP_GROUND)
+        .alongWith(wristSubsystem.rotateToCommand(Constants.Wrist.MAX_ROTATION));
+    }
 }

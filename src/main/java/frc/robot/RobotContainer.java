@@ -84,7 +84,7 @@ public class RobotContainer {
         configureButtonBindings();
         setDefaultCommands();
 
-        CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture(); 
 
         DriverStation.silenceJoystickConnectionWarning(true);
         Shuffleboard.getTab("DriveSubsystem")
@@ -226,7 +226,18 @@ public class RobotContainer {
         controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeHigh());
 
         controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
-        controller.homeArmTrigger().onTrue(armSubsystem.retractArmCommand());
+        controller.retractArmTrigger().onTrue(armSubsystem.retractArmCommand());
+
+        controller.primeConeShelfTrigger().onTrue(commandBuilder.primeConeShelf());
+        controller.primeCubeShelfTrigger().onTrue(commandBuilder.primeCubeShelf());
+
+        controller.primeCubeShelfTrigger().onTrue(commandBuilder.primeCubeRamp());
+        controller.groundCubePickupTrigger().onTrue(commandBuilder.groundCubePickup());
+
+        controller.cone().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", true)));
+        controller.cube().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", false)));
+
+
 
         controller
                 .brakeModeTrigger()

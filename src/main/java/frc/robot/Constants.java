@@ -187,6 +187,8 @@ public final class Constants {
                 public static final double CUBE_HIGH = 23.7;
                 public static final double CUBE_MID = 17.5;
 
+                public static final double PICKUP_GROUND = -20;
+
                 public static final double HYBRID = -10; // TODO: TUNE
 
                 public static final double RAMP = 30; // TODO: TUNE

@@ -84,6 +84,10 @@ public class Controller {
         return commandDriverController.povCenter();
     }
 
+    public Trigger pickupModeTrigger() {
+        return commandOperatorController.povLeft();
+    }
+
     public Trigger primeHybridTrigger() {
         return scoreModeTrigger().and(commandOperatorController.a());
     }
@@ -106,6 +110,22 @@ public class Controller {
 
     public Trigger primeHighCubeTrigger() {
         return scoreModeTrigger().and(cube()).and(commandOperatorController.y());
+    }
+
+    public Trigger primeConeShelfTrigger() {
+        return pickupModeTrigger().and(cone()).and(commandOperatorController.y());
+    }
+
+    public Trigger primeCubeShelfTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.x());
+    }
+
+    public Trigger primeCubeSlideTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.b());
+    }
+
+    public Trigger groundCubePickupTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.a());
     }
 
     public Trigger wristLevelTrigger() {
