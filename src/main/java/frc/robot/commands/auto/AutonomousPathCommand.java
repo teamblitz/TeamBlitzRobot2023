@@ -80,6 +80,18 @@ public class AutonomousPathCommand {
         return this.intakeSubsystem.buildCubeOutCommand().withTimeout(0.50);
     }
 
+    public Command driveOutDistance(double distance) {
+        Commands.runOnce(() -> driveSubsystem.drive(new Translation2d(1, 0), 0, true, true, false))
+                .until(() -> Math.abs(driveSubsystem.getPose().getX()) > distance || Math.abs(driveSubsystem.getPose().getY()) > distance)
+                .finallyDo((b) -> driveSubsystem.drive(new Translation2d(), 0, false, true, false));
+    }
+
+    public Command driveBackDistance(double distance) {
+        Commands.runOnce(() -> driveSubsystem.drive(new Translation2d(-1, 0), 0, true, true, false))
+                .until(() -> Math.abs(driveSubsystem.getPose().getX()) < distance || Math.abs(driveSubsystem.getPose().getY()) < distance)
+                .finallyDo((b) -> driveSubsystem.drive(new Translation2d(), 0, false, true, false));
+    }
+
     // Mid Cube command (used in all autonomous)
     // This does not stop in simulation because encoders don't get values...
     public Command autoMidCube() {
@@ -102,6 +114,11 @@ public class AutonomousPathCommand {
     }
 
     public Command generateAutonomous(String path) {
+        if (true) {
+            return generateBackupAuto(path);
+        }
+
+
         final List<PathPlannerTrajectory> pathGroup;
         HashMap<String, Command> eventMap = new HashMap<>();
         // This will load the file "FullAuto.path"
@@ -159,5 +176,37 @@ public class AutonomousPathCommand {
                         true,
                         this.driveSubsystem);
         return autoBuilder.fullAuto(pathGroup);
+    }
+
+    public Command generateBackupAuto(String path) {
+        switch (path) {
+            case "Score":
+                return autoMidCube();
+            case "Left":
+                return autoMidCube()
+                        .andThen(
+                                driveOutDistance(2).withTimeout(2),
+                                driveBackDistance(1.5).withTimeout(1.5)
+                        );
+            case "Right":
+                return autoMidCube()
+                        .andThen(
+                                driveOutDistance(4).withTimeout(4),
+                                driveBackDistance(2).withTimeout(2)
+                        );
+            case "Middle":
+                return autoMidCube()
+                        .andThen(
+                                driveOutDistance(4).withTimeout(4),
+                        ).andThen(
+                                Commands.runOnce(
+                                        () -> driveSubsystem.drive(new Translation2d(-1, 0), 0, true, true, false)
+                                ).until(() -> Math.abs(driveSubsystem.getPitch()) > 10)
+                                        .finallyDo((b) -> driveSubsystem.drive(new Translation2d(0, 0), 0, true, true, false))
+                                        .andThen(
+                                                driveSubsystem.buildParkCommand().repeatedly()
+                                        )
+                        );
+        }
     }
 }
