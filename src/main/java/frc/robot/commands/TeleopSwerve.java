@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -46,12 +47,14 @@ public class TeleopSwerve extends CommandBase {
         logger.recordOutput("DriveCommand/strafe", strafeVal);
         logger.recordOutput("DriveCommand/rot", rotationVal);
 
-        /* Drive */
-        driveSubsystem.drive(
-                new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED),
-                rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY,
-                !robotCentricSup.getAsBoolean(),
-                true,
-                true);
+        if (!DriverStation.isAutonomous()) {
+            /* Drive */
+            driveSubsystem.drive(
+                    new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED),
+                    rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY,
+                    !robotCentricSup.getAsBoolean(),
+                    true,
+                    true);
+        }
     }
 }

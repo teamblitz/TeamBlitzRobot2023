@@ -247,7 +247,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() { // Autonomous code goes here
         String autoCommand = chooser.getSelected();
-        // System.out.println(autoCommand);
         AutonomousPathCommand autonomousPathCommand =
                 new AutonomousPathCommand(
                         driveSubsystem, armSubsystem, intakeSubsystem, commandBuilder);

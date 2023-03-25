@@ -27,6 +27,8 @@ public class AutonomousPathCommand {
 
     private final Logger logger = Logger.getInstance();
 
+    private static final boolean backupAuto = true;
+
     public AutonomousPathCommand(
             final DriveSubsystem driveSubsystem,
             final ArmSubsystem armSubsystem,
@@ -188,7 +190,9 @@ public class AutonomousPathCommand {
     public Command generateBackupAuto(String path) {
         switch (path) {
             case "Score":
-                return autoMidCube().andThen(() -> System.out.println("Score"));
+                return autoMidCube();
+                // .andThen(() -> System.out.println("Score"))
+                // .andThen(driveSubsystem.buildParkCommand().repeatedly());
             case "Left":
                 return autoMidCube()
                         .andThen(() -> System.out.println("Left pre drive"))
@@ -270,7 +274,7 @@ public class AutonomousPathCommand {
                                                 new Translation2d(0, 0), 0, false, true, false))
                         .andThen(driveSubsystem.buildParkCommand().repeatedly());
             default:
-                return null;
+                return autoMidCube();
         }
     }
 }
