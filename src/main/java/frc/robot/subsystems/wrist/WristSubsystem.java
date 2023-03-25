@@ -3,12 +3,15 @@ package frc.robot.subsystems.wrist;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
 import frc.robot.commands.wrist.HoldWristAtPositionCommand;
@@ -52,6 +55,16 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         feedforward =
                 new ArmFeedforward(Constants.Wrist.ks, Constants.Wrist.kg, Constants.Wrist.kv);
 
+        lastGoal = getRotation();
+        lastRelativeGoal = getRelativeRotation();
+
+        // new Trigger(DriverStation::isEnabled).onTrue(Commands.runOnce(() -> {
+        //     lastGoal = getRotation();
+        //     lastRelativeGoal = getRelativeRotation();
+        // }))
+    }
+
+    public void setHoldGoals() {
         lastGoal = getRotation();
         lastRelativeGoal = getRelativeRotation();
     }

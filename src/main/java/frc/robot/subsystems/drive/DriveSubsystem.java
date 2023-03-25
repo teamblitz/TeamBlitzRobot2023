@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
+import frc.robot.Constants.Arm.Position.Rotation;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
@@ -203,6 +204,10 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+    }
+
+    public void resetPose(Pose2d pose) {
+        swerveOdometry.resetPosition(new Rotation2d(), getModulePositions(), pose);
     }
 
     public void zeroGyro() {

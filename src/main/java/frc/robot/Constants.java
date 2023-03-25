@@ -437,8 +437,9 @@ public final class Constants {
         }
     }
 
-    // TODO: Calculate needed deadband for controller (should be like 6% or less)
-    public static double STICK_DEADBAND = 0.1;
+    // TODO: Calculate needed deadb7and for controller (should be like 6% or less)
+    // Ran this in the pit; had issues with 10% upped to 12%
+    public static double STICK_DEADBAND = 0.12;
 
     public static final class Networking {
         public static final String JETSON_IP_ADDRESS = "10.20.83.130";

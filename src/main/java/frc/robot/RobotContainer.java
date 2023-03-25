@@ -246,6 +246,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
+        Command wristFix = Commands.runOnce(wristSubsystem::setHoldGoals);
+        wristFix.schedule();
+
         String autoCommand = chooser.getSelected();
         AutonomousPathCommand autonomousPathCommand =
                 new AutonomousPathCommand(

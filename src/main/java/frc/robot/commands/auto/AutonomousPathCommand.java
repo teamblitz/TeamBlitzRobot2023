@@ -27,7 +27,7 @@ public class AutonomousPathCommand {
 
     private final Logger logger = Logger.getInstance();
 
-    private static final boolean backupAuto = true;
+    private static final boolean backupAuto = false;
 
     public AutonomousPathCommand(
             final DriveSubsystem driveSubsystem,
@@ -71,7 +71,7 @@ public class AutonomousPathCommand {
     }
 
     public Command autoConeOut() {
-        return this.intakeSubsystem.buildConeOutCommand().withTimeout(0.50);
+        return this.intakeSubsystem.buildConeOutCommand().withTimeout(1);
     }
 
     public Command autoCubeIn() {
@@ -79,7 +79,7 @@ public class AutonomousPathCommand {
     }
 
     public Command autoCubeOut() {
-        return this.intakeSubsystem.buildCubeOutCommand().withTimeout(0.50);
+        return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1);
     }
 
     public Command driveOutDistance(double distance) {
@@ -124,7 +124,7 @@ public class AutonomousPathCommand {
     }
 
     public Command generateAutonomous(String path) {
-        if (true) {
+        if (backupAuto) {
             return generateBackupAuto(path);
         }
 
@@ -133,7 +133,9 @@ public class AutonomousPathCommand {
         // This will load the file "FullAuto.path"
         // All paths are in /src/main/deploy/pathplanner
         // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
-        eventMap.put("autoCubeMid", this.autoMidCube());
+        
+        // eventMap.put("autoCubeMid", this.autoMidCube());
+        eventMap.put("autoCubeMid", this.autoCubeOut());
         eventMap.put("balanceChargeStation", this.balanceChargeStation());
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
@@ -190,9 +192,10 @@ public class AutonomousPathCommand {
     public Command generateBackupAuto(String path) {
         switch (path) {
             case "Score":
-                return autoMidCube();
+                // return autoMidCube();
                 // .andThen(() -> System.out.println("Score"))
                 // .andThen(driveSubsystem.buildParkCommand().repeatedly());
+                return this.autoCubeOut();
             case "Left":
                 return autoMidCube()
                         .andThen(() -> System.out.println("Left pre drive"))
