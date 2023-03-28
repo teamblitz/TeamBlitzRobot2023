@@ -21,7 +21,7 @@ public class RotateToCommand extends CommandBase {
         this.goal = goal;
         this.threshold = threshold;
 
-        addRequirements(armSubsystem.RotationRequirement);
+        addRequirements(armSubsystem.rotationRequirement);
     }
 
     @Override

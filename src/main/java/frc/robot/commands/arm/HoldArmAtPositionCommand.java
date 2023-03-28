@@ -11,7 +11,7 @@ public class HoldArmAtPositionCommand extends CommandBase {
 
     public HoldArmAtPositionCommand(ArmSubsystem armSubsystem) {
         this.armSubsystem = armSubsystem;
-        addRequirements(armSubsystem.RotationRequirement);
+        addRequirements(armSubsystem.rotationRequirement);
     }
 
     @Override

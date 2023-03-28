@@ -223,6 +223,9 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     public double getPitch() {
         return gyroInputs.pitch;
     }
+    public double getRoll() {
+        return gyroInputs.roll;
+    }
 
     @Override
     public void periodic() {

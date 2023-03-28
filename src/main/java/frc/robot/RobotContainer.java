@@ -115,7 +115,7 @@ public class RobotContainer {
                                                 * calculateDriveMultiplier()),
                         () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .2,
                         () -> false));
-        armSubsystem.RotationRequirement.setDefaultCommand(
+        armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));
         // wristSubsystem.setDefaultCommand(
         // Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtCommand()));
@@ -151,8 +151,8 @@ public class RobotContainer {
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
 
-        armSubsystem = new ArmSubsystem(new ArmIOTalon());
-        wristSubsystem = new WristSubsystem(new WristIOSpark(), armSubsystem);
+        armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRotation());
+        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
 
@@ -203,7 +203,7 @@ public class RobotContainer {
                                 () -> {
                                     armSubsystem.setArmRotationSpeed(controller.getArmSpeed());
                                 },
-                                armSubsystem.RotationRequirement));
+                                armSubsystem.rotationRequirement));
 
         new Trigger(() -> Math.abs(controller.getExtensionSpeed()) > .05)
                 .whileTrue(
@@ -212,7 +212,7 @@ public class RobotContainer {
                                             armSubsystem.setArmExtensionSpeed(
                                                     controller.getExtensionSpeed());
                                         },
-                                        armSubsystem.ExtensionRequirement)
+                                        armSubsystem.extensionRequirement)
                                 .finallyDo((b) -> armSubsystem.setArmExtensionSpeed(0)));
 
         // controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));

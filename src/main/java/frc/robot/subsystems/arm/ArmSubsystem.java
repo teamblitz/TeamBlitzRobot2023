@@ -10,6 +10,8 @@ import frc.robot.commands.arm.ExtendToCommand;
 import frc.robot.commands.arm.RotateToCommand;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.DoubleSupplier;
+
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final ArmIO io;
@@ -26,10 +28,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     // But my 12:30am brain thinks this is the best way to do it atm.
     // This assumes that commands requiring extension requirement will only command the extension
     // and vice versa.
-    public final Subsystem ExtensionRequirement = new Subsystem() {};
-    public final Subsystem RotationRequirement = new Subsystem() {};
+    public final Subsystem extensionRequirement = new Subsystem() {};
+    public final Subsystem rotationRequirement = new Subsystem() {};
 
-    private final TelescopingArmFeedforward rotationFeedforward;
+    public final DoubleSupplier wristRotSupplier;
 
     private final CommandBase protectArmCommand;
     private boolean stopExtendingOut;
@@ -37,29 +39,37 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     private boolean shouldTuck;
     private double extension;
 
-    public ArmSubsystem(ArmIO io) {
+    public ArmSubsystem(ArmIO io, DoubleSupplier wristRotSupplier) {
         this.io = io;
-
-        rotationFeedforward =
-                new TelescopingArmFeedforward(
-                        (x) -> 0., (x) -> 0., (x) -> 0.,
-                        (x) -> 0.); // TODO: Make these actual gains
 
         // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and
         // Rotation Requirement subsystems
-        Commands.run(() -> {}).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
+        Commands.run(() -> {}).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming).schedule();
 
         // Schedule a command to seed the arm, as the encoder does not appear to be connected when
         // this class is initiated.
         Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
 
         protectArmCommand = extendToCommand(Constants.Arm.PULL_TO);
+
+        this.wristRotSupplier = wristRotSupplier;
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         logger.processInputs("arm", inputs);
+
+        // AHHHHHHH
+
+        // So, this sucks
+
+        // And I really need to fix it
+
+        // Idealy the wrist sbhoulgffhguikerrkjghjkh to9r8jyoihmrdhm,dsauikrjhyrdnsuyfjhewtyashdnyisdhjghnesdlihfgjerend
+        // Yea
+
+        // Ok
 
         // Height Protection
         double percentExtended = getExtension() / Constants.Arm.MAX_EXTENSION;

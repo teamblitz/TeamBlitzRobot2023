@@ -3,30 +3,28 @@ package frc.robot.subsystems.wrist;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
 import frc.robot.commands.wrist.HoldWristAtPositionCommand;
 import frc.robot.commands.wrist.HoldWristAtRelativePositionCommand;
 import frc.robot.commands.wrist.RotateWristCommand;
 import frc.robot.commands.wrist.RotateWristRelativeCommand;
-import frc.robot.subsystems.arm.ArmSubsystem;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.DoubleSupplier;
 
 public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final WristIO io;
 
     private final WristIOInputsAutoLogged inputs = new WristIOInputsAutoLogged();
 
-    private final ArmSubsystem armSubsystem;
+    private final DoubleSupplier armRotSupplier;
 
     private final ArmFeedforward feedforward;
 
@@ -48,12 +46,16 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public double lastGoal;
     public double lastRelativeGoal;
 
-    public WristSubsystem(WristIO io, ArmSubsystem armSubsystem) {
+    public WristSubsystem(WristIO io, DoubleSupplier armRotSuppler) {
+
+        this.armRotSupplier = armRotSuppler;
+
         this.io = io;
-        this.armSubsystem = armSubsystem;
         // The wrist is basically an arm, so we treat it as such.
         feedforward =
                 new ArmFeedforward(Constants.Wrist.ks, Constants.Wrist.kg, Constants.Wrist.kv);
+
+
 
         lastGoal = getRotation();
         lastRelativeGoal = getRelativeRotation();
@@ -102,7 +104,6 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         // if (armSubsystem.shouldWristTuck()) {
         //     tuckInWristCommand().schedule();
         // }
-        armSubsystem.setWristPos(getRotation());
     }
 
     public void setRotationSpeed(double speed) {
@@ -125,14 +126,14 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         logger.recordOutput("wrist/wanted_rot_relative", relativeRot);
 
-        double rot = relativeRot - armSubsystem.getRotation();
+        double rot = relativeRot - armRotSupplier.getAsDouble();
 
         logger.recordOutput("wrist/wanted_rot", rot);
         logger.recordOutput("wrist/wanted_velocity", velocity);
 
         double clamped =
                 MathUtil.clamp(rot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
-        double clampedRelativeRot = clamped + armSubsystem.getRotation();
+        double clampedRelativeRot = clamped + armRotSupplier.getAsDouble();
 
         if (rot != clamped) {
             velocity = 0;
@@ -159,7 +160,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         double clamped =
                 MathUtil.clamp(
                         wristRot, Constants.Wrist.MIN_ROTATION, Constants.Wrist.MAX_ROTATION);
-        double relativeRot = clamped + armSubsystem.getRotation();
+        double relativeRot = clamped + armRotSupplier.getAsDouble();
 
         if (wristRot != clamped) {
             velocity = 0;
@@ -185,7 +186,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public double getRelativeRotation() {
-        return armSubsystem.getRotation() + getRotation();
+        return armRotSupplier.getAsDouble() + getRotation();
     }
 
     public double getRotationSpeed() {

@@ -21,7 +21,7 @@ public class ExtendToCommand extends CommandBase {
         this.goal = goal;
         this.threshold = threshold;
 
-        addRequirements(armSubsystem.ExtensionRequirement);
+        addRequirements(armSubsystem.extensionRequirement);
     }
 
     @Override
