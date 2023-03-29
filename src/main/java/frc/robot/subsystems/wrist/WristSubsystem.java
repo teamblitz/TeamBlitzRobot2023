@@ -190,7 +190,7 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         return inputs.rotationSpeed;
     }
 
-    public CommandBase rotateRelativeToCommand(double rotation) {
+    public CommandBase rotateRobotRelativeToCommand(double rotation) {
         return new RotateWristRelativeCommand(this, rotation, 5);
     }
 
@@ -214,12 +214,12 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public CommandBase levelWristCommand() {
-        return rotateRelativeToCommand(Constants.Wrist.Position.LEVEL)
+        return rotateRobotRelativeToCommand(Constants.Wrist.Position.LEVEL)
                 .andThen(holdAtRelativeCommand());
     }
 
     public CommandBase verticalWristCommand() {
-        return rotateRelativeToCommand(Constants.Wrist.Position.VERTICAL)
+        return rotateRobotRelativeToCommand(Constants.Wrist.Position.VERTICAL)
                 .andThen(holdAtRelativeCommand());
     }
 }

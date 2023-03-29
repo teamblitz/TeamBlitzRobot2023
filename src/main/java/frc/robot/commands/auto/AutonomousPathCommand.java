@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants;
-import frc.robot.commands.CommandBuilder;
+import frc.robot.commands.ManipulatorCommandFactory;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -23,7 +23,7 @@ public class AutonomousPathCommand {
     private final DriveSubsystem driveSubsystem;
     private final ArmSubsystem armSubsystem;
     private final IntakeSubsystem intakeSubsystem;
-    private final CommandBuilder commandBuilder;
+    private final ManipulatorCommandFactory manipulatorCommandFactory;
 
     private final Logger logger = Logger.getInstance();
 
@@ -33,11 +33,11 @@ public class AutonomousPathCommand {
             final DriveSubsystem driveSubsystem,
             final ArmSubsystem armSubsystem,
             final IntakeSubsystem intakeSubsystem,
-            final CommandBuilder commandBuilder) {
+            final ManipulatorCommandFactory manipulatorCommandFactory) {
         this.driveSubsystem = driveSubsystem;
         this.armSubsystem = armSubsystem;
         this.intakeSubsystem = intakeSubsystem;
-        this.commandBuilder = commandBuilder;
+        this.manipulatorCommandFactory = manipulatorCommandFactory;
     }
 
     // Add vision at some point. To this one specifically, but the whole autonomous would be nice.
@@ -79,7 +79,7 @@ public class AutonomousPathCommand {
 
     public Command autoCubeOut() {
         return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1);
-//        return Commands.runOnce(() -> {})
+        //        return Commands.runOnce(() -> {})
     }
 
     public Command driveOutDistance(double distance) {
@@ -105,7 +105,7 @@ public class AutonomousPathCommand {
     // Mid Cube command (used in all autonomous)
     // This does not stop in simulation because encoders don't get values...
     public Command autoMidCube() {
-        return this.commandBuilder
+        return this.manipulatorCommandFactory
                 .primeCubeMid()
                 .withTimeout(2)
                 .beforeStarting(() -> logger.recordOutput("auto/state", "prime"))
@@ -138,7 +138,8 @@ public class AutonomousPathCommand {
         eventMap.put(
                 "autoCubeMid",
                 this.autoCubeOut()); // Changed to autoCubeOut to only drop cube, not move arm
-//        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem)); // import fix later
+        //        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem)); // import
+        // fix later
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
 

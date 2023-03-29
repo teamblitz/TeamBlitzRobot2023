@@ -28,6 +28,9 @@ public class Controller {
         signalCube().onTrue(Commands.runOnce(() -> mode = GamePiece.CUBE).ignoringDisable(true));
     }
 
+
+    /* Arm/Wrist/Intake manipulator controls */
+
     public Trigger intake() {
         return commandOperatorController
                 .leftBumper()
@@ -72,60 +75,78 @@ public class Controller {
         return new Trigger(() -> mode == GamePiece.CUBE);
     }
 
-    public Trigger getArmGroundTrigger() {
-        return unbound;
-    }
+    /* Modes */
 
     public Trigger scoreModeTrigger() {
         return commandOperatorController.povDown();
     }
-
     public Trigger basicModeTrigger() {
         return commandDriverController.povCenter();
     }
 
     public Trigger pickupModeTrigger() {
+        return commandOperatorController.povUp();
+    }
+
+    public Trigger substationModeTrigger() {
         return commandOperatorController.povLeft();
     }
 
+    /* Arm/wrist positions */
+
+
+    /* Scoring presets */
+
     public Trigger primeHybridTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.b());
+    }
+    public Trigger primeMidConeTrigger() {
+        return scoreModeTrigger().and(commandOperatorController.x());
+    }
+    public Trigger primeHighConeTrigger() {
+        return scoreModeTrigger().and(commandOperatorController.y());
+    }
+    public Trigger primeMidCubeTrigger() {
         return scoreModeTrigger().and(commandOperatorController.a());
     }
-
-    public Trigger primeMidConeTrigger() {
-        return scoreModeTrigger().and(cone()).and(commandOperatorController.x());
-    }
-
-    public Trigger primeHighConeTrigger() {
-        return scoreModeTrigger().and(cone()).and(commandOperatorController.y());
-    }
-
-    public Trigger primeMidCubeTrigger() {
-        return scoreModeTrigger().and(cube()).and(commandOperatorController.x());
-    }
-
-    public Trigger homeArmTrigger() {
+    public Trigger primeHighCubeTrigger() {
         return scoreModeTrigger().and(commandOperatorController.b());
     }
 
-    public Trigger primeHighCubeTrigger() {
-        return scoreModeTrigger().and(cube()).and(commandOperatorController.y());
-    }
+    /* Substation pickups  */
 
     public Trigger primeConeShelfTrigger() {
-        return pickupModeTrigger().and(cone()).and(commandOperatorController.y());
+        return pickupModeTrigger().and(commandOperatorController.y());
     }
 
     public Trigger primeCubeShelfTrigger() {
-        return pickupModeTrigger().and(commandOperatorController.x());
-    }
-
-    public Trigger primeCubeSlideTrigger() {
         return pickupModeTrigger().and(commandOperatorController.b());
     }
 
+    public Trigger primeConeRampTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.x());
+    }
+
+    public Trigger primeCubeRampTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.a());
+    }
+
+    /* Ground pickup */
+
     public Trigger groundCubePickupTrigger() {
         return pickupModeTrigger().and(commandOperatorController.a());
+    }
+
+    public Trigger groundConeUprightPickupTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.y());
+    }
+    public Trigger groundConeFallenPickupTrigger() {
+        return pickupModeTrigger().and(commandOperatorController.x());
+    }
+
+
+    public Trigger homeArmTrigger() {
+        return scoreModeTrigger().and(commandOperatorController.b());
     }
 
     public Trigger wristLevelTrigger() {

@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.CommandBuilder;
+import frc.robot.commands.ManipulatorCommandFactory;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.arm.HoldArmAtPositionCommand;
 import frc.robot.commands.auto.AutoBalance;
@@ -56,7 +56,7 @@ public class RobotContainer {
     private IntakeSubsystem intakeSubsystem;
     private LedSubsystem ledSubsystem;
 
-    private CommandBuilder commandBuilder;
+    private ManipulatorCommandFactory manipulatorCommandFactory;
 
     /* ***** --- Controllers --- ***** */
 
@@ -74,13 +74,8 @@ public class RobotContainer {
     public RobotContainer() {
         configureSubsystems();
 
-        commandBuilder =
-                new CommandBuilder(
-                        armSubsystem,
-                        driveSubsystem,
-                        intakeSubsystem,
-                        ledSubsystem,
-                        wristSubsystem);
+        manipulatorCommandFactory =
+                new ManipulatorCommandFactory(armSubsystem, intakeSubsystem, wristSubsystem);
 
         configureButtonBindings();
         setDefaultCommands();
@@ -173,8 +168,8 @@ public class RobotContainer {
         controller.coneOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
         controller.cubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
         controller.cubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
-        controller.wristLevelTrigger().onTrue(wristSubsystem.rotateRelativeToCommand(0));
-        controller.wristDownTrigger().onTrue(wristSubsystem.rotateRelativeToCommand(-90));
+        controller.wristLevelTrigger().onTrue(wristSubsystem.rotateRobotRelativeToCommand(0));
+        controller.wristDownTrigger().onTrue(wristSubsystem.rotateRobotRelativeToCommand(-90));
 
         controller.signalCube().whileTrue(ledSubsystem.cubeSolid());
         controller.signalCone().whileTrue(ledSubsystem.coneSolid());
@@ -219,21 +214,27 @@ public class RobotContainer {
         // controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
         // controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));
 
-        controller.primeHybridTrigger().onTrue(commandBuilder.primeHybrid());
-        controller.primeMidConeTrigger().onTrue(commandBuilder.primeConeMid());
-        controller.primeHighConeTrigger().onTrue(commandBuilder.primeConeHigh());
+        controller.primeHybridTrigger().onTrue(manipulatorCommandFactory.primeHybrid());
 
-        controller.primeMidCubeTrigger().onTrue(commandBuilder.primeCubeMid());
-        controller.primeHighCubeTrigger().onTrue(commandBuilder.primeCubeHigh());
+        controller.primeMidConeTrigger().onTrue(manipulatorCommandFactory.primeConeMid());
+        controller.primeHighConeTrigger().onTrue(manipulatorCommandFactory.primeConeHigh());
+
+        controller.primeMidCubeTrigger().onTrue(manipulatorCommandFactory.primeCubeMid());
+        controller.primeHighCubeTrigger().onTrue(manipulatorCommandFactory.primeCubeHigh());
 
         controller.homeArmTrigger().onTrue(armSubsystem.homeArmCommand());
         controller.retractArmTrigger().onTrue(armSubsystem.retractArmCommand());
 
-        controller.primeConeShelfTrigger().onTrue(commandBuilder.primeConeShelf());
-        controller.primeCubeShelfTrigger().onTrue(commandBuilder.primeCubeShelf());
+        controller.primeConeShelfTrigger().onTrue(manipulatorCommandFactory.primeConeShelf());
+        controller.primeCubeShelfTrigger().onTrue(manipulatorCommandFactory.primeCubeShelf());
 
-        controller.primeCubeShelfTrigger().onTrue(commandBuilder.primeCubeRamp());
-        controller.groundCubePickupTrigger().onTrue(commandBuilder.groundCubePickup());
+        controller.primeCubeRampTrigger().onTrue(manipulatorCommandFactory.primeCubeRamp());
+        controller.primeConeRampTrigger().onTrue(manipulatorCommandFactory.primeConeRamp());
+
+
+        controller.groundCubePickupTrigger().onTrue(manipulatorCommandFactory.groundCubePickup());
+        controller.groundConeUprightPickupTrigger().onTrue(manipulatorCommandFactory.groundUprightConePickup());
+        controller.groundConeFallenPickupTrigger().onTrue(manipulatorCommandFactory.groundFallenConePickup());
 
         controller.cone().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", true)));
         controller.cube().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", false)));
@@ -248,17 +249,15 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() { // Autonomous code goes here
 
-
         if (true) {
-            return Commands.run(() -> driveSubsystem.drive(
-                    new Translation2d(-.75, 0),
-                    0,
-                    false,
-                    true,
-                    false
-            )).until(() -> Math.abs(driveSubsystem.getPitch()) > 8).andThen(
-                    new AutoBalance(driveSubsystem)
-            ).andThen(driveSubsystem.buildParkCommand()).repeatedly();
+            return Commands.run(
+                            () ->
+                                    driveSubsystem.drive(
+                                            new Translation2d(-.75, 0), 0, false, true, false))
+                    .until(() -> Math.abs(driveSubsystem.getPitch()) > 8)
+                    .andThen(new AutoBalance(driveSubsystem))
+                    .andThen(driveSubsystem.buildParkCommand())
+                    .repeatedly();
         }
 
         Command wristFix = Commands.runOnce(wristSubsystem::setHoldGoals);
@@ -267,7 +266,7 @@ public class RobotContainer {
         String autoCommand = chooser.getSelected();
         AutonomousPathCommand autonomousPathCommand =
                 new AutonomousPathCommand(
-                        driveSubsystem, armSubsystem, intakeSubsystem, commandBuilder);
+                        driveSubsystem, armSubsystem, intakeSubsystem, manipulatorCommandFactory);
         switch (autoCommand) {
             case "Left":
                 return autonomousPathCommand.generateAutonomous("Left");

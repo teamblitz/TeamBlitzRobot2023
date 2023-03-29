@@ -174,6 +174,14 @@ public final class Constants {
                 public static final double CUBE_HIGH = .4; // TODO: TUNE
                 public static final double CUBE_MID = 0;
 
+                public static final double HYBRID = 0;
+
+                public static final double CUBE_PICKUP_GROUND = 0;
+                public static final double CONE_UPRIGHT_PICKUP_GROUND = 0;
+                public static final double CONE_FALLEN_PICKUP_GROUND = 0;
+
+                public static final double CUBE_RAMP = 0;
+                public static final double CONE_RAMP = 0;
                 public static final double CUBE_SHELF = 1; // TODO: TUNE
                 public static final double CONE_SHELF = 1; //  TODO: TUNE
             }
@@ -187,11 +195,14 @@ public final class Constants {
                 public static final double CUBE_HIGH = 23.7;
                 public static final double CUBE_MID = 17.5;
 
-                public static final double PICKUP_GROUND = -20;
+                public static final double CUBE_PICKUP_GROUND = -20;
+                public static final double CONE_UPRIGHT_PICKUP_GROUND = -20;
+                public static final double CONE_FALLEN_PICKUP_GROUND = -20;
 
                 public static final double HYBRID = -10; // TODO: TUNE
 
-                public static final double RAMP = 30; // TODO: TUNE
+                public static final double CUBE_RAMP = 30; // TODO: TUNE
+                public static final double CONE_RAMP = 30; // TODO: TUNE
 
                 public static final double CUBE_SHELF = 50; // TODO: TUNE
 
@@ -234,7 +245,14 @@ public final class Constants {
             public static final double CUBE_HIGH_RELATIVE = 0;
             public static final double CUBE_MID_RELATIVE = 0;
 
-            public static final double RAMP = -5; // TODO: TUNE
+            public static final double HYBRID_ROBOT_RELATIVE = 0;
+
+            public static final double CUBE_PICKUP_GROUND_ROBOT_RELATIVE = 0;
+            public static final double CONE_UPRIGHT_PICKUP_GROUND_ROBOT_RELATIVE = -20;
+            public static final double CONE_FALLEN_PICKUP_GROUND_ROBOT_RELATIVE = -10;
+
+            public static final double CUBE_RAMP_ROBOT_RELATIVE = 20; // TODO: TUNE
+            public static final double CONE_RAMP_ROBOT_RELATIVE = 20; // TODO: TUNE
 
             public static final double CONE_SHELF_RELATIVE = -90;
             public static final double CUBE_SHELF_RELATIVE = 0;
