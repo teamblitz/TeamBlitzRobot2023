@@ -161,9 +161,9 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void park() {
-        for (SwerveModuleState state : getModuleStates()) {
-            if (state.speedMetersPerSecond > .01) return;
-        }
+//        for (SwerveModuleState state : getModuleStates()) {
+//            if (state.speedMetersPerSecond > .01) return;
+//        }
         SwerveModuleState[] desiredStates = {
             (new SwerveModuleState(0, Rotation2d.fromDegrees(45))),
             (new SwerveModuleState(0, Rotation2d.fromDegrees(-45))),

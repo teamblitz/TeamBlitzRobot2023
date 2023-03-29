@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -24,6 +25,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandBuilder;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.arm.HoldArmAtPositionCommand;
+import frc.robot.commands.auto.AutoBalance;
 import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -245,6 +247,20 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
+
+
+        if (true) {
+            return Commands.run(() -> driveSubsystem.drive(
+                    new Translation2d(-.75, 0),
+                    0,
+                    false,
+                    true,
+                    false
+            )).until(() -> Math.abs(driveSubsystem.getPitch()) > 8).andThen(
+                    new AutoBalance(driveSubsystem)
+            ).andThen(driveSubsystem.buildParkCommand()).repeatedly();
+        }
+
         Command wristFix = Commands.runOnce(wristSubsystem::setHoldGoals);
         wristFix.schedule();
 

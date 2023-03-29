@@ -79,6 +79,7 @@ public class AutonomousPathCommand {
 
     public Command autoCubeOut() {
         return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1);
+//        return Commands.runOnce(() -> {})
     }
 
     public Command driveOutDistance(double distance) {
@@ -137,7 +138,7 @@ public class AutonomousPathCommand {
         eventMap.put(
                 "autoCubeMid",
                 this.autoCubeOut()); // Changed to autoCubeOut to only drop cube, not move arm
-        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem, null)); // import fix later
+//        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem)); // import fix later
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
 

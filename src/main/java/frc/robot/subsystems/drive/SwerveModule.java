@@ -62,7 +62,7 @@ public class SwerveModule {
             io.setDrivePercent(percentOutput);
             logger.recordOutput(logKey + "/drivePercent", percentOutput);
         } else {
-            logger.recordOutput(logKey + "/SpeedSetpoint", desiredState.speedMetersPerSecond);
+            logger.recordOutput(logKey + "/speedSetpoint", desiredState.speedMetersPerSecond);
             io.setDriveSetpoint(
                     desiredState.speedMetersPerSecond,
                     feedforward.calculate(desiredState.speedMetersPerSecond));
