@@ -15,9 +15,8 @@ import frc.robot.commands.wrist.HoldWristAtPositionCommand;
 import frc.robot.commands.wrist.HoldWristAtRelativePositionCommand;
 import frc.robot.commands.wrist.RotateWristCommand;
 import frc.robot.commands.wrist.RotateWristRelativeCommand;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final WristIO io;
@@ -54,8 +53,6 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
         // The wrist is basically an arm, so we treat it as such.
         feedforward =
                 new ArmFeedforward(Constants.Wrist.ks, Constants.Wrist.kg, Constants.Wrist.kv);
-
-
 
         lastGoal = getRotation();
         lastRelativeGoal = getRelativeRotation();

@@ -10,7 +10,7 @@
         "x": 2.678130780291781,
         "y": 1.05
       },
-      "holonomicAngle": 90.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -33,41 +33,18 @@
         "x": 5.63076174445752,
         "y": 0.8678567784486001
       },
-      "nextControl": {
-        "x": 6.561665544071428,
-        "y": 0.8678567784486001
-      },
-      "holonomicAngle": 90.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 3.702589285520452,
-        "y": 0.8564376103111184
-      },
-      "prevControl": {
-        "x": 4.672738564381479,
-        "y": 0.8564376103111182
-      },
       "nextControl": null,
-      "holonomicAngle": 90.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
+        "names": [
+          "buildPark"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
         "waitTime": 1.0
       }
     }

@@ -36,7 +36,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,7 +61,7 @@ public class RobotContainer {
     private Controller controller;
     private SaitekX52Joystick driveController;
 
-    private final Logger logger = Logger.getInstance();
+    // private final Logger logger = Logger.getInstance();
 
     /* ***** --- Autonomous --- ***** */
     private static final String[] autonomousCommands = {

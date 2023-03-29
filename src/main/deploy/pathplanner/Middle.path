@@ -26,62 +26,12 @@
     },
     {
       "anchorPoint": {
-        "x": 2.4,
-        "y": 2.7
-      },
-      "prevControl": {
-        "x": 1.884470477516012,
-        "y": 2.7
-      },
-      "nextControl": {
-        "x": 2.8153742771299224,
-        "y": 2.7
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 5.7,
-        "y": 2.7
-      },
-      "prevControl": {
-        "x": 5.0701387113311975,
-        "y": 2.696228016997516
-      },
-      "nextControl": {
-        "x": 6.6161435465728085,
-        "y": 2.705486410972822
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "after",
-        "waitTime": 2.0
-      }
-    },
-    {
-      "anchorPoint": {
         "x": 3.875630465546646,
         "y": 2.7
       },
       "prevControl": {
-        "x": 4.569998118826794,
-        "y": 2.6900994230559894
+        "x": 4.570068698469923,
+        "y": 2.7
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -91,7 +41,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "balanceChargeStation"
+          "balanceChargeStation",
+          "buildPark"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",

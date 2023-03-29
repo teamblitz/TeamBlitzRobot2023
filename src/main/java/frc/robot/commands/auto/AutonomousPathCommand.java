@@ -65,7 +65,6 @@ public class AutonomousPathCommand {
     }
 
     // Intake Commands
-    // ----- TODO: Test timeout -----
     public Command autoConeIn() {
         return this.intakeSubsystem.buildConeInCommand().withTimeout(2);
     }
@@ -133,25 +132,29 @@ public class AutonomousPathCommand {
         // This will load the file "FullAuto.path"
         // All paths are in /src/main/deploy/pathplanner
         // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
-        
+
         // eventMap.put("autoCubeMid", this.autoMidCube());
-        eventMap.put("autoCubeMid", this.autoCubeOut());
-        eventMap.put("balanceChargeStation", this.balanceChargeStation());
+        eventMap.put(
+                "autoCubeMid",
+                this.autoCubeOut()); // Changed to autoCubeOut to only drop cube, not move arm
+        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem, null)); // import fix later
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+
         switch (path) {
             case "Left":
-                pathGroup = PathPlanner.loadPathGroup("Left Copy", new PathConstraints(2, 1.5));
+                pathGroup = PathPlanner.loadPathGroup("Left", new PathConstraints(2, 1.5));
                 break;
             case "Middle":
                 pathGroup = PathPlanner.loadPathGroup("Middle", new PathConstraints(2, 1.5));
                 break;
             case "Right":
-                pathGroup = PathPlanner.loadPathGroup("Right Copy", new PathConstraints(2, 1.5));
+                pathGroup = PathPlanner.loadPathGroup("Right", new PathConstraints(2, 1.5));
                 break;
             case "Nothing":
-                pathGroup = PathPlanner.loadPathGroup("Nothing", new PathConstraints(2, 1.5));
-                break;
+                return null;
+                // pathGroup = PathPlanner.loadPathGroup("Nothing", new PathConstraints(2, 1.5));
+                // break;
             case "Test":
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
                 break;

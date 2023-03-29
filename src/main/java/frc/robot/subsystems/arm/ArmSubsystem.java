@@ -4,13 +4,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.BlitzSubsystem;
-import frc.lib.math.controller.TelescopingArmFeedforward;
 import frc.robot.Constants;
 import frc.robot.commands.arm.ExtendToCommand;
 import frc.robot.commands.arm.RotateToCommand;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
@@ -44,7 +42,9 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and
         // Rotation Requirement subsystems
-        Commands.run(() -> {}).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming).schedule();
+        Commands.run(() -> {})
+                .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)
+                .schedule();
 
         // Schedule a command to seed the arm, as the encoder does not appear to be connected when
         // this class is initiated.
@@ -66,7 +66,8 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         // And I really need to fix it
 
-        // Idealy the wrist sbhoulgffhguikerrkjghjkh to9r8jyoihmrdhm,dsauikrjhyrdnsuyfjhewtyashdnyisdhjghnesdlihfgjerend
+        // Idealy the wrist sbhoulgffhguikerrkjghjkh
+        // to9r8jyoihmrdhm,dsauikrjhyrdnsuyfjhewtyashdnyisdhjghnesdlihfgjerend
         // Yea
 
         // Ok
