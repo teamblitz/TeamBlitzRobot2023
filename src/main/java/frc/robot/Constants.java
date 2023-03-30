@@ -338,9 +338,9 @@ public final class Constants {
         public static final double DRIVE_KF = 0.0; // Same here.
 
         /* Drive Motor Characterization Values in volts*/
-        public static final double DRIVE_KS = (0.32); // TODO: This must be tuned to specific robot
-        public static final double DRIVE_KV = (1.51);
-        public static final double DRIVE_KA = (0.27);
+        public static final double DRIVE_KS = (0.19983);
+        public static final double DRIVE_KV = (2.3923);
+        public static final double DRIVE_KA = (0.47987);
 
         /* DriveSubsystem Profiling Values */
         /** Meters per Second */
