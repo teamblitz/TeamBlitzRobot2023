@@ -152,17 +152,13 @@ public class AutonomousPathCommand {
             case "Right":
                 pathGroup = PathPlanner.loadPathGroup("Right", new PathConstraints(2, 1.5));
                 break;
-            case "Nothing":
-                return null;
             case "SquarePath":
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
                 break;
             case "Score":
-                pathGroup = PathPlanner.loadPathGroup("Score", new PathConstraints(2, 1.5));
-                break;
+                return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1.5);
             default:
-                pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
-                break;
+                return null;
         }
 
         // Create the AutoBuilder
