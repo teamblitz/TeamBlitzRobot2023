@@ -65,7 +65,7 @@ public class RobotContainer {
 
     /* ***** --- Autonomous --- ***** */
     private static final String[] autonomousCommands = {
-        "Left", "Middle", "Right", "SquarePath", "Nothing", "Score", "Balance"
+        "Left", "Middle", "Right", "SquarePath", "Score", "Balance"
     };
     private final SendableChooser<String> chooser = new SendableChooser<>();
 

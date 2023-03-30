@@ -157,6 +157,9 @@ public class AutonomousPathCommand {
                 break;
             case "Score":
                 return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1.5);
+            case "Balance":
+                // ----- TODO: Balance paths -----
+                return null;
             default:
                 return null;
         }
