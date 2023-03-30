@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,7 +24,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ManipulatorCommandFactory;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.arm.HoldArmAtPositionCommand;
-import frc.robot.commands.auto.AutoBalance;
 import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -67,7 +65,7 @@ public class RobotContainer {
 
     /* ***** --- Autonomous --- ***** */
     private static final String[] autonomousCommands = {
-        "Left", "Middle", "Right", "Test", "Nothing", "Score", "Balance"
+        "Left", "Middle", "Right", "SquarePath", "Nothing", "Score", "Balance"
     };
     private final SendableChooser<String> chooser = new SendableChooser<>();
 
@@ -231,10 +229,13 @@ public class RobotContainer {
         controller.primeCubeRampTrigger().onTrue(manipulatorCommandFactory.primeCubeRamp());
         controller.primeConeRampTrigger().onTrue(manipulatorCommandFactory.primeConeRamp());
 
-
         controller.groundCubePickupTrigger().onTrue(manipulatorCommandFactory.groundCubePickup());
-        controller.groundConeUprightPickupTrigger().onTrue(manipulatorCommandFactory.groundUprightConePickup());
-        controller.groundConeFallenPickupTrigger().onTrue(manipulatorCommandFactory.groundFallenConePickup());
+        controller
+                .groundConeUprightPickupTrigger()
+                .onTrue(manipulatorCommandFactory.groundUprightConePickup());
+        controller
+                .groundConeFallenPickupTrigger()
+                .onTrue(manipulatorCommandFactory.groundFallenConePickup());
 
         controller.cone().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", true)));
         controller.cube().onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("mode", false)));
@@ -248,18 +249,16 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
-
-        if (true) {
-            return Commands.run(
-                            () ->
-                                    driveSubsystem.drive(
-                                            new Translation2d(-.75, 0), 0, false, true, false))
-                    .until(() -> Math.abs(driveSubsystem.getPitch()) > 8)
-                    .andThen(new AutoBalance(driveSubsystem))
-                    .andThen(driveSubsystem.buildParkCommand())
-                    .repeatedly();
-        }
-
+        // if (true) {
+        //     return Commands.run(
+        //                     () ->
+        //                             driveSubsystem.drive(
+        //                                     new Translation2d(-.75, 0), 0, false, true, false))
+        //             .until(() -> Math.abs(driveSubsystem.getPitch()) > 8)
+        //             .andThen(new AutoBalance(driveSubsystem))
+        //             .andThen(driveSubsystem.buildParkCommand())
+        //             .repeatedly();
+        // }
         Command wristFix = Commands.runOnce(wristSubsystem::setHoldGoals);
         wristFix.schedule();
 
@@ -267,21 +266,6 @@ public class RobotContainer {
         AutonomousPathCommand autonomousPathCommand =
                 new AutonomousPathCommand(
                         driveSubsystem, armSubsystem, intakeSubsystem, manipulatorCommandFactory);
-        switch (autoCommand) {
-            case "Left":
-                return autonomousPathCommand.generateAutonomous("Left");
-            case "Middle":
-                return autonomousPathCommand.generateAutonomous("Middle");
-            case "Right":
-                return autonomousPathCommand.generateAutonomous("Right");
-            case "Balance":
-                return autonomousPathCommand.generateAutonomous("Balance");
-            case "Nothing":
-                return null;
-            case "Test":
-                return autonomousPathCommand.generateAutonomous("Test");
-            default:
-                return null;
-        }
+        return autonomousPathCommand.generateAutonomous(autoCommand);
     }
 }

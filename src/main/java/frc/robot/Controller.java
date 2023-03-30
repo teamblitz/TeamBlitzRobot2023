@@ -28,7 +28,6 @@ public class Controller {
         signalCube().onTrue(Commands.runOnce(() -> mode = GamePiece.CUBE).ignoringDisable(true));
     }
 
-
     /* Arm/Wrist/Intake manipulator controls */
 
     public Trigger intake() {
@@ -80,6 +79,7 @@ public class Controller {
     public Trigger scoreModeTrigger() {
         return commandOperatorController.povDown();
     }
+
     public Trigger basicModeTrigger() {
         return commandDriverController.povCenter();
     }
@@ -94,21 +94,24 @@ public class Controller {
 
     /* Arm/wrist positions */
 
-
     /* Scoring presets */
 
     public Trigger primeHybridTrigger() {
         return pickupModeTrigger().and(commandOperatorController.b());
     }
+
     public Trigger primeMidConeTrigger() {
         return scoreModeTrigger().and(commandOperatorController.x());
     }
+
     public Trigger primeHighConeTrigger() {
         return scoreModeTrigger().and(commandOperatorController.y());
     }
+
     public Trigger primeMidCubeTrigger() {
         return scoreModeTrigger().and(commandOperatorController.a());
     }
+
     public Trigger primeHighCubeTrigger() {
         return scoreModeTrigger().and(commandOperatorController.b());
     }
@@ -140,10 +143,10 @@ public class Controller {
     public Trigger groundConeUprightPickupTrigger() {
         return pickupModeTrigger().and(commandOperatorController.y());
     }
+
     public Trigger groundConeFallenPickupTrigger() {
         return pickupModeTrigger().and(commandOperatorController.x());
     }
-
 
     public Trigger homeArmTrigger() {
         return scoreModeTrigger().and(commandOperatorController.b());

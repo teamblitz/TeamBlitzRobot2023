@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -28,8 +27,8 @@ public class ManipulatorCommandFactory {
         return armSubsystem
                 .rotateToCommand(armRotation)
                 .alongWith(armSubsystem.extendToCommand(armExtension))
-                .alongWith(wristSubsystem.rotateToCommand(
-                        robotRelativeWristRotation - armRotation));
+                .alongWith(
+                        wristSubsystem.rotateToCommand(robotRelativeWristRotation - armRotation));
     }
 
     public CommandBase primeConeHigh() {
@@ -99,23 +98,20 @@ public class ManipulatorCommandFactory {
         return superStructureToState(
                 Constants.Arm.Position.Rotation.CUBE_PICKUP_GROUND,
                 Constants.Arm.Position.Extension.CUBE_PICKUP_GROUND,
-                Constants.Wrist.Position.CUBE_PICKUP_GROUND_ROBOT_RELATIVE
-        );
+                Constants.Wrist.Position.CUBE_PICKUP_GROUND_ROBOT_RELATIVE);
     }
 
     public CommandBase groundUprightConePickup() {
         return superStructureToState(
                 Constants.Arm.Position.Rotation.CONE_UPRIGHT_PICKUP_GROUND,
                 Constants.Arm.Position.Extension.CONE_UPRIGHT_PICKUP_GROUND,
-                Constants.Wrist.Position.CONE_UPRIGHT_PICKUP_GROUND_ROBOT_RELATIVE
-        );
+                Constants.Wrist.Position.CONE_UPRIGHT_PICKUP_GROUND_ROBOT_RELATIVE);
     }
 
     public CommandBase groundFallenConePickup() {
         return superStructureToState(
                 Constants.Arm.Position.Rotation.CONE_FALLEN_PICKUP_GROUND,
                 Constants.Arm.Position.Extension.CONE_FALLEN_PICKUP_GROUND,
-                Constants.Wrist.Position.CONE_FALLEN_PICKUP_GROUND_ROBOT_RELATIVE
-        );
+                Constants.Wrist.Position.CONE_FALLEN_PICKUP_GROUND_ROBOT_RELATIVE);
     }
 }

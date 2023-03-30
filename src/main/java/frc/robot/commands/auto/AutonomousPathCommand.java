@@ -134,12 +134,11 @@ public class AutonomousPathCommand {
         // All paths are in /src/main/deploy/pathplanner
         // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
 
-        // eventMap.put("autoCubeMid", this.autoMidCube());
         eventMap.put(
                 "autoCubeMid",
                 this.autoCubeOut()); // Changed to autoCubeOut to only drop cube, not move arm
         //        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem)); // import
-        // fix later
+        eventMap.put("buildPark", this.driveSubsystem.buildParkCommand().withTimeout(3));
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
 
@@ -155,10 +154,11 @@ public class AutonomousPathCommand {
                 break;
             case "Nothing":
                 return null;
-                // pathGroup = PathPlanner.loadPathGroup("Nothing", new PathConstraints(2, 1.5));
-                // break;
-            case "Test":
+            case "SquarePath":
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
+                break;
+            case "Score":
+                pathGroup = PathPlanner.loadPathGroup("Score", new PathConstraints(2, 1.5));
                 break;
             default:
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
