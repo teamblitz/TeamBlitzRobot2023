@@ -17,7 +17,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "autoCubeMid"
+          "armConeHigh",
+          "intake",
+          "armHome"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -43,8 +45,12 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "armGroundCube",
+          "intake",
+          "armHome"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 1.0
       }
@@ -68,20 +74,24 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "armCubeHigh",
+          "outtake",
+          "armHome"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.3611718692631705,
-        "y": 0.9307975014054289
+        "x": 6.628037422741513,
+        "y": 1.4752137837609016
       },
       "prevControl": {
-        "x": 5.819789649057973,
-        "y": 0.6933491592101674
+        "x": 6.614120311573957,
+        "y": 0.3061764456862255
       },
       "nextControl": null,
       "holonomicAngle": 60.0,
@@ -90,8 +100,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "armGroundCone"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }

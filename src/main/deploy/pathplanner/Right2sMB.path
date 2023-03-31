@@ -17,7 +17,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "autoCubeMid"
+          "armConeHigh",
+          "outtake",
+          "armHome"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -43,7 +45,11 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "armGroundCube",
+          "intake",
+          "armHome"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 1.0
@@ -68,7 +74,11 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "armCubeHigh",
+          "outtake",
+          "armHome"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -90,7 +100,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "balance"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
