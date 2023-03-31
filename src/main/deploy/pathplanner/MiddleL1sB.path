@@ -1,0 +1,92 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8813607552027143,
+        "y": 3.314993096151607
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8813607552027143,
+        "y": 2.850507192078809
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "armHighCone",
+          "outtake"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 1.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.4238141709366134,
+        "y": 2.7323579459189
+      },
+      "prevControl": {
+        "x": 2.2602863591500646,
+        "y": 2.7323579459189
+      },
+      "nextControl": {
+        "x": 3.1182524038598882,
+        "y": 2.7323579459189
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "balanceChargeStation",
+          "buildPark"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 1.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.6292662059008336,
+        "y": 2.75
+      },
+      "prevControl": {
+        "x": 3.0505852967734137,
+        "y": 2.75
+      },
+      "nextControl": null,
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": 1.0,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "balance"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 1.5,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "armHome"
+      ]
+    }
+  ]
+}
