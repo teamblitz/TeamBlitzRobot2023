@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.2858987384641445,
-        "y": 4.690066463466261
+        "x": 1.9256368370556651,
+        "y": 4.967419318724893
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.415216747100162,
-        "y": 4.731817796968928
+        "x": 2.2580645161290325,
+        "y": 4.615995772275905
       },
       "holonomicAngle": -180.0,
       "isReversal": false,
@@ -16,48 +16,26 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "armHighCone",
+          "outtake"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 4.818812970959276,
-        "y": 4.662232241131149
+        "x": 4.129157452627702,
+        "y": 4.682481308090579
       },
       "prevControl": {
-        "x": 4.192542968419271,
-        "y": 4.731817796968929
-      },
-      "nextControl": {
-        "x": 5.4450829734992805,
-        "y": 4.59264668529337
-      },
-      "holonomicAngle": 0.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 6.349695199390399,
-        "y": 4.56481246295826
-      },
-      "prevControl": {
-        "x": 5.793010752688172,
-        "y": 4.543936796206926
+        "x": 3.499033444465253,
+        "y": 4.682481308090579
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -73,5 +51,12 @@
   "maxVelocity": 2.0,
   "maxAcceleration": 1.5,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "armHome"
+      ]
+    }
+  ]
 }
