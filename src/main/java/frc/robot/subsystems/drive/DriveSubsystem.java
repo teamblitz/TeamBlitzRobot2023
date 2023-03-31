@@ -111,7 +111,8 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         gyroIO.preMatchZero(180);
 
-        new Trigger(DriverStation::isEnabled).onTrue(Commands.runOnce(() -> keepHeadingSetpointSet = false));
+        new Trigger(DriverStation::isEnabled)
+                .onTrue(Commands.runOnce(() -> keepHeadingSetpointSet = false));
     }
 
     public void drive(

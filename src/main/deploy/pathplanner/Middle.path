@@ -41,8 +41,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "balanceChargeStation",
-          "buildPark"
+          "balanceChargeStation"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",

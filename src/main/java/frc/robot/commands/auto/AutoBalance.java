@@ -73,6 +73,7 @@ public class AutoBalance extends CommandBase {
         }
         return Math.abs(driveSubsystem.getPitch())
                         < Constants.AutoConstants.CHARGE_STATION_MIN_ANGLE
-                && (minTimer.get() > 1) && (waitTimer.get() > .4);
+                && (minTimer.get() > 1)
+                && (waitTimer.get() > .4);
     }
 }

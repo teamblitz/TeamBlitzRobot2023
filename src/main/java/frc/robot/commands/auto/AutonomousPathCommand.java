@@ -79,7 +79,6 @@ public class AutonomousPathCommand {
 
     public Command autoCubeOut() {
         return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1);
-        //        return Commands.runOnce(() -> {})
     }
 
     public Command driveOutDistance(double distance) {
@@ -132,15 +131,15 @@ public class AutonomousPathCommand {
         HashMap<String, Command> eventMap = new HashMap<>();
         // This will load the file "FullAuto.path"
         // All paths are in /src/main/deploy/pathplanner
-        // Please set robot width/length in PathPlanner to 34 x 34 inches --> meters (0.8636 meters)
+        // Please set robot width/length in PathPlanner to 36.5 x 36.5 inches --> meters (0.9271
+        // meters)
 
-        eventMap.put(
-                "autoCubeMid",
-                this.autoCubeOut()); // Changed to autoCubeOut to only drop cube, not move arm
-        //        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem)); // import
+        // ONLY DROPS CUBE. CHANGE COMMAND TO autoCubeMid TO FIX
+        eventMap.put("autoCubeMid", this.autoCubeOut());
         eventMap.put("buildPark", this.driveSubsystem.buildParkCommand().withTimeout(3));
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
+        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem));
 
         switch (path) {
             case "Left":
@@ -156,10 +155,16 @@ public class AutonomousPathCommand {
                 pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
                 break;
             case "Score":
-                return this.intakeSubsystem.buildCubeOutCommand().withTimeout(1.5);
-            case "Balance":
-                // ----- TODO: Balance paths -----
-                return null;
+                return autoCubeOut();
+            case "BalanceTest":
+                return Commands.run(
+                                () ->
+                                        this.driveSubsystem.drive(
+                                                new Translation2d(-.75, 0), 0, false, true, false))
+                        .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                        .andThen(() -> this.driveSubsystem.setBrakeMode(true))
+                        .andThen(new AutoBalance(this.driveSubsystem))
+                        .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
             default:
                 return null;
         }

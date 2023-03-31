@@ -338,7 +338,8 @@ public final class Constants {
          * 0.074084 1s denominator, don't convert
          * 0.00063245 60s denominator, do convert 6.12 : 1
          */
-        public static final double DRIVE_KP = 0.0012347; // TODO: This must be tuned to specific robot
+        public static final double DRIVE_KP =
+                0.0012347; // TODO: This must be tuned to specific robot
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
         public static final double DRIVE_KF = 0.0; // Same here.
