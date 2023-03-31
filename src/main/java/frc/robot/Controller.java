@@ -191,6 +191,10 @@ public class Controller {
         return commandOperatorController.start();
     }
 
+    public Trigger getBackTrigger() {
+        return commandOperatorController.back();
+    }
+
     // Driver Controls
     public Trigger restGyroTrigger() {
         return commandDriverController.button(SaitekX52Joystick.Button.kFire.value);

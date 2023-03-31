@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -24,6 +25,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ManipulatorCommandFactory;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.arm.HoldArmAtPositionCommand;
+import frc.robot.commands.auto.AutoBalance;
 import frc.robot.commands.auto.AutonomousPathCommand;
 import frc.robot.subsystems.arm.ArmIOTalon;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -34,6 +36,7 @@ import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
+import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
 
@@ -146,7 +149,8 @@ public class RobotContainer {
                         Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRotation());
-        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation());
+//        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation());
+        wristSubsystem = new WristSubsystem(new WristIO() {}, () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
 
@@ -246,19 +250,24 @@ public class RobotContainer {
         controller
                 .coastModeTrigger()
                 .onTrue(Commands.runOnce(() -> driveSubsystem.setBrakeMode(false)));
+
+        controller.getStartTrigger().whileTrue(driveSubsystem.driveSpeedTestCommand(1, 4));
+        controller.getBackTrigger().whileTrue(driveSubsystem.driveSpeedTestCommand(-1, 4));
     }
 
     public Command getAutonomousCommand() { // Autonomous code goes here
-        // if (true) {
-        //     return Commands.run(
-        //                     () ->
-        //                             driveSubsystem.drive(
-        //                                     new Translation2d(-.75, 0), 0, false, true, false))
-        //             .until(() -> Math.abs(driveSubsystem.getPitch()) > 8)
-        //             .andThen(new AutoBalance(driveSubsystem))
-        //             .andThen(driveSubsystem.buildParkCommand())
-        //             .repeatedly();
-        // }
+         if (true) {
+             return Commands.run(
+                             () ->
+                                     driveSubsystem.drive(
+                                             new Translation2d(-.75, 0), 0, false, true, false))
+                     .until(() -> Math.abs(driveSubsystem.getPitch()) > 12)
+                     .andThen(() -> driveSubsystem.setBrakeMode(true))
+                     .andThen(new AutoBalance(driveSubsystem))
+                     .andThen(
+                             driveSubsystem.buildParkCommand()
+                                     .repeatedly());
+         }
         Command wristFix = Commands.runOnce(wristSubsystem::setHoldGoals);
         wristFix.schedule();
 

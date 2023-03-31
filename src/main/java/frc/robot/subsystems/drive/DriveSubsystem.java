@@ -5,6 +5,7 @@ package frc.robot.subsystems.drive;
 import static frc.robot.Constants.Swerve.*;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -109,6 +110,8 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
                 .onTrue(Commands.runOnce(() -> gyroIO.preMatchZero(180)).ignoringDisable(true));
 
         gyroIO.preMatchZero(180);
+
+        new Trigger(DriverStation::isEnabled).onTrue(Commands.runOnce(() -> keepHeadingSetpointSet = false));
     }
 
     public void drive(
@@ -238,6 +241,7 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         swerveOdometry.update(getYaw(), getModulePositions());
 
         logger.recordOutput("Swerve/Odometry", swerveOdometry.getPoseMeters());
+        logger.recordOutput("Swerve/modules", getModuleStates());
 
         boolean anglePIDChanged = false;
         boolean drivePIDChanged = false;
@@ -329,5 +333,27 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public CommandBase buildParkCommand() {
         return Commands.runOnce(this::park, this);
+    }
+
+    public CommandBase driveSpeedTestCommand(double speed, double duration) {
+        SlewRateLimiter filter = new SlewRateLimiter(1);
+        return Commands.run(
+                        () ->
+                                drive(
+                                        new Translation2d(filter.calculate(speed), 0),
+                                        0,
+                                        false,
+                                        false,
+                                        false))
+                .withTimeout(duration)
+                .andThen(
+                        Commands.run(
+                                () ->
+                                        drive(
+                                                new Translation2d(filter.calculate(0), 0),
+                                                0,
+                                                false,
+                                                false,
+                                                false)));
     }
 }

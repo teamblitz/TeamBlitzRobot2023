@@ -12,6 +12,11 @@ public class AutoBalance extends CommandBase {
 
     Timer minTimer = new Timer();
 
+    Timer waitTimer = new Timer();
+
+    boolean hasDecremented;
+    double speed;
+
     public AutoBalance(DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
 
@@ -22,6 +27,9 @@ public class AutoBalance extends CommandBase {
     @Override
     public void initialize() {
         minTimer.start();
+        waitTimer.start();
+        hasDecremented = false;
+        speed = .5;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -31,25 +39,40 @@ public class AutoBalance extends CommandBase {
         double xOut = 0;
         if (Math.abs(driveSubsystem.getPitch())
                 > Constants.AutoConstants.CHARGE_STATION_MAX_ANGLE) {
-            xOut = Math.signum(-driveSubsystem.getPitch()) * 0.6;
+            xOut = Math.signum(-driveSubsystem.getPitch()) * speed;
         } else if (minTimer.get() < 1) {
-            xOut = Math.signum(-driveSubsystem.getPitch()) * 0.6;
+            xOut = Math.signum(-driveSubsystem.getPitch()) * speed;
         }
 
-        driveSubsystem.drive(new Translation2d(xOut, 0), 0, false, false, false);
+        driveSubsystem.drive(new Translation2d(xOut, 0), 0, false, false, true);
+
+        if (Math.abs(driveSubsystem.getPitch())
+                < Constants.AutoConstants.CHARGE_STATION_MIN_ANGLE) {
+            if (!hasDecremented) {
+                speed += -.05;
+                hasDecremented = true;
+            }
+        } else {
+            hasDecremented = false;
+        }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        //        driveSubsystem.drive();
+        driveSubsystem.drive(new Translation2d(0, 0), 0, false, false, false);
+        System.out.println("Auto Balance over");
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        if (!(Math.abs(driveSubsystem.getPitch())
+                < Constants.AutoConstants.CHARGE_STATION_MIN_ANGLE)) {
+            waitTimer.reset();
+        }
         return Math.abs(driveSubsystem.getPitch())
                         < Constants.AutoConstants.CHARGE_STATION_MIN_ANGLE
-                && (minTimer.get() > 1);
+                && (minTimer.get() > 1) && (waitTimer.get() > .4);
     }
 }
