@@ -16,7 +16,10 @@
       "isLocked": true,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "armConeHigh",
+          "outtake"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -64,9 +67,11 @@
       "isReversal": true,
       "velOverride": null,
       "isLocked": true,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "intake"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -116,7 +121,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "outtake"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -149,12 +156,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.247196665009444,
-        "y": 4.426037098519695
+        "x": 6.4749491998984,
+        "y": 4.035962238591145
       },
       "prevControl": {
-        "x": 5.715312378492055,
-        "y": 5.04340278822738
+        "x": 5.943064913381011,
+        "y": 4.65332792829883
       },
       "nextControl": null,
       "holonomicAngle": -770.0,
@@ -163,12 +170,49 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "armGroundCone",
+          "intake"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "maxVelocity": 2.0,
+  "maxAcceleration": 1.5,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "armHome"
+      ]
+    },
+    {
+      "position": 1.4727272727272729,
+      "names": [
+        "armGroundCube"
+      ]
+    },
+    {
+      "position": 2.0181818181818185,
+      "names": [
+        "armHome"
+      ]
+    },
+    {
+      "position": 3.38181818181818,
+      "names": [
+        "armCubeHigh"
+      ]
+    },
+    {
+      "position": 4.0909090909090855,
+      "names": [
+        "armCubeHigh"
+      ]
+    }
+  ]
 }

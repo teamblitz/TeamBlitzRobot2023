@@ -55,6 +55,8 @@
     {
       "position": 0.0,
       "names": [
+        "armConeHigh",
+        "outtake",
         "armHome"
       ]
     }
