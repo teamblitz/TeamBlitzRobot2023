@@ -14,6 +14,7 @@ import frc.robot.commands.ManipulatorCommandFactory;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -26,6 +27,24 @@ public class AutonomousPathCommand {
     private final ManipulatorCommandFactory manipulatorCommandFactory;
 
     private final Logger logger = Logger.getInstance();
+
+    private static final List<String> autonomousCommands =
+            Arrays.asList(
+                    "Left1sM",
+                    "Left2sB",
+                    "Left2sHM",
+                    "Left2sMB",
+                    "MiddleL1sB",
+                    "MiddleL1sMB",
+                    "MiddleR1sB",
+                    "MiddleR1sMB",
+                    "Right1sM",
+                    "Right2sHM",
+                    "Right2sMB",
+                    "Score",
+                    "SquareTest",
+                    "BalanceTest",
+                    "Nothing");
 
     private static final boolean backupAuto = false;
 
@@ -110,7 +129,7 @@ public class AutonomousPathCommand {
         // Check timeouts! Please test.
         // I'm still treating the prime commands like they do not end.
         // ----- Arm Positions -----
-        eventMap.put("armHome", this.armSubsystem.homeArmCommand());
+        eventMap.put("armHome", this.armSubsystem.homeArmCommand().withTimeout(3));
         eventMap.put(
                 "armConeGround",
                 this.manipulatorCommandFactory.groundUprightConePickup().withTimeout(3));
@@ -136,21 +155,28 @@ public class AutonomousPathCommand {
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
 
-        if (path == "Score") {
-            return autoCubeOut();
-        } else if (path == "BalanceTest") {
-            return Commands.run(
-                            () ->
-                                    this.driveSubsystem.drive(
-                                            new Translation2d(-.75, 0), 0, false, true, false))
-                    .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
-                    .andThen(() -> this.driveSubsystem.setBrakeMode(true))
-                    .andThen(new AutoBalance(this.driveSubsystem))
-                    .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
-        } else if (path == "Nothing") {
-            return null;
-        } else {
-            pathGroup = PathPlanner.loadPathGroup(path, new PathConstraints(2, 1.5));
+        // Actual Pathing
+        switch (path) {
+            case "Score":
+                return autoCubeOut();
+            case "BalanceTest":
+                return Commands.run(
+                                () ->
+                                        this.driveSubsystem.drive(
+                                                new Translation2d(-.75, 0), 0, false, true, false))
+                        .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                        .andThen(() -> this.driveSubsystem.setBrakeMode(true))
+                        .andThen(new AutoBalance(this.driveSubsystem))
+                        .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
+            case "Nothing":
+                return null;
+            default:
+                if (!autonomousCommands.contains(path)) {
+                    System.err.println(
+                            "Error:Path selected not in Pathplanner list of paths (How? I checked these myself? -Avery)");
+                    return null;
+                }
+                pathGroup = PathPlanner.loadPathGroup(path, new PathConstraints(2, 1.5));
         }
 
         // Create the AutoBuilder
