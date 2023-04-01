@@ -146,9 +146,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "balance"
+          "balance",
+          "buildPark"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }

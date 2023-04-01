@@ -148,8 +148,7 @@ public class AutonomousPathCommand {
 
         // ----- Balance -----
         eventMap.put("balance", new AutoBalance(this.driveSubsystem));
-        eventMap.put("autoCubeMid", this.autoCubeOut());
-        eventMap.put("buildPark", this.driveSubsystem.buildParkCommand().withTimeout(3));
+        eventMap.put("buildPark", this.driveSubsystem.buildParkCommand());
 
         // ----- Testing -----
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));

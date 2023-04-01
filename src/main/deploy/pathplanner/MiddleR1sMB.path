@@ -81,11 +81,11 @@
     },
     {
       "anchorPoint": {
-        "x": 4.724218470993334,
+        "x": 4.4,
         "y": 2.75
       },
       "prevControl": {
-        "x": 6.142197514140023,
+        "x": 5.81797904314669,
         "y": 2.75
       },
       "nextControl": null,
@@ -96,7 +96,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "balance"
+          "balance",
+          "buildPark"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

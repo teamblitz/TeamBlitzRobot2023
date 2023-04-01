@@ -70,7 +70,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "balance"
+          "balance",
+          "buildPark"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
