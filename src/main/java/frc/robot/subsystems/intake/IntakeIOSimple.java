@@ -7,34 +7,29 @@ import frc.robot.Constants;
 /** Hardware io for the simple intake design */
 public class IntakeIOSimple implements IntakeIO {
 
-    private final CANSparkMax leaderMotor;
-    private final CANSparkMax followerMotor;
+    private final CANSparkMax motor;
 
     public IntakeIOSimple() {
-        leaderMotor =
+        motor =
                 new CANSparkMax(
-                        Constants.Intake.Simple.LEFT_MOTOR_ID,
-                        CANSparkMaxLowLevel.MotorType.kBrushless);
-        followerMotor =
-                new CANSparkMax(
-                        Constants.Intake.Simple.RIGHT_MOTOR_ID,
+                        Constants.Intake.Simple.MOTOR_ID,
                         CANSparkMaxLowLevel.MotorType.kBrushless);
 
-        leaderMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
-        followerMotor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
 
-        leaderMotor.setOpenLoopRampRate(.5);
-        followerMotor.setOpenLoopRampRate(.5);
+                        
 
-        leaderMotor.setInverted(true);
+        motor.restoreFactoryDefaults();
+        motor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);
 
-        followerMotor.follow(leaderMotor, true);
+        motor.setOpenLoopRampRate(.5);
+
+        motor.setInverted(true);
     }
 
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
-        inputs.rpm = leaderMotor.getEncoder().getVelocity();
-        inputs.current = leaderMotor.getOutputCurrent();
+        inputs.rpm = motor.getEncoder().getVelocity();
+        inputs.current = motor.getOutputCurrent();
     }
 
     @Override
@@ -59,14 +54,19 @@ public class IntakeIOSimple implements IntakeIO {
 
     @Override
     public void stop() {
-        leaderMotor.set(0);
+        motor.set(0);
+    }
+
+    @Override
+    public void set(double percent) {
+        motor.set(percent);
     }
 
     private void in() {
-        leaderMotor.set(Constants.Intake.Simple.IN_SPEED);
+        motor.set(Constants.Intake.Simple.IN_SPEED);
     }
 
     private void out() {
-        leaderMotor.set(Constants.Intake.Simple.OUT_SPEED);
+        motor.set(Constants.Intake.Simple.OUT_SPEED);
     }
 }

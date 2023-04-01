@@ -16,6 +16,8 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final Logger logger = Logger.getInstance();
 
+    private boolean gamePiceInIntakeFlag;
+
     public IntakeSubsystem(IntakeIO io) {
         this.io = io;
     }
@@ -37,12 +39,21 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void stop() {
+        gamePiceInIntakeFlag = false;
         io.stop();
+    }
+    public void inAuto() {
+        if (!gamePieceInIntake()) {
+            inCube();
+        } else {
+            io.set(.1);
+        }
     }
 
     public void periodic() {
         io.updateInputs(inputs);
         logger.processInputs("intake", inputs);
+        logger.recordOutput("intake/hasGampiece", gamePieceInIntake());
     }
 
     public State getState() {
@@ -74,6 +85,10 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private boolean gamePieceInIntake() {
         // TODO: CHANGED TO MAKE BUILD
-        return false;
+        if (!gamePiceInIntakeFlag && inputs.current > Constants.Intake.DETECTION_CURRENT_THRESHOLD) {
+            gamePiceInIntakeFlag = true;
+            return true;
+        }
+        return gamePiceInIntakeFlag;
     }
 }

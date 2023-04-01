@@ -54,7 +54,7 @@ public final class Constants {
          * For NEOs use 40
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
-        public static final int CURRENT_LIMIT = 40;
+        public static final int CURRENT_LIMIT = 60;
 
         // Which intake is on the bot?
         public enum Type {
@@ -65,23 +65,20 @@ public final class Constants {
         public static final Type type = Type.Simple;
 
         public static final class Simple {
-            public static final double IN_SPEED = 0.5;
-            public static final double OUT_SPEED = -0.5;
-            // From robot POV
-            public static final int LEFT_MOTOR_ID = 14;
-            public static final int RIGHT_MOTOR_ID = 15;
+            public static final double IN_SPEED = 0.6;
+            public static final double OUT_SPEED = -0.6;
+
+            public static final int MOTOR_ID = 15;
         }
 
         public static final class Complex {
-            public static final double IN_SPEED = 0.2;
-            public static final double OUT_SPEED = -0.2;
+            public static final double IN_SPEED = 0.5;
+            public static final double OUT_SPEED = -0.5;
 
             public static final int FRONT_MOTOR_ID = 14;
             public static final int BACK_MOTOR_ID = 15;
-
-            
         }
-        public static final int DETECTION_CURRENT_THRESHOLD = 0; //needs value
+        public static final int DETECTION_CURRENT_THRESHOLD = 55; //needs value
 
     }
 
@@ -142,7 +139,7 @@ public final class Constants {
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
         public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
 
-        public static final double WRIST_GEAR_RATIO = (27.0 / 1.0); // TODO: Get the actual value
+        public static final double WRIST_GEAR_RATIO = (81.0 / 1.0); // TODO: Get the actual value
         public static final double
                 EXTENSION_PULLEY_CIRCUMFERENCE = // This should be good enough for now
                 0.0191 * Math.PI; // diameter in meters

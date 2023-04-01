@@ -155,10 +155,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setArmExtensionSpeed(double percent) {
-        if (stopExtendingOut && percent > 0) {
-            io.setArmExtensionSpeed(0);
-            return;
-        }
+        // if (stopExtendingOut && percent > 0) {
+        //     io.setArmExtensionSpeed(0);
+        //     return;
+        // }
         // if (extension > Constants.Arm.SLOW_DOWN_AT) {
         //     io.setArmExtensionSpeed(percent * .5);
 

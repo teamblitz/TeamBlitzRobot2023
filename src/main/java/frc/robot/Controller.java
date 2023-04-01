@@ -179,7 +179,7 @@ public class Controller {
     }
 
     public double getExtensionSpeed() {
-        return .5
+        return .8
                 * (Constants.OIConstants.inputCurve.apply(
                         -commandOperatorController.getHID().getLeftTriggerAxis()
                                 + commandOperatorController
