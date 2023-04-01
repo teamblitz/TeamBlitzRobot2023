@@ -234,4 +234,140 @@ public class LedSubsystem extends SubsystemBase {
                     }
                 });
     }
+    public CommandBase redBlueYellowLeds() {
+        return Commands.runOnce(
+                () -> {
+                    ledBuffer.setRGB(0, 255, 0, 0);
+                    ledBuffer.setRGB(1, 0, 0, 255);
+                    ledBuffer.setRGB(2, 255, 255, 0);
+
+                    led.setData(ledBuffer);
+                });
+    }
+    public CommandBase greenOrangePurpleLeds() {
+        return Commands.runOnce(
+                () -> {
+                    ledBuffer.setRGB(0, 0, 255, 0);
+                    ledBuffer.setRGB(1, 255, 163, 0);
+                    ledBuffer.setRGB(2, 225, 0, 225);
+
+                    led.setData(ledBuffer);
+                });
+    }
+    public CommandBase blueorange() {
+        return Commands.runOnce(
+                () -> {
+                    ledBuffer.setRGB(0, 0, 0, 255);
+                    ledBuffer.setRGB(1, 255, 163, 0);
+
+                    led.setData(ledBuffer);
+                });
+    }
+    public CommandBase redGreen() {
+        return Commands.runOnce(
+                () -> {
+                    ledBuffer.setRGB(0, 255, 0, 0);
+                    ledBuffer.setRGB(1, 0, 255, 0);
+            
+                    led.setData(ledBuffer);
+                });
+    }
+    public CommandBase green() {
+        return Commands.runOnce(
+            () -> {
+                    ledBuffer.setRGB(0, 0, 255, 0);
+                    ledBuffer.setRGB(1, 0, 255, 0);
+                        
+                    led.setData(ledBuffer);
+                });
+    }
+    public CommandBase pink() {
+        return Commands.runOnce(
+            () -> {
+                    ledBuffer.setRGB(0, 255, 192, 203);
+                    ledBuffer.setRGB(1, 255, 192, 203);
+                        
+                    led.setData(ledBuffer);
+                });
+    }    
+    public CommandBase blickingRed() {
+        return Commands.repeatingSequence(
+                Commands.runOnce(
+                                () -> {
+                                    ledBuffer.setRGB(0, 255, 0, 0);
+
+                                    led.setData(ledBuffer);
+                                },
+                                this)
+                        .andThen(Commands.waitSeconds(.25))
+                        .andThen(
+                                Commands.runOnce(
+                                        () -> {
+                                            ledBuffer.setRGB(0, 0, 0, 0);
+
+                                            led.setData(ledBuffer);
+                                        },
+                                        this))
+                        .andThen(Commands.waitSeconds(.25)));
+    }
+    public CommandBase blickingGreen() {
+        return Commands.repeatingSequence(
+                Commands.runOnce(
+                                () -> {
+                                    ledBuffer.setRGB(0, 0, 255, 0);
+
+                                    led.setData(ledBuffer);
+                                },
+                                this)
+                        .andThen(Commands.waitSeconds(.25))
+                        .andThen(
+                                Commands.runOnce(
+                                        () -> {
+                                            ledBuffer.setRGB(0, 0, 0, 0);
+
+                                            led.setData(ledBuffer);
+                                        },
+                                        this))
+                        .andThen(Commands.waitSeconds(.25)));
+    }
+    public CommandBase blickingBlue() {
+        return Commands.repeatingSequence(
+                Commands.runOnce(
+                                () -> {
+                                    ledBuffer.setRGB(0, 0, 0, 255);
+
+                                    led.setData(ledBuffer);
+                                },
+                                this)
+                        .andThen(Commands.waitSeconds(.25))
+                        .andThen(
+                                Commands.runOnce(
+                                        () -> {
+                                            ledBuffer.setRGB(0, 0, 0, 0);
+
+                                            led.setData(ledBuffer);
+                                        },
+                                        this))
+                        .andThen(Commands.waitSeconds(.25)));
+    }
+    public CommandBase blickingPink() {
+        return Commands.repeatingSequence(
+                Commands.runOnce(
+                                () -> {
+                                    ledBuffer.setRGB(0, 255, 192, 203);
+
+                                    led.setData(ledBuffer);
+                                },
+                                this)
+                        .andThen(Commands.waitSeconds(.25))
+                        .andThen(
+                                Commands.runOnce(
+                                        () -> {
+                                            ledBuffer.setRGB(0, 0, 0, 0);
+
+                                            led.setData(ledBuffer);
+                                        },
+                                        this))
+                        .andThen(Commands.waitSeconds(.25)));
+    }
 }
