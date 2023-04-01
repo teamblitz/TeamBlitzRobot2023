@@ -122,8 +122,8 @@ public class RobotContainer {
         //                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
         //                wristSubsystem)
         //        );
-//        wristSubsystem.setDefaultCommand(
-//                Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
+        // wristSubsystem.setDefaultCommand(
+        //         Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -150,9 +150,8 @@ public class RobotContainer {
                         Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRotation());
-        //        wristSubsystem = new WristSubsystem(new WristIOSpark(), () ->
-        // armSubsystem.getRotation());
         wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation());
+        // wristSubsystem = new WristSubsystem(new WristIO() {}, () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
 
@@ -195,7 +194,8 @@ public class RobotContainer {
                                                             wristSubsystem.getRelativeRotation();
                                                     wristSubsystem.lastGoal =
                                                             wristSubsystem.getRotation();
-                                                })));
+                                                }))
+                                .finallyDo((b) -> wristSubsystem.setRotationSpeed(0)));
 
         new Trigger(() -> Math.abs(controller.getArmSpeed()) > .02)
                 .whileTrue(
