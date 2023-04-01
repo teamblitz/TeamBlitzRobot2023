@@ -63,7 +63,7 @@ public class WristIOSpark implements WristIO {
         inputs.rotationSpeed = wristEncoder.getVelocity();
         inputs.absoluteRotation = getAbsolutePosition();
         inputs.absEncoder =
-                Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360, -270, 90);
+                Angles.wrapAngle(-absWristEncoder.getAbsolutePosition() * 360, -180, 180);
 
         inputs.topLimit = wristTopLimitSwitch.get();
         inputs.bottomLimit = wristBottomLimitSwitch.get();
@@ -122,7 +122,7 @@ public class WristIOSpark implements WristIO {
     private double getAbsolutePosition() {
         return Angles.wrapAngle(
                 -absWristEncoder.getAbsolutePosition() * 360 - Constants.Wrist.ENCODER_OFFSET,
-                -270,
-                90);
+                -180,
+                180);
     }
 }

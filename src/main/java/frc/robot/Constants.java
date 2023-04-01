@@ -214,28 +214,28 @@ public final class Constants {
 
     public static final class Wrist {
 
-        public static final double MIN_ROTATION = -177; // TODO: TUNE THESE.
-        public static final double MAX_ROTATION = -23;
+        public static final double MIN_ROTATION = -128;
+        public static final double MAX_ROTATION = 70;
         public static final double ks = 0.16962;
         public static final double kg = 0.2848;
         public static final double kv = 0.77534;
         // ka = 0.01853
         // All in volts, divide by 12 to percent
 
-        public static final double p = 0.008;
+        public static final double p = 0.006;
         public static final double i = 0;
         public static final double d = 0.0001;
 
         public static final double ROTATION_VELOCITY = 60;
         public static final double ROTATION_ACCELERATION = 120; // 1 seconds to full
 
-        public static final double ENCODER_OFFSET = -165 + 90;
+        public static final double ENCODER_OFFSET = 14;
         //        public static final double CG_OFFSET = Math.toDegrees(1.1423);
-        public static final double CG_OFFSET = 0;
+        public static final double CG_OFFSET = 35;
 
         public static final class Position {
-            public static final double STARTING = -175;
-            public static final double TUCKED_IN = -170;
+            public static final double STARTING = -128;
+            public static final double TUCKED_IN = -128;
 
             public static final double LEVEL = 0;
 

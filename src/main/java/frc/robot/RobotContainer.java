@@ -122,8 +122,8 @@ public class RobotContainer {
         //                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
         //                wristSubsystem)
         //        );
-        // wristSubsystem.setDefaultCommand(
-        //         Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
+        wristSubsystem.setDefaultCommand(
+                Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
