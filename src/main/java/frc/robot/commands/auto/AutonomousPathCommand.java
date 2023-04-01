@@ -172,7 +172,7 @@ public class AutonomousPathCommand {
             default:
                 if (!autonomousCommands.contains(path)) {
                     System.err.println(
-                            "Error:Path selected not in Pathplanner list of paths (How? I checked these myself? -Avery)");
+                            "Error: Path selected not in Pathplanner list of paths (How? I checked these myself? -Avery)");
                     return null;
                 }
                 pathGroup = PathPlanner.loadPathGroup(path, new PathConstraints(2, 1.5));
