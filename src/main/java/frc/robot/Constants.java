@@ -219,10 +219,10 @@ public final class Constants {
 
         public static final double MIN_ROTATION = -177; // TODO: TUNE THESE.
         public static final double MAX_ROTATION = -23;
-        public static final double ks = 0.41856;
-        public static final double kg = 0.89932;
-        public static final double kv = 0.24084;
-        // ka = 0.013184
+        public static final double ks = 0.16962;
+        public static final double kg = 0.2848;
+        public static final double kv = 0.77534;
+        // ka = 0.01853
         // All in volts, divide by 12 to percent
 
         public static final double p = 0.008;
