@@ -73,6 +73,7 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     private boolean gamePieceInIntake() {
-        if (inputs.current > Constants.Intake.) 
+        // TODO: CHANGED TO MAKE BUILD
+        return false;
     }
 }

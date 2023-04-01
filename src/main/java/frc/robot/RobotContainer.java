@@ -35,6 +35,7 @@ import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
 
 /**
@@ -121,8 +122,8 @@ public class RobotContainer {
         //                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
         //                wristSubsystem)
         //        );
-        wristSubsystem.setDefaultCommand(
-                Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
+//        wristSubsystem.setDefaultCommand(
+//                Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
     }
 
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
@@ -151,7 +152,7 @@ public class RobotContainer {
         armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRotation());
         //        wristSubsystem = new WristSubsystem(new WristIOSpark(), () ->
         // armSubsystem.getRotation());
-        wristSubsystem = new WristSubsystem(new WristIO() {}, () -> armSubsystem.getRotation());
+        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
 
