@@ -201,14 +201,14 @@ public class Controller {
     }
 
     public Trigger xBrakeTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kA.value);
+        return commandDriverController.button(SaitekX52Joystick.Button.kT4.value);
     }
 
     public Trigger brakeModeTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kModeBlue.value);
+        return commandDriverController.button(SaitekX52Joystick.Button.kT6.value);
     }
 
     public Trigger coastModeTrigger() {
-        return brakeModeTrigger().negate();
+        return commandDriverController.button(SaitekX52Joystick.Button.kT5.value);
     }
 }
