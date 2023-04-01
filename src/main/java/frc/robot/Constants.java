@@ -54,7 +54,7 @@ public final class Constants {
          * For NEOs use 40
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
-        public static final int CURRENT_LIMIT = 30;
+        public static final int CURRENT_LIMIT = 40;
 
         // Which intake is on the bot?
         public enum Type {
@@ -78,7 +78,11 @@ public final class Constants {
 
             public static final int FRONT_MOTOR_ID = 14;
             public static final int BACK_MOTOR_ID = 15;
+
+            
         }
+        public static final int DETECTION_CURRENT_THRESHOLD = 0; //needs value
+
     }
 
     public static final class Arm {

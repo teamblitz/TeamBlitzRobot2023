@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
+import frc.robot.Constants;
+import frc.robot.Constants.Arm.Position.Rotation;
+
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
@@ -67,5 +70,9 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
         CONE,
         NONE,
         UNKNOWN
+    }
+
+    private boolean gamePieceInIntake() {
+        if (inputs.current > Constants.Intake.) 
     }
 }

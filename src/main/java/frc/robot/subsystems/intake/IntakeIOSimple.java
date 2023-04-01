@@ -33,7 +33,8 @@ public class IntakeIOSimple implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
-        // TODO: Update inputs
+        inputs.rpm = leaderMotor.getEncoder().getVelocity();
+        inputs.current = leaderMotor.getOutputCurrent();
     }
 
     @Override
