@@ -17,9 +17,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "arm high cone",
+          "armConeHigh",
           "outtake",
-          "arm home"
+          "armHome"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -71,9 +71,9 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "arm ground cube",
-          "intake",
-          "arm home"
+          "armCubeGround",
+          "intakeCube",
+          "armHome"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -125,9 +125,9 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "arm high cube",
+          "armCubeHigh",
           "outtake",
-          "arm home"
+          "armHome"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",

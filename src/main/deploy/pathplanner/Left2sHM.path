@@ -70,7 +70,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intake"
+          "intakeCube"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -171,8 +171,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "armGroundCone",
-          "intake"
+          "armConeGround",
+          "intakeCone"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -193,7 +193,7 @@
     {
       "position": 1.4727272727272729,
       "names": [
-        "armGroundCube"
+        "armCubeGround"
       ]
     },
     {
@@ -209,7 +209,7 @@
       ]
     },
     {
-      "position": 4.0909090909090855,
+      "position": 4.09,
       "names": [
         "armCubeHigh"
       ]

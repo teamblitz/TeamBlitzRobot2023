@@ -40,30 +40,6 @@ public class AutonomousPathCommand {
         this.manipulatorCommandFactory = manipulatorCommandFactory;
     }
 
-    // Add vision at some point. To this one specifically, but the whole autonomous would be nice.
-    public Command balanceChargeStation() {
-        return Commands.run(
-                        () ->
-                                this.driveSubsystem.drive(
-                                        new Translation2d(speedCalculation(), 0),
-                                        0,
-                                        false,
-                                        true,
-                                        false),
-                        driveSubsystem)
-                .until(() -> this.driveSubsystem.getPitch() <= 10);
-    }
-
-    private double speedCalculation() {
-        if (this.driveSubsystem.getPitch() > 10) {
-            return -0.2;
-        } else if (this.driveSubsystem.getPitch() <= -10) {
-            return 0.2;
-        } else {
-            return 0;
-        }
-    }
-
     // Intake Commands
     public Command autoConeIn() {
         return this.intakeSubsystem.buildConeInCommand().withTimeout(2);
@@ -101,8 +77,6 @@ public class AutonomousPathCommand {
                 .finallyDo((b) -> driveSubsystem.drive(new Translation2d(), 0, false, true, false));
     }
 
-    // Mid Cube command (used in all autonomous)
-    // This does not stop in simulation because encoders don't get values...
     public Command autoMidCube() {
         return this.manipulatorCommandFactory
                 .primeCubeMid()
@@ -131,42 +105,52 @@ public class AutonomousPathCommand {
         HashMap<String, Command> eventMap = new HashMap<>();
         // This will load the file "FullAuto.path"
         // All paths are in /src/main/deploy/pathplanner
-        // Please set robot width/length in PathPlanner to 36.5 x 36.5 inches --> meters (0.9271
-        // meters)
+        // Please set robot width/length in PathPlanner to 36.5 x 36.5 inches- > meters (0.9271)
 
-        // ONLY DROPS CUBE. CHANGE COMMAND TO autoCubeMid TO FIX
+        // Check timeouts! Please test.
+        // I'm still treating the prime commands like they do not end.
+        // ----- Arm Positions -----
+        eventMap.put("armHome", this.armSubsystem.homeArmCommand());
+        eventMap.put(
+                "armConeGround",
+                this.manipulatorCommandFactory.groundUprightConePickup().withTimeout(3));
+        eventMap.put("armConeHigh", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
+        eventMap.put(
+                "armCubeGround", this.manipulatorCommandFactory.groundCubePickup().withTimeout(3));
+        eventMap.put("armCubeMid", this.manipulatorCommandFactory.primeCubeMid().withTimeout(3));
+        eventMap.put("armCubeHigh", this.manipulatorCommandFactory.primeCubeHigh().withTimeout(3));
+
+        // ----- Intake -----
+        eventMap.put("intakeCube", this.intakeSubsystem.buildCubeInCommand().withTimeout(1));
+        eventMap.put("intakeCone", this.intakeSubsystem.buildConeInCommand().withTimeout(1));
+
+        // ----- Outtake -----
+        eventMap.put("outtake", this.intakeSubsystem.buildCubeOutCommand().withTimeout(0.25));
+
+        // ----- Balance -----
+        eventMap.put("balance", new AutoBalance(this.driveSubsystem));
         eventMap.put("autoCubeMid", this.autoCubeOut());
         eventMap.put("buildPark", this.driveSubsystem.buildParkCommand().withTimeout(3));
+
+        // ----- Testing -----
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
-        eventMap.put("balanceChargeStation", new AutoBalance(driveSubsystem));
 
-        switch (path) {
-            case "Left":
-                pathGroup = PathPlanner.loadPathGroup("Left", new PathConstraints(2, 1.5));
-                break;
-            case "Middle":
-                pathGroup = PathPlanner.loadPathGroup("Middle", new PathConstraints(2, 1.5));
-                break;
-            case "Right":
-                pathGroup = PathPlanner.loadPathGroup("Right", new PathConstraints(2, 1.5));
-                break;
-            case "SquarePath":
-                pathGroup = PathPlanner.loadPathGroup("SquarePath", new PathConstraints(2, 1.5));
-                break;
-            case "Score":
-                return autoCubeOut();
-            case "BalanceTest":
-                return Commands.run(
-                                () ->
-                                        this.driveSubsystem.drive(
-                                                new Translation2d(-.75, 0), 0, false, true, false))
-                        .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
-                        .andThen(() -> this.driveSubsystem.setBrakeMode(true))
-                        .andThen(new AutoBalance(this.driveSubsystem))
-                        .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
-            default:
-                return null;
+        if (path == "Score") {
+            return autoCubeOut();
+        } else if (path == "BalanceTest") {
+            return Commands.run(
+                            () ->
+                                    this.driveSubsystem.drive(
+                                            new Translation2d(-.75, 0), 0, false, true, false))
+                    .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                    .andThen(() -> this.driveSubsystem.setBrakeMode(true))
+                    .andThen(new AutoBalance(this.driveSubsystem))
+                    .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
+        } else if (path == "Nothing") {
+            return null;
+        } else {
+            pathGroup = PathPlanner.loadPathGroup(path, new PathConstraints(2, 1.5));
         }
 
         // Create the AutoBuilder

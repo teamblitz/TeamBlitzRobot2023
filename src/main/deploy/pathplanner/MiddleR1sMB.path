@@ -17,10 +17,12 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "autoCubeMid"
+          "armCubeMid",
+          "outtake",
+          "armHome"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "after",
+        "waitBehavior": "none",
         "waitTime": 1.0
       }
     },
