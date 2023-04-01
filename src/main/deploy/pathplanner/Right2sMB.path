@@ -46,8 +46,8 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "armGroundCube",
-          "intake",
+          "armCubeGround",
+          "intakeCube",
           "armHome"
         ],
         "executionBehavior": "parallel",

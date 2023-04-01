@@ -64,8 +64,11 @@ public class RobotContainer {
     // private final Logger logger = Logger.getInstance();
 
     /* ***** --- Autonomous --- ***** */
+    // *** Must match with path names in pathplanner folder ***
     private static final String[] autonomousCommands = {
-        "Left", "Middle", "Right", "SquarePath", "Score", "Balance"
+        "Left1sM", "Left2sB", "Left2sHM", "Left2sMB", "MiddleL1sB", "MiddleL1sMB",
+        "MiddleR1sB", "MiddleR1sMB", "Right1sM", "Right2sHM", "Right2sMB", "Score",
+        "SquareTest", "BalanceTest", "Nothing"
     };
     private final SendableChooser<String> chooser = new SendableChooser<>();
 

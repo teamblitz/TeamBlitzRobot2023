@@ -70,7 +70,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intake"
+          "intakeCube"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -169,7 +169,7 @@
       "position": 1.5000000000000002,
       "names": [
         "event",
-        "armGroundCube"
+        "armCubeGround"
       ]
     },
     {
