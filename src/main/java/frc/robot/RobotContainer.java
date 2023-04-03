@@ -171,6 +171,9 @@ public class RobotContainer {
         controller.coneOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
         controller.cubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
         controller.cubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
+        controller.slowIntakeTrigger().whileTrue(intakeSubsystem.slowIntakeCommand());
+
+
         controller.wristLevelTrigger().onTrue(wristSubsystem.rotateRobotRelativeToCommand(0));
         controller.wristDownTrigger().onTrue(wristSubsystem.rotateRobotRelativeToCommand(-90));
 

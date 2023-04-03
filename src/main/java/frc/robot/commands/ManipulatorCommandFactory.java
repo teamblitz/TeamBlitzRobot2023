@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -25,7 +26,7 @@ public class ManipulatorCommandFactory {
     public CommandBase superStructureToState(
             double armRotation, double armExtension, double robotRelativeWristRotation) {
         return armSubsystem
-                .rotateToCommand(armRotation)
+                .rotateToCommand(armRotation).alongWith(Commands.print("Super structure to state"))
                 .alongWith(armSubsystem.extendToCommand(armExtension))
                 .alongWith(
                         wristSubsystem.rotateToCommand(robotRelativeWristRotation - armRotation));

@@ -54,7 +54,7 @@ public final class Constants {
          * For NEOs use 40
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
-        public static final int CURRENT_LIMIT = 60;
+        public static final int CURRENT_LIMIT = 80;
 
         // Which intake is on the bot?
         public enum Type {
@@ -67,6 +67,7 @@ public final class Constants {
         public static final class Simple {
             public static final double IN_SPEED = 0.6;
             public static final double OUT_SPEED = -0.6;
+            public static final double SLOW_INTAKE = .1;
 
             public static final int MOTOR_ID = 15;
         }
@@ -116,10 +117,10 @@ public final class Constants {
         public static final double MIN_ROT = -25; // TODO: Tune to robot
         public static final double MAX_ROT = 90; // TODO: Tune to robot
 
-        public static final double ROT_THRESHOLD = 10;
+        public static final double ROT_THRESHOLD = 5;
 
         public static final double EXTENSION_THRESHOLD =
-                Units.inchesToMeters(1); // Tight, but achievable.
+                Units.inchesToMeters(.05); // Tight, but achievable.
         public static final double MIN_EXTENSION = 0;
 
         public static final double MAX_EXTENSION = 1.10; // TODO: Tune to robot
@@ -168,10 +169,10 @@ public final class Constants {
         public static final class Position {
 
             public static final class Extension {
-                public static final double RETRACTED = .05;
+                public static final double RETRACTED = Units.inchesToMeters(.5);
 
-                public static final double CONE_HIGH = .76; // or .73
-                public static final double CONE_MID = .23;
+                public static final double CONE_HIGH = .8063; // or .73
+                public static final double CONE_MID = .067;
                 public static final double CUBE_HIGH = .4; // TODO: TUNE
                 public static final double CUBE_MID = 0;
 
@@ -191,10 +192,10 @@ public final class Constants {
                 public static final double LEVEL = 0;
                 public static final double VERTICAL = 90;
 
-                public static final double CONE_HIGH = 31;
-                public static final double CONE_MID = 34;
-                public static final double CUBE_HIGH = 23.7;
-                public static final double CUBE_MID = 17.5;
+                public static final double CONE_HIGH = 50;
+                public static final double CONE_MID = 50;
+                public static final double CUBE_HIGH = 40;
+                public static final double CUBE_MID = 25;
 
                 public static final double CUBE_PICKUP_GROUND = -20;
                 public static final double CONE_UPRIGHT_PICKUP_GROUND = -20;
@@ -241,7 +242,7 @@ public final class Constants {
 
             public static final double VERTICAL = -90;
 
-            public static final double CONE_HIGH_RELATIVE = -50;
+            public static final double CONE_HIGH_RELATIVE = -33;
             public static final double CONE_MID_RELATIVE = -52;
             public static final double CUBE_HIGH_RELATIVE = 0;
             public static final double CUBE_MID_RELATIVE = 0;

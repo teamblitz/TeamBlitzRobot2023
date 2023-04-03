@@ -42,12 +42,9 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
         gamePiceInIntakeFlag = false;
         io.stop();
     }
-    public void inAuto() {
-        if (!gamePieceInIntake()) {
-            inCube();
-        } else {
-            io.set(.1);
-        }
+    
+    public void slowIn() {
+        io.set(Constants.Intake.Simple.SLOW_INTAKE);
     }
 
     public void periodic() {
@@ -74,6 +71,10 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public Command buildConeOutCommand() {
         return Commands.startEnd(this::outCone, this::stop, this);
+    }
+    
+    public Command slowIntakeCommand() {
+        return Commands.startEnd(this::slowIn, this::stop, this);
     }
 
     public enum State {

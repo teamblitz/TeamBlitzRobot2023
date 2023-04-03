@@ -36,6 +36,10 @@ public class Controller {
                 .or(commandDriverController.button(SaitekX52Joystick.Button.kB.value));
     }
 
+    public Trigger slowIntakeTrigger() {
+        return basicModeTrigger().and(commandOperatorController.y());
+    }
+
     public Trigger outtake() {
         return commandOperatorController
                 .rightBumper()
@@ -81,7 +85,8 @@ public class Controller {
     }
 
     public Trigger basicModeTrigger() {
-        return commandDriverController.povCenter();
+        // return unbound;
+        return commandOperatorController.povCenter();
     }
 
     public Trigger pickupModeTrigger() {
@@ -119,19 +124,19 @@ public class Controller {
     /* Substation pickups  */
 
     public Trigger primeConeShelfTrigger() {
-        return pickupModeTrigger().and(commandOperatorController.y());
+        return substationModeTrigger().and(commandOperatorController.y());
     }
 
     public Trigger primeCubeShelfTrigger() {
-        return pickupModeTrigger().and(commandOperatorController.b());
+        return substationModeTrigger().and(commandOperatorController.b());
     }
 
     public Trigger primeConeRampTrigger() {
-        return pickupModeTrigger().and(commandOperatorController.x());
+        return substationModeTrigger().and(commandOperatorController.x());
     }
 
     public Trigger primeCubeRampTrigger() {
-        return pickupModeTrigger().and(commandOperatorController.a());
+        return substationModeTrigger().and(commandOperatorController.a());
     }
 
     /* Ground pickup */
@@ -149,19 +154,20 @@ public class Controller {
     }
 
     public Trigger homeArmTrigger() {
-        return scoreModeTrigger().and(commandOperatorController.b());
+        return basicModeTrigger().and(commandOperatorController.b());
     }
 
     public Trigger wristLevelTrigger() {
-        return commandOperatorController.b().and(basicModeTrigger());
+        return commandOperatorController.y().and(basicModeTrigger());
     }
 
     public Trigger wristDownTrigger() {
-        return commandOperatorController.a().and(basicModeTrigger());
+        return commandOperatorController.x().and(basicModeTrigger());
     }
 
     public Trigger retractArmTrigger() {
-        return commandOperatorController.y().and(basicModeTrigger());
+        return unbound;
+        // return basicModeTrigger().and(commandOperatorController.a());
     }
 
     public double getArmSpeed() {

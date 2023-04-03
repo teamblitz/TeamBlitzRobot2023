@@ -2,6 +2,8 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import frc.robot.Constants;
 
 /** Hardware io for the simple intake design */
