@@ -111,7 +111,7 @@ public class RobotContainer {
                                         -driveController.getRawAxis(
                                                         SaitekX52Joystick.Axis.kXAxis.value)
                                                 * calculateDriveMultiplier()),
-                        () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .4,
+                        () -> OIConstants.inputCurve.apply(-driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value)) * .3,
                         () -> false));
         armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));
@@ -167,9 +167,9 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        controller.coneInTrigger().whileTrue(intakeSubsystem.buildConeInCommand());
+        controller.coneInTrigger().whileTrue(intakeSubsystem.buildConeInCommand()).onFalse(intakeSubsystem.slowIntakeCommand());
         controller.coneOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
-        controller.cubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand());
+        controller.cubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand()).onFalse(intakeSubsystem.slowIntakeCommand());
         controller.cubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
         controller.slowIntakeTrigger().whileTrue(intakeSubsystem.slowIntakeCommand());
 

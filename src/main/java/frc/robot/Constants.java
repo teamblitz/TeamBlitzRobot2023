@@ -67,7 +67,7 @@ public final class Constants {
         public static final class Simple {
             public static final double IN_SPEED = 0.6;
             public static final double OUT_SPEED = -0.6;
-            public static final double SLOW_INTAKE = .2;
+            public static final double SLOW_INTAKE = .1;
 
             public static final int MOTOR_ID = 15;
         }
