@@ -68,7 +68,7 @@ public class RobotContainer {
     // *** Must match with path names in pathplanner folder ***
     private static final String[] autonomousCommands = {
         "Left1sM", "Left2sB", "Left2sHM", "Left2sMB", "MiddleL1sB", "MiddleL1sMB",
-        "MiddleR1sB", "MiddleR1sMB", "Right1sM", "Right2sHM", "Right2sMB", "Score",
+        "MiddleR1sB", "MiddleR1sMB", "MiddleC1sMB", "Right1sM", "Right2sHM", "Right2sMB", "Score",
         "SquareTest", "BalanceTest", "Nothing"
     };
     private final SendableChooser<String> chooser = new SendableChooser<>();
@@ -111,7 +111,7 @@ public class RobotContainer {
                                         -driveController.getRawAxis(
                                                         SaitekX52Joystick.Axis.kXAxis.value)
                                                 * calculateDriveMultiplier()),
-                        () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .2,
+                        () -> -driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value) * .4,
                         () -> false));
         armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));

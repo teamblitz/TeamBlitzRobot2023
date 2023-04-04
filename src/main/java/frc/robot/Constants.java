@@ -54,7 +54,7 @@ public final class Constants {
          * For NEOs use 40
          * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
          * */
-        public static final int CURRENT_LIMIT = 80;
+        public static final int CURRENT_LIMIT = 60;
 
         // Which intake is on the bot?
         public enum Type {
@@ -67,7 +67,7 @@ public final class Constants {
         public static final class Simple {
             public static final double IN_SPEED = 0.6;
             public static final double OUT_SPEED = -0.6;
-            public static final double SLOW_INTAKE = .1;
+            public static final double SLOW_INTAKE = .2;
 
             public static final int MOTOR_ID = 15;
         }
@@ -184,8 +184,8 @@ public final class Constants {
 
                 public static final double CUBE_RAMP = 0;
                 public static final double CONE_RAMP = 0;
-                public static final double CUBE_SHELF = 1; // TODO: TUNE
-                public static final double CONE_SHELF = 1; //  TODO: TUNE
+                public static final double CUBE_SHELF = 0; // TODO: TUNE
+                public static final double CONE_SHELF = .0361; //  TODO: TUNE
             }
 
             public static final class Rotation {
@@ -199,16 +199,16 @@ public final class Constants {
 
                 public static final double CUBE_PICKUP_GROUND = -20;
                 public static final double CONE_UPRIGHT_PICKUP_GROUND = -20;
-                public static final double CONE_FALLEN_PICKUP_GROUND = -20;
+                public static final double CONE_FALLEN_PICKUP_GROUND = -30;
 
                 public static final double HYBRID = -10; // TODO: TUNE
 
                 public static final double CUBE_RAMP = 30; // TODO: TUNE
                 public static final double CONE_RAMP = 30; // TODO: TUNE
 
-                public static final double CUBE_SHELF = 50; // TODO: TUNE
+                public static final double CUBE_SHELF = 55;
 
-                public static final double CONE_SHELF = 50; //  TODO: TUNE
+                public static final double CONE_SHELF = 60; //  TODO: TUNE
             }
         }
     }
@@ -244,20 +244,20 @@ public final class Constants {
 
             public static final double CONE_HIGH_RELATIVE = -33;
             public static final double CONE_MID_RELATIVE = -52;
-            public static final double CUBE_HIGH_RELATIVE = 0;
+            public static final double CUBE_HIGH_RELATIVE = -30;
             public static final double CUBE_MID_RELATIVE = 0;
 
             public static final double HYBRID_ROBOT_RELATIVE = 0;
 
             public static final double CUBE_PICKUP_GROUND_ROBOT_RELATIVE = 0;
-            public static final double CONE_UPRIGHT_PICKUP_GROUND_ROBOT_RELATIVE = -20;
-            public static final double CONE_FALLEN_PICKUP_GROUND_ROBOT_RELATIVE = -10;
+            public static final double CONE_UPRIGHT_PICKUP_GROUND_ROBOT_RELATIVE = -30;
+            public static final double CONE_FALLEN_PICKUP_GROUND_ROBOT_RELATIVE = -30;
 
             public static final double CUBE_RAMP_ROBOT_RELATIVE = 20; // TODO: TUNE
             public static final double CONE_RAMP_ROBOT_RELATIVE = 20; // TODO: TUNE
 
-            public static final double CONE_SHELF_RELATIVE = -90;
-            public static final double CUBE_SHELF_RELATIVE = 0;
+            public static final double CONE_SHELF_RELATIVE = -10;
+            public static final double CUBE_SHELF_RELATIVE = -10;
         }
     }
 

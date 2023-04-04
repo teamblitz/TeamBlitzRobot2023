@@ -38,6 +38,7 @@ public class AutonomousPathCommand {
                     "MiddleL1sMB",
                     "MiddleR1sB",
                     "MiddleR1sMB",
+                    "MiddleC1sMB",
                     "Right1sM",
                     "Right2sHM",
                     "Right2sMB",
@@ -133,7 +134,7 @@ public class AutonomousPathCommand {
         eventMap.put(
                 "armConeGround",
                 this.manipulatorCommandFactory.groundUprightConePickup().withTimeout(3));
-        eventMap.put("armConeHigh", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
+        eventMap.put("armHighCone", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
         eventMap.put(
                 "armCubeGround", this.manipulatorCommandFactory.groundCubePickup().withTimeout(3));
         eventMap.put("armCubeMid", this.manipulatorCommandFactory.primeCubeMid().withTimeout(3));
@@ -167,6 +168,34 @@ public class AutonomousPathCommand {
                         .andThen(() -> this.driveSubsystem.setBrakeMode(true))
                         .andThen(new AutoBalance(this.driveSubsystem))
                         .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
+            case "MiddleC1sMB":
+                return manipulatorCommandFactory.primeCubeHigh().withTimeout(1)
+                        .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
+                        .andThen(armSubsystem.homeArmCommand().asProxy())
+                        .andThen(
+                                Commands.run(
+                                                () -> this.driveSubsystem.drive(
+                                                        new Translation2d(-.75, 0), 0, false, true, false)
+                                )
+                                        .raceWith(
+                                                Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) > 10)
+                                                .andThen(Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) < 2))
+                                                .andThen(Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) > 10))
+                                                .andThen(Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) < 2))
+                                                .andThen(Commands.waitSeconds(.5))
+                                        )
+                                
+                        )
+                        .andThen(
+                                Commands.run(
+                                () ->
+                                        this.driveSubsystem.drive(
+                                                new Translation2d(.75, 0), 0, false, true, false))
+                                .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                                .andThen(() -> this.driveSubsystem.setBrakeMode(true))
+                                .andThen(new AutoBalance(this.driveSubsystem))
+                                .andThen(this.driveSubsystem.buildParkCommand().repeatedly())
+                        );
             case "Nothing":
                 return null;
             default:
@@ -175,7 +204,7 @@ public class AutonomousPathCommand {
                             "Error: Path selected not in Pathplanner list of paths (How? I checked these myself? -Avery)");
                     return null;
                 }
-                pathGroup = PathPlanner.loadPathGroup(path, new PathConstraints(2, 1.5));
+                pathGroup = PathPlanner.loadPathGroup(path, new PathConstraints(1, .75));
         }
 
         // Create the AutoBuilder
@@ -189,14 +218,14 @@ public class AutonomousPathCommand {
                         Constants.Swerve.KINEMATICS,
                         // Use DrivePID presumably
                         new PIDConstants(
-                                Constants.Swerve.DRIVE_KP,
-                                Constants.Swerve.DRIVE_KI,
-                                Constants.Swerve.DRIVE_KD),
+                                Constants.AutoConstants.PX_CONTROLLER,
+                                0,
+                                0),
                         // Use AnglePID presumably
                         new PIDConstants(
-                                Constants.Swerve.ANGLE_KP,
-                                Constants.Swerve.ANGLE_KI,
-                                Constants.Swerve.ANGLE_KD),
+                                Constants.AutoConstants.P_THETA_CONTROLLER,
+                                0,
+                                0),
                         // Module states consumer used to output the drive subsystem
                         (states) ->
                                 this.driveSubsystem.setModuleStates(states, false, false, false),
