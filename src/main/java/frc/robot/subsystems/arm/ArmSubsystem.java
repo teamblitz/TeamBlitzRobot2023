@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
@@ -29,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     public final Subsystem extensionRequirement = new Subsystem() {};
     public final Subsystem rotationRequirement = new Subsystem() {};
 
-    public final DoubleSupplier wristRotSupplier;
+    public final DoubleSupplier relativeWristRotSupplier;
 
     private final CommandBase protectArmCommand;
     private boolean stopExtendingOut;
@@ -37,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     private boolean shouldTuck;
     private double extension;
 
-    public ArmSubsystem(ArmIO io, DoubleSupplier wristRotSupplier) {
+    public ArmSubsystem(ArmIO io, DoubleSupplier relativeWristRotSupplier) {
         this.io = io;
 
         // Prevent commands from requiring this subsystem, instead use the ExtensionRequirement and
@@ -52,7 +51,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         protectArmCommand = extendToCommand(Constants.Arm.PULL_TO);
 
-        this.wristRotSupplier = wristRotSupplier;
+        this.relativeWristRotSupplier = relativeWristRotSupplier;
     }
 
     @Override
@@ -60,17 +59,6 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         io.updateInputs(inputs);
         logger.processInputs("arm", inputs);
 
-        // AHHHHHHH
-
-        // So, this sucks
-
-        // And I really need to fix it
-
-        // Idealy the wrist sbhoulgffhguikerrkjghjkh
-        // to9r8jyoihmrdhm,dsauikrjhyrdnsuyfjhewtyashdnyisdhjghnesdlihfgjerend
-        // Yea
-
-        // Ok
 
         // Height Protection
         double percentExtended = getExtension() / Constants.Arm.MAX_EXTENSION;
@@ -90,33 +78,46 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         }
         logger.recordOutput("arm/length", armLength);
 
+        // All the below is backup
+        // I don't want to delete the one thing that got us though inspection in denver
+        // Before we know if it works or not
+
         // Extension limit
-        extension =
-                (armLength * Math.cos(Math.toRadians(getRotation())))
-                        - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
-        logger.recordOutput("arm/extension", extension);
-
-        // if (extension > Constants.Arm.TUCK_IN_EXTENSION) {
-        //     shouldTuck = true;
-        // } else {
-        //     shouldTuck = false;
-        // }
-        logger.recordOutput("arm/shouldTuck", shouldTuck);
-
-        double max =
-                Constants.Arm.STOP_EXTENSION + (wristPos > -160 ? Units.inchesToMeters(-10) : 0);
-
-        if (extension > max) {
-            stopExtendingOut = true;
-            logger.recordOutput("arm/extension_protection_enabled", true);
-        } else {
-            stopExtendingOut = false;
-            logger.recordOutput("arm/extension_protection_enabled", false);
-        }
+//        extension =
+//                (armLength * Math.cos(Math.toRadians(getRotation())))
+//                        - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
+//        logger.recordOutput("arm/extension", extension);
+//
+//        double max =
+//                Constants.Arm.STOP_EXTENSION + (wristPos > -160 ? Units.inchesToMeters(-10) : 0);
+//
+//        if (extension > max) {
+//            stopExtendingOut = true;
+//            logger.recordOutput("arm/extension_protection_enabled", true);
+//        } else {
+//            stopExtendingOut = false;
+//            logger.recordOutput("arm/extension_protection_enabled", false);
+//        }
     }
 
-    public boolean shouldWristTuck() {
-        return shouldTuck;
+    // Pretty much the same impl as wrist
+    private boolean safeToRotateArmIn(double direction) {
+        double extension =
+                (getExtension() * Math.cos(Math.toRadians(getRotation())))
+                        - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME
+                + Constants.Wrist.END_EFFECTOR_LENGTH * Math.cos(Math.toRadians(relativeWristRotSupplier.getAsDouble()));
+
+        return extension < Constants.Arm.MAX_EXTENSION_PAST_FRAME || direction * getRotation() > 0;
+    }
+
+    // Very similar impl to above
+    private boolean safeToExtendArmIn(double direction) {
+        double extension =
+                (getExtension() * Math.cos(Math.toRadians(getRotation())))
+                        - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME
+                        + Constants.Wrist.END_EFFECTOR_LENGTH * Math.cos(Math.toRadians(relativeWristRotSupplier.getAsDouble()));
+
+        return extension < Constants.Arm.MAX_EXTENSION_PAST_FRAME || direction < 0;
     }
 
     public void updateRotation(double degrees, double velocity) {
@@ -142,6 +143,18 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         return inputs.armExtension;
     }
 
+    /**
+     * Returns the "real world" distance in between the arm and wrist center of rotations, used for anti over extenison.
+     * @return ArmLength in meters
+     */
+    public double getArmLength() {
+
+        double percentExtended = getExtension() / Constants.Arm.MAX_EXTENSION;
+
+        return (Constants.Arm.OUT_LENGTH - Constants.Arm.IN_LENGTH) * percentExtended
+                + Constants.Arm.IN_LENGTH;
+    }
+
     public double getRotationSpeed() {
         return inputs.armRotationSpeed;
     }
@@ -151,6 +164,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public void setArmRotationSpeed(double percent) {
+        if (!safeToRotateArmIn(Math.signum(percent))) {
+            io.setArmRotationSpeed(0);
+            return;
+        }
         io.setArmRotationSpeed(percent);
     }
 
@@ -163,6 +180,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         //     io.setArmExtensionSpeed(percent * .5);
 
         // }
+        if (!safeToExtendArmIn(Math.signum(percent))) {
+            io.setArmExtensionSpeed(0);
+            return;
+        }
         io.setArmExtensionSpeed(percent);
     }
 

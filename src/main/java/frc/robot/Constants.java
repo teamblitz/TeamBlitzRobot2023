@@ -110,12 +110,12 @@ public final class Constants {
         public static final double STARTING_ROTATION = 90;
         /** The center of the center of rotation for the arm */
         public static final double ARM_BASE_HEIGHT =
-                Units.inchesToMeters(19); // TODO: Tune to robot
+                Units.inchesToMeters(19);
 
         public static final double ARM_BASE_DISTANCE_FROM_FRAME = Units.inchesToMeters(14);
 
-        public static final double MIN_ROT = -25; // TODO: Tune to robot
-        public static final double MAX_ROT = 90; // TODO: Tune to robot
+        public static final double MIN_ROT = -25;
+        public static final double MAX_ROT = 90;
 
         public static final double ROT_THRESHOLD = 5;
 
@@ -123,7 +123,7 @@ public final class Constants {
                 Units.inchesToMeters(.05); // Tight, but achievable.
         public static final double MIN_EXTENSION = 0;
 
-        public static final double MAX_EXTENSION = 1.10; // TODO: Tune to robot
+        public static final double MAX_EXTENSION = 1.10;
 
         public static final double IN_LENGTH = Units.inchesToMeters(32);
         public static final double OUT_LENGTH = Units.inchesToMeters(60);
@@ -135,19 +135,22 @@ public final class Constants {
 
         public static final double SLOW_DOWN_AT = Units.inchesToMeters(30);
 
+        // Decrease this is things extend too far, make sure you have power cycled the bot with the winch
+        // all the way in first however.
+        public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(46);
+
         public static final double STOP_EXTENSION = Units.inchesToMeters(41);
 
         public static final double ROTATION_GEAR_RATIO = (60.0 / 1.0);
-        public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0); // TODO: Confirm this
+        public static final double EXTENSION_GEAR_RATIO = (48.0 / 1.0);
 
-        public static final double WRIST_GEAR_RATIO = (81.0 / 1.0); // TODO: Get the actual value
+        public static final double WRIST_GEAR_RATIO = (81.0 / 1.0);
         public static final double
                 EXTENSION_PULLEY_CIRCUMFERENCE = // This should be good enough for now
                 0.0191 * Math.PI; // diameter in meters
 
         // Values to determine if a configuration of the arm is legal.
         public static final double MAX_LEGAL_HEIGHT = Units.feetToMeters(6.5);
-        public static final double MAX_EXTENSION_PAST_FRAME = Units.inchesToMeters(48);
 
         // Units in degrees per second and degrees per second squared
         public static final double ROTATION_VELOCITY = 30;
@@ -171,9 +174,9 @@ public final class Constants {
             public static final class Extension {
                 public static final double RETRACTED = Units.inchesToMeters(.5);
 
-                public static final double CONE_HIGH = .8063; // or .73
+                public static final double CONE_HIGH = .8063;
                 public static final double CONE_MID = .067;
-                public static final double CUBE_HIGH = .4; // TODO: TUNE
+                public static final double CUBE_HIGH = .4;
                 public static final double CUBE_MID = 0;
 
                 public static final double HYBRID = 0;
@@ -184,8 +187,8 @@ public final class Constants {
 
                 public static final double CUBE_RAMP = 0;
                 public static final double CONE_RAMP = 0;
-                public static final double CUBE_SHELF = 0; // TODO: TUNE
-                public static final double CONE_SHELF = .0361; //  TODO: TUNE
+                public static final double CUBE_SHELF = 0;
+                public static final double CONE_SHELF = .0361;
             }
 
             public static final class Rotation {
@@ -208,7 +211,7 @@ public final class Constants {
 
                 public static final double CUBE_SHELF = 55;
 
-                public static final double CONE_SHELF = 60; //  TODO: TUNE
+                public static final double CONE_SHELF = 60;
             }
         }
     }
@@ -233,6 +236,8 @@ public final class Constants {
         public static final double ENCODER_OFFSET = 14;
         //        public static final double CG_OFFSET = Math.toDegrees(1.1423);
         public static final double CG_OFFSET = 35;
+
+        public static final double END_EFFECTOR_LENGTH = Units.inchesToMeters(10); // TODO: IMPORTANT TUNE THIS TO INTAKE
 
         public static final class Position {
             public static final double STARTING = -128;
@@ -270,9 +275,9 @@ public final class Constants {
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH =
-                Units.inchesToMeters(24.75); // TODO: This must be tuned to specific robot
+                Units.inchesToMeters(24.75);
         public static final double WHEEL_BASE =
-                Units.inchesToMeters(24.75); // TODO: This must be tuned to specific robot
+                Units.inchesToMeters(24.75);
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         /* Motor Inverts */
@@ -328,7 +333,7 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double ANGLE_KP = 0.003; // TODO: Tune this.
+        public static final double ANGLE_KP = 0.003;
         public static final double ANGLE_KI = 0.0;
         public static final double ANGLE_KD = 0.0;
         public static final double ANGLE_KF = 0.0; // For now, should remain zero
@@ -336,12 +341,14 @@ public final class Constants {
         /* Drive Motor PID Values */
         /*
          * Some posible gains for kp
-         * 0.0012347 60s denominator, don't convert
-         * 0.074084 1s denominator, don't convert
+         * 0.0012347 60s denominator, don't convert (possible)
+         * 0.074084 1s denominator, don't convert] (high)
+         *
+         * I for some reason don't trust this one
          * 0.00063245 60s denominator, do convert 6.12 : 1
          */
         public static final double DRIVE_KP =
-                0.0012347; // TODO: This must be tuned to specific robot
+                0.0012347;
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
         public static final double DRIVE_KF = 0.0; // Same here.
@@ -359,6 +366,12 @@ public final class Constants {
          *
          * <p>Can likely be figured out using an equation. Or we can just tornado spin it and see
          * what happens.
+         *
+         * public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
+         *             Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
+         *
+         *   Assuming our robot can still go at 4.6 meters per second (which it can't, this value was taken
+         *   when we had like nothing on our robot, we can go 10.348178456877813130498318828226534894488969421353632604171 radians per second while spinning
          */
         public static final double MAX_ANGULAR_VELOCITY =
                 10.0; // TODO: This must be tuned to specific robot
@@ -369,7 +382,7 @@ public final class Constants {
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
-        public static final class Mod0 { // TODO: This must be tuned to specific robot
+        public static final class Mod0 {
             public static final int DRIVE_MOTOR_ID = 7;
             public static final int ANGLE_MOTOR_ID = 8;
             public static final int CAN_CODER_ID = 4;
@@ -380,7 +393,7 @@ public final class Constants {
         }
 
         /* Front Right Module - Module 1 */
-        public static final class Mod1 { // TODO: This must be tuned to specific robot
+        public static final class Mod1 {
             public static final int DRIVE_MOTOR_ID = 5;
             public static final int ANGLE_MOTOR_ID = 6;
             public static final int CAN_CODER_ID = 2;
@@ -391,7 +404,7 @@ public final class Constants {
         }
 
         /* Back Left Module - Module 2 */
-        public static final class Mod2 { // TODO: This must be tuned to specific robot
+        public static final class Mod2 {
             public static final int DRIVE_MOTOR_ID = 11;
             public static final int ANGLE_MOTOR_ID = 12;
             public static final int CAN_CODER_ID = 13;
@@ -402,7 +415,7 @@ public final class Constants {
         }
 
         /* Back Right Module - Module 3 */
-        public static final class Mod3 { // TODO: This must be tuned to specific robot
+        public static final class Mod3 {
             public static final int DRIVE_MOTOR_ID = 9;
             public static final int ANGLE_MOTOR_ID = 10;
             public static final int CAN_CODER_ID = 3;
@@ -470,6 +483,8 @@ public final class Constants {
 
     // TODO: Calculate needed deadb7and for controller (should be like 6% or less)
     // Ran this in the pit; had issues with 10% upped to 12%
+    // Have you not seen the comment above, anyways we could probably just shift the deadband or somthing
+    // to fix the issues.
     public static double STICK_DEADBAND = 0.12;
 
     public static final class Networking {

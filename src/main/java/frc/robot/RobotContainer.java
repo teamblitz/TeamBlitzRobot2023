@@ -149,8 +149,8 @@ public class RobotContainer {
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
 
-        armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRotation());
-        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation());
+        armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRelativeRotation());
+        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation(), () -> armSubsystem.getArmLength());
         // wristSubsystem = new WristSubsystem(new WristIO() {}, () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
