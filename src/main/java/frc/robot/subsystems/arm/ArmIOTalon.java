@@ -99,6 +99,8 @@ public class ArmIOTalon implements ArmIO {
         inputs.bottomRotationLimit = armBottomLimitSwitch.get();
         inputs.minExtensionLimit = extensionBottomLimitSwitch.get();
         inputs.maxExtensionLimit = extensionTopLimitSwitch.get();
+
+        inputs.encoderConnected = absRotationEncoder.isConnected();
     }
 
     /** Updates the arm position setpoint. */

@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
 import frc.robot.commands.arm.ExtendToCommand;
@@ -47,7 +48,9 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         // Schedule a command to seed the arm, as the encoder does not appear to be connected when
         // this class is initiated.
-        Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
+//        Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
+        // DO require the arm, this will cancel the active hold at command, and will stop the arm from slamming to vertical if the bot is enabled before the encoder is connected.
+        new Trigger(() -> inputs.encoderConnected).onTrue(Commands.runOnce(this::seedArm, rotationRequirement).ignoringDisable(true));
 
         protectArmCommand = extendToCommand(Constants.Arm.PULL_TO);
 

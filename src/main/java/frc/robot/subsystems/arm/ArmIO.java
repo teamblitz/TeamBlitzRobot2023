@@ -18,6 +18,8 @@ public interface ArmIO {
         public boolean bottomRotationLimit;
         public boolean maxExtensionLimit;
         public boolean minExtensionLimit;
+
+        public boolean encoderConnected;
     }
 
     /** Updates the set of loggable inputs. */
