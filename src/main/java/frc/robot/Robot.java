@@ -60,7 +60,7 @@ public class Robot extends LoggedRobot {
             try {
                 // The /u directory maps to the connected usb drive if one exists.
                 // If /u doesn't work replace it with /media/sda1
-                Path usbDir = Paths.get("/u").toRealPath();
+                Path usbDir = Paths.get("/media/sda1").toRealPath();
                 thumbDriveConnected = Files.isWritable(usbDir);
                 if (thumbDriveConnected) {
                     logDir = usbDir.toString();

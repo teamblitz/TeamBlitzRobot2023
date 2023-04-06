@@ -34,7 +34,6 @@ import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
-import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
 
@@ -67,9 +66,22 @@ public class RobotContainer {
     /* ***** --- Autonomous --- ***** */
     // *** Must match with path names in pathplanner folder ***
     private static final String[] autonomousCommands = {
-        "Left1sM", "Left2sB", "Left2sHM", "Left2sMB", "MiddleL1sB", "MiddleL1sMB",
-        "MiddleR1sB", "MiddleR1sMB", "MiddleC1sMB", "Right1sM", "Right2sHM", "Right2sMB", "Score",
-        "SquareTest", "BalanceTest", "Nothing"
+        "Left1sM",
+        "Left2sB",
+        "Left2sHM",
+        "Left2sMB",
+        "MiddleL1sB",
+        "MiddleL1sMB",
+        "MiddleR1sB",
+        "MiddleR1sMB",
+        "MiddleC1sMB",
+        "Right1sM",
+        "Right2sHM",
+        "Right2sMB",
+        "Score",
+        "SquareTest",
+        "BalanceTest",
+        "Nothing"
     };
     private final SendableChooser<String> chooser = new SendableChooser<>();
 
@@ -111,7 +123,11 @@ public class RobotContainer {
                                         -driveController.getRawAxis(
                                                         SaitekX52Joystick.Axis.kXAxis.value)
                                                 * calculateDriveMultiplier()),
-                        () -> OIConstants.inputCurve.apply(-driveController.getRawAxis(SaitekX52Joystick.Axis.kZRot.value)) * .3,
+                        () ->
+                                OIConstants.inputCurve.apply(
+                                                -driveController.getRawAxis(
+                                                        SaitekX52Joystick.Axis.kZRot.value))
+                                        * .3,
                         () -> false));
         armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));
@@ -149,8 +165,16 @@ public class RobotContainer {
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
                         Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
 
-        armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRelativeRotation());
-        wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation(), () -> armSubsystem.getArmLength());
+        armSubsystem =
+                new ArmSubsystem(
+                        new ArmIOTalon(),
+                        () -> wristSubsystem.getRelativeRotation(),
+                        () -> wristSubsystem.getRotation());
+        wristSubsystem =
+                new WristSubsystem(
+                        new WristIOSpark(),
+                        () -> armSubsystem.getRotation(),
+                        () -> armSubsystem.getArmLength());
         // wristSubsystem = new WristSubsystem(new WristIO() {}, () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
@@ -167,12 +191,17 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        controller.coneInTrigger().whileTrue(intakeSubsystem.buildConeInCommand()).onFalse(intakeSubsystem.slowIntakeCommand());
+        controller
+                .coneInTrigger()
+                .whileTrue(intakeSubsystem.buildConeInCommand())
+                .onFalse(intakeSubsystem.slowIntakeCommand());
         controller.coneOutTrigger().whileTrue(intakeSubsystem.buildConeOutCommand());
-        controller.cubeInTrigger().whileTrue(intakeSubsystem.buildCubeInCommand()).onFalse(intakeSubsystem.slowIntakeCommand());
+        controller
+                .cubeInTrigger()
+                .whileTrue(intakeSubsystem.buildCubeInCommand())
+                .onFalse(intakeSubsystem.slowIntakeCommand());
         controller.cubeOutTrigger().whileTrue(intakeSubsystem.buildCubeOutCommand());
         controller.slowIntakeTrigger().whileTrue(intakeSubsystem.slowIntakeCommand());
-
 
         controller.wristLevelTrigger().onTrue(wristSubsystem.rotateRobotRelativeToCommand(0));
         controller.wristDownTrigger().onTrue(wristSubsystem.rotateRobotRelativeToCommand(-90));

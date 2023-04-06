@@ -160,42 +160,79 @@ public class AutonomousPathCommand {
             case "Score":
                 return autoCubeOut();
             case "BalanceTest":
-                return Commands.run(
-                                () ->
-                                        this.driveSubsystem.drive(
-                                                new Translation2d(-.75, 0), 0, false, true, false))
-                        .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
-                        .andThen(() -> this.driveSubsystem.setBrakeMode(true))
-                        .andThen(new AutoBalance(this.driveSubsystem))
-                        .andThen(this.driveSubsystem.buildParkCommand().repeatedly());
-            case "MiddleC1sMB":
-                return manipulatorCommandFactory.primeCubeHigh().withTimeout(1)
+                return manipulatorCommandFactory
+                        .primeConeMid().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(1)
                         .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
-                        .andThen(armSubsystem.homeArmCommand().asProxy())
                         .andThen(
                                 Commands.run(
-                                                () -> this.driveSubsystem.drive(
-                                                        new Translation2d(-.75, 0), 0, false, true, false)
-                                )
+                                                () ->
+                                                        this.driveSubsystem.drive(
+                                                                new Translation2d(-.75, 0), 0, false, true, false))
+                                        .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                                        .andThen(() -> this.driveSubsystem.setBrakeMode(true))
+                                        .andThen(new AutoBalance(this.driveSubsystem))
+                                        .andThen(this.driveSubsystem.buildParkCommand().repeatedly()
+                        ));
+            case "MiddleC1sMB":
+                return manipulatorCommandFactory
+                        .primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(1)
+                        .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
+                        .andThen(
+                                Commands.run(
+                                                () ->
+                                                        this.driveSubsystem.drive(
+                                                                new Translation2d(-.75, 0),
+                                                                0,
+                                                                false,
+                                                                true,
+                                                                false))
                                         .raceWith(
-                                                Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) > 10)
-                                                .andThen(Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) < 2))
-                                                .andThen(Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) > 10))
-                                                .andThen(Commands.waitUntil(() -> Math.abs(driveSubsystem.getPitch()) < 2))
-                                                .andThen(Commands.waitSeconds(.5))
-                                        )
-                                
-                        )
+                                                Commands.waitUntil(
+                                                                () ->
+                                                                        Math.abs(
+                                                                                        driveSubsystem
+                                                                                                .getPitch())
+                                                                                > 10).andThen(Commands.print("Once"))
+                                                        .andThen(
+                                                                Commands.waitUntil(
+                                                                        () ->
+                                                                                Math.abs(
+                                                                                                driveSubsystem
+                                                                                                        .getPitch())
+                                                                                        < 2)).andThen(Commands.print("2"))
+                                                        .andThen(
+                                                                Commands.waitUntil(
+                                                                        () ->
+                                                                                Math.abs(
+                                                                                                driveSubsystem
+                                                                                                        .getPitch())
+                                                                                        > 10)).andThen(Commands.print("3"))
+                                                        .andThen(
+                                                                Commands.waitUntil(
+                                                                        () ->
+                                                                                Math.abs(
+                                                                                                driveSubsystem
+                                                                                                        .getPitch())
+                                                                                        < 2)).andThen(Commands.print("4"))
+                                                        .andThen(Commands.waitSeconds(.25)))
+                                        .alongWith(armSubsystem.homeArmCommand()))
                         .andThen(
                                 Commands.run(
-                                () ->
-                                        this.driveSubsystem.drive(
-                                                new Translation2d(.75, 0), 0, false, true, false))
-                                .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
-                                .andThen(() -> this.driveSubsystem.setBrakeMode(true))
-                                .andThen(new AutoBalance(this.driveSubsystem))
-                                .andThen(this.driveSubsystem.buildParkCommand().repeatedly())
-                        );
+                                                () ->
+                                                        this.driveSubsystem.drive(
+                                                                new Translation2d(.75, 0),
+                                                                0,
+                                                                false,
+                                                                true,
+                                                                false)).alongWith(Commands.print("5"))
+                                        .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                                        .andThen(() -> this.driveSubsystem.setBrakeMode(true))
+                                        .andThen(new AutoBalance(this.driveSubsystem))
+                                        .andThen(
+                                                this.driveSubsystem
+                                                        .buildParkCommand()
+                                                        .repeatedly()))
+                        .finallyDo((b) -> driveSubsystem.setBrakeMode(false));
             case "Nothing":
                 return null;
             default:
@@ -217,15 +254,9 @@ public class AutonomousPathCommand {
                         // SwerveDriveKinematics
                         Constants.Swerve.KINEMATICS,
                         // Use DrivePID presumably
-                        new PIDConstants(
-                                Constants.AutoConstants.PX_CONTROLLER,
-                                0,
-                                0),
+                        new PIDConstants(Constants.AutoConstants.PX_CONTROLLER, 0, 0),
                         // Use AnglePID presumably
-                        new PIDConstants(
-                                Constants.AutoConstants.P_THETA_CONTROLLER,
-                                0,
-                                0),
+                        new PIDConstants(Constants.AutoConstants.P_THETA_CONTROLLER, 0, 0),
                         // Module states consumer used to output the drive subsystem
                         (states) ->
                                 this.driveSubsystem.setModuleStates(states, false, false, false),

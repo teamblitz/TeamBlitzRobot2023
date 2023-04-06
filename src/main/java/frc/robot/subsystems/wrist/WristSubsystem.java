@@ -46,7 +46,8 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     public double lastGoal;
     public double lastRelativeGoal;
 
-    public WristSubsystem(WristIO io, DoubleSupplier armRotSupplier, DoubleSupplier armLengthSupplier) {
+    public WristSubsystem(
+            WristIO io, DoubleSupplier armRotSupplier, DoubleSupplier armLengthSupplier) {
 
         this.armRotSupplier = armRotSupplier;
         this.armLengthSupplier = armLengthSupplier;
@@ -98,38 +99,44 @@ public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
             io.setPID(p, i, d);
         }
 
-        // TODO: Some point after tulsa, we should just move the closed loop for the wrist to the rio if we are constantly reseting the position
+        // TODO: Some point after tulsa, we should just move the closed loop for the wrist to the
+        // rio if we are constantly reseting the position
         // Maybe use the quad output of the encoder as well
 
         io.seedWristPosition(false);
         io.checkLimitSwitches();
-
-
     }
 
     /**
      * Is it safe (will it cause an overextension) if the wrist is moved in the supplied direction
-     * Currently only checks for horizontal limit, (as this is what inspectors are looking for)
-     * The wrist is most at risk of causing an overextension here, were as the arm will pull itself in fast if it suspects a height overextension.
+     * Currently only checks for horizontal limit, (as this is what inspectors are looking for) The
+     * wrist is most at risk of causing an overextension here, were as the arm will pull itself in
+     * fast if it suspects a height overextension.
      *
      * @param direction signum of the direction positive is upward and negative is down
      * @return a boolean stating if moving the wrist in that direction will cause it to overextend
      */
     private boolean safeToMoveWristIn(double direction) {
+        return true;
         // The extension of the arm is the length of the arm multiplied by cosine of the angle
-        double extension =
-                (armLengthSupplier.getAsDouble() * Math.cos(Math.toRadians(armRotSupplier.getAsDouble())))
-                        - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
+        // double extension =
+        //         (armLengthSupplier.getAsDouble() *
+        // Math.cos(Math.toRadians(armRotSupplier.getAsDouble())))
+        //                 - Constants.Arm.ARM_BASE_DISTANCE_FROM_FRAME;
 
-        if (extension + Constants.Wrist.END_EFFECTOR_LENGTH < Constants.Arm.MAX_EXTENSION_PAST_FRAME) return true; // Currently the wrist moving can't cause an overextenison
+        // if (extension + Constants.Wrist.END_EFFECTOR_LENGTH <
+        // Constants.Arm.MAX_EXTENSION_PAST_FRAME) return true; // Currently the wrist moving can't
+        // cause an overextenison
 
-        // If relative rot is pos and direction is pos we are okay, same for the other way around
-        // If they are opposite, that means we will cross over the danger zone
-        return direction * getRelativeRotation() > 0;
+        // // If relative rot is pos and direction is pos we are okay, same for the other way around
+        // // If they are opposite, that means we will cross over the danger zone
+        // return direction * getRelativeRotation() > 0;
     }
 
     public void setRotationSpeed(double speed) {
-        if ((speed > 0 && inputs.topLimit) || (speed < 0 && inputs.bottomLimit) || !safeToMoveWristIn(Math.signum(speed))) {
+        if ((speed > 0 && inputs.topLimit)
+                || (speed < 0 && inputs.bottomLimit)
+                || !safeToMoveWristIn(Math.signum(speed))) {
             io.setRotationSpeed(0);
             return;
         }

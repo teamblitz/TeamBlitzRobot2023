@@ -2,8 +2,6 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMax.IdleMode;
-
 import frc.robot.Constants;
 
 /** Hardware io for the simple intake design */
@@ -14,11 +12,7 @@ public class IntakeIOSimple implements IntakeIO {
     public IntakeIOSimple() {
         motor =
                 new CANSparkMax(
-                        Constants.Intake.Simple.MOTOR_ID,
-                        CANSparkMaxLowLevel.MotorType.kBrushless);
-
-
-                        
+                        Constants.Intake.Simple.MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 
         motor.restoreFactoryDefaults();
         motor.setSmartCurrentLimit(Constants.Intake.CURRENT_LIMIT);

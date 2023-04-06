@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.BlitzSubsystem;
 import frc.robot.Constants;
-import frc.robot.Constants.Arm.Position.Rotation;
-
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
@@ -42,7 +40,7 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
         gamePiceInIntakeFlag = false;
         io.stop();
     }
-    
+
     public void slowIn() {
         io.set(Constants.Intake.Simple.SLOW_INTAKE);
     }
@@ -72,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
     public Command buildConeOutCommand() {
         return Commands.startEnd(this::outCone, this::stop, this);
     }
-    
+
     public Command slowIntakeCommand() {
         return Commands.startEnd(this::slowIn, this::stop, this);
     }
@@ -86,7 +84,8 @@ public class IntakeSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private boolean gamePieceInIntake() {
         // TODO: CHANGED TO MAKE BUILD
-        if (!gamePiceInIntakeFlag && inputs.current > Constants.Intake.DETECTION_CURRENT_THRESHOLD) {
+        if (!gamePiceInIntakeFlag
+                && inputs.current > Constants.Intake.DETECTION_CURRENT_THRESHOLD) {
             gamePiceInIntakeFlag = true;
             return true;
         }

@@ -26,7 +26,8 @@ public class ManipulatorCommandFactory {
     public CommandBase superStructureToState(
             double armRotation, double armExtension, double robotRelativeWristRotation) {
         return armSubsystem
-                .rotateToCommand(armRotation).alongWith(Commands.print("Super structure to state"))
+                .rotateToCommand(armRotation)
+                .alongWith(Commands.print("Super structure to state"))
                 .alongWith(armSubsystem.extendToCommand(armExtension))
                 .alongWith(
                         wristSubsystem.rotateToCommand(robotRelativeWristRotation - armRotation));
