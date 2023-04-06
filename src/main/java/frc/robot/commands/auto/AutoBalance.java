@@ -29,7 +29,7 @@ public class AutoBalance extends CommandBase {
         minTimer.start();
         waitTimer.start();
         hasDecremented = false;
-        speed = .5;
+        speed = .45;
     }
 
     // Called every time the scheduler runs while the command is scheduled.

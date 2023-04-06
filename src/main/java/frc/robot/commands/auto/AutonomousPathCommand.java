@@ -196,7 +196,7 @@ public class AutonomousPathCommand {
                                                                 0,
                                                                 false,
                                                                 true,
-                                                                false))
+                                                                true))
                                         .raceWith(
                                                 Commands.waitUntil(
                                                                 () ->
@@ -229,7 +229,7 @@ public class AutonomousPathCommand {
                                                                                                         .getPitch())
                                                                                         < 2))
                                                         .andThen(Commands.print("4"))
-                                                        .andThen(Commands.waitSeconds(.25)))
+                                                        .andThen(Commands.waitSeconds(.5)))
                                         .alongWith(armSubsystem.homeArmCommand().withTimeout(1).andThen(Commands.print("5"))))
                         .andThen(
                                 Commands.run(
@@ -239,7 +239,7 @@ public class AutonomousPathCommand {
                                                                 0,
                                                                 false,
                                                                 true,
-                                                                false)).alongWith(Commands.print("1"))
+                                                                true)).alongWith(Commands.print("1"))
                                         .alongWith(Commands.print("6"))
                                         .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
                                         .andThen(() -> this.driveSubsystem.setBrakeMode(true))
