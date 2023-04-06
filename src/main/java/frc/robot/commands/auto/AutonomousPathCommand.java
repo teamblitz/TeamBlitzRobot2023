@@ -135,10 +135,11 @@ public class AutonomousPathCommand {
                 "armConeGround",
                 this.manipulatorCommandFactory.groundUprightConePickup().withTimeout(3));
         eventMap.put("armHighCone", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
+        eventMap.put("armMidCone", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
         eventMap.put(
                 "armCubeGround", this.manipulatorCommandFactory.groundCubePickup().withTimeout(3));
-        eventMap.put("armCubeMid", this.manipulatorCommandFactory.primeCubeMid().withTimeout(3));
-        eventMap.put("armCubeHigh", this.manipulatorCommandFactory.primeCubeHigh().withTimeout(3));
+        eventMap.put("armMidCube", this.manipulatorCommandFactory.primeCubeMid().withTimeout(3));
+        eventMap.put("armHighCube", this.manipulatorCommandFactory.primeCubeHigh().withTimeout(3));
 
         // ----- Intake -----
         eventMap.put("intakeCube", this.intakeSubsystem.buildCubeInCommand().withTimeout(1));
@@ -161,21 +162,31 @@ public class AutonomousPathCommand {
                 return autoCubeOut();
             case "BalanceTest":
                 return manipulatorCommandFactory
-                        .primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(1)
+                        .primeCubeHigh()
+                        .alongWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(1)
                         .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
                         .andThen(
                                 Commands.run(
                                                 () ->
                                                         this.driveSubsystem.drive(
-                                                                new Translation2d(-.75, 0), 0, false, true, false))
+                                                                new Translation2d(-.75, 0),
+                                                                0,
+                                                                false,
+                                                                true,
+                                                                false))
                                         .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
                                         .andThen(() -> this.driveSubsystem.setBrakeMode(true))
                                         .andThen(new AutoBalance(this.driveSubsystem))
-                                        .andThen(this.driveSubsystem.buildParkCommand().repeatedly()
-                        ));
+                                        .andThen(
+                                                this.driveSubsystem
+                                                        .buildParkCommand()
+                                                        .repeatedly()));
             case "MiddleC1sMB":
                 return manipulatorCommandFactory
-                        .primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(1)
+                        .primeCubeHigh()
+                        .alongWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(1)
                         .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
                         .andThen(
                                 Commands.run(
@@ -192,28 +203,32 @@ public class AutonomousPathCommand {
                                                                         Math.abs(
                                                                                         driveSubsystem
                                                                                                 .getPitch())
-                                                                                > 10).andThen(Commands.print("Once"))
+                                                                                > 10)
+                                                        .andThen(Commands.print("Once"))
                                                         .andThen(
                                                                 Commands.waitUntil(
                                                                         () ->
                                                                                 Math.abs(
                                                                                                 driveSubsystem
                                                                                                         .getPitch())
-                                                                                        < 2)).andThen(Commands.print("2"))
+                                                                                        < 2))
+                                                        .andThen(Commands.print("2"))
                                                         .andThen(
                                                                 Commands.waitUntil(
                                                                         () ->
                                                                                 Math.abs(
                                                                                                 driveSubsystem
                                                                                                         .getPitch())
-                                                                                        > 10)).andThen(Commands.print("3"))
+                                                                                        > 10))
+                                                        .andThen(Commands.print("3"))
                                                         .andThen(
                                                                 Commands.waitUntil(
                                                                         () ->
                                                                                 Math.abs(
                                                                                                 driveSubsystem
                                                                                                         .getPitch())
-                                                                                        < 2)).andThen(Commands.print("4"))
+                                                                                        < 2))
+                                                        .andThen(Commands.print("4"))
                                                         .andThen(Commands.waitSeconds(.25)))
                                         .alongWith(armSubsystem.homeArmCommand()))
                         .andThen(
@@ -224,7 +239,8 @@ public class AutonomousPathCommand {
                                                                 0,
                                                                 false,
                                                                 true,
-                                                                false)).alongWith(Commands.print("5"))
+                                                                false))
+                                        .alongWith(Commands.print("5"))
                                         .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
                                         .andThen(() -> this.driveSubsystem.setBrakeMode(true))
                                         .andThen(new AutoBalance(this.driveSubsystem))

@@ -128,7 +128,8 @@ public class RobotContainer {
                                                 -driveController.getRawAxis(
                                                         SaitekX52Joystick.Axis.kZRot.value))
                                         * .25,
-                        () -> false));;
+                        () -> false));
+        ;
         armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));
         // wristSubsystem.setDefaultCommand(

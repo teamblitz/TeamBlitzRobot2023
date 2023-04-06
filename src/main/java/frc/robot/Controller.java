@@ -186,11 +186,13 @@ public class Controller {
 
     public double getExtensionSpeed() {
         return .8
-                * (Constants.OIConstants.inputCurve.apply(
-                        -commandOperatorController.getHID().getLeftTriggerAxis()
-                                + commandOperatorController
-                                        .getHID()
-                                        .getRightTriggerAxis())); // Differential arm control
+                * MathUtil.applyDeadband(
+                        (Constants.OIConstants.inputCurve.apply(
+                                -commandOperatorController.getHID().getLeftTriggerAxis()
+                                        + commandOperatorController
+                                                .getHID()
+                                                .getRightTriggerAxis())),
+                        0.10);
     }
 
     public Trigger getStartTrigger() {

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -68,6 +69,9 @@ public class ArmIOTalon implements ArmIO {
         armExtension.config_kP(0, Arm.EXT_P);
         armExtension.config_kI(0, Arm.EXT_I);
         armExtension.config_kD(0, Arm.EXT_D);
+
+        armExtension.configSupplyCurrentLimit(
+                new SupplyCurrentLimitConfiguration(true, 40, 90, 0.2));
 
         absRotationEncoder = new DutyCycleEncoder(Arm.ABS_ROTATION_ENCODER);
 

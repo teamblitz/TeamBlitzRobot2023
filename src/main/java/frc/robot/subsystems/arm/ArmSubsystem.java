@@ -212,9 +212,13 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public CommandBase extendToCommand(double meters) {
         return new ExtendToCommand(
-                this,
-                MathUtil.clamp(meters, Constants.Arm.MIN_EXTENSION, Constants.Arm.MAX_EXTENSION),
-                Constants.Arm.EXTENSION_THRESHOLD);
+                        this,
+                        MathUtil.clamp(
+                                meters,
+                                Constants.Arm.MIN_EXTENSION + Units.inchesToMeters(0.5),
+                                Constants.Arm.MAX_EXTENSION),
+                        Constants.Arm.EXTENSION_THRESHOLD)
+                .withTimeout(5);
     }
 
     public CommandBase retractArmCommand() {
