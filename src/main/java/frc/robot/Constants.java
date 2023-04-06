@@ -487,7 +487,7 @@ public final class Constants {
     // Have you not seen the comment above, anyways we could probably just shift the deadband or
     // something
     // to fix the issues.
-    public static double STICK_DEADBAND = 0.12;
+    public static double STICK_DEADBAND = 0.08;
 
     public static final class Networking {
         public static final String JETSON_IP_ADDRESS = "10.20.83.130";

@@ -161,7 +161,7 @@ public class AutonomousPathCommand {
                 return autoCubeOut();
             case "BalanceTest":
                 return manipulatorCommandFactory
-                        .primeConeMid().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(1)
+                        .primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(1)
                         .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
                         .andThen(
                                 Commands.run(
