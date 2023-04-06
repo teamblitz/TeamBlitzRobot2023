@@ -180,8 +180,8 @@ public class Controller {
 
     public double getWristSpeed() {
         return -.2
-                * Constants.OIConstants.inputCurve.apply(
-                        commandOperatorController.getHID().getRightY());
+                * MathUtil.applyDeadband(Constants.OIConstants.inputCurve.apply(
+                        commandOperatorController.getHID().getRightY()), .1);
     }
 
     public double getExtensionSpeed() {
