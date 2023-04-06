@@ -34,6 +34,8 @@ import frc.robot.subsystems.drive.gyro.GyroIOPigeon;
 import frc.robot.subsystems.intake.IntakeIOSimple;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
+import frc.robot.subsystems.vision.VisionIONTJetson;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOSpark;
 import frc.robot.subsystems.wrist.WristSubsystem;
@@ -49,6 +51,8 @@ public class RobotContainer {
     /* ***** --- Subsystems --- ***** */
 
     private DriveSubsystem driveSubsystem;
+
+    private VisionSubsystem visionSubsystem;
 
     private ArmSubsystem armSubsystem;
     private WristSubsystem wristSubsystem;
@@ -141,13 +145,16 @@ public class RobotContainer {
     }
 
     private void configureSubsystems() {
+        visionSubsystem = new VisionSubsystem(new VisionIONTJetson());
+
         driveSubsystem =
                 new DriveSubsystem(
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod0.CONSTANTS),
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod1.CONSTANTS),
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod2.CONSTANTS),
                         new SwerveModuleIOSparkMax(Constants.Swerve.Mod3.CONSTANTS),
-                        Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx());
+                        Constants.Swerve.USE_PIGEON ? new GyroIOPigeon() : new GyroIONavx(),
+                        visionSubsystem.getQueue());
 
         armSubsystem = new ArmSubsystem(new ArmIOTalon(), () -> wristSubsystem.getRelativeRotation());
         wristSubsystem = new WristSubsystem(new WristIOSpark(), () -> armSubsystem.getRotation(), () -> armSubsystem.getArmLength());

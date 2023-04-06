@@ -5,6 +5,7 @@ package frc.robot.subsystems.drive;
 import static frc.robot.Constants.Swerve.*;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,12 +29,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
+import frc.lib.TimestampedValue;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Deque;
+
 public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final SwerveDriveOdometry swerveOdometry;
+    private final SwerveDrivePoseEstimator poseEstimator;
     private final SwerveModule[] swerveModules;
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -73,18 +78,22 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private PIDController keepHeadingPid;
 
+    private final Deque<TimestampedValue<Pose2d>> visionQueue;
+
     public DriveSubsystem(
             SwerveModuleIO frontLeft,
             SwerveModuleIO frontRight,
             SwerveModuleIO backLeft,
             SwerveModuleIO backRight,
-            GyroIO gyroIO) {
+            GyroIO gyroIO,
+            Deque<TimestampedValue<Pose2d>> visionQueue) {
         this(
                 new SwerveModule(FL, frontLeft),
                 new SwerveModule(FR, frontRight),
                 new SwerveModule(BL, backLeft),
                 new SwerveModule(BR, backRight),
-                gyroIO);
+                gyroIO,
+                visionQueue);
     }
 
     public DriveSubsystem(
@@ -92,13 +101,23 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
             SwerveModule frontRight,
             SwerveModule backLeft,
             SwerveModule backRight,
-            GyroIO gyroIO) {
+            GyroIO gyroIO,
+            Deque<TimestampedValue<Pose2d>> visionQueue) {
         swerveModules =
                 new SwerveModule[] { // front left, front right, back left, back right.
                     frontLeft, frontRight, backLeft, backRight
                 };
         swerveOdometry = new SwerveDriveOdometry(KINEMATICS, getYaw(), getModulePositions());
+        // The gyro doesn't return anything until periodic is called (oops) this might cause issues.
+        // Though it should be okay
+        // If we reset our odometry at the start of auto or something this won't be an issue
+        // -Noah
+        poseEstimator = new SwerveDrivePoseEstimator(KINEMATICS, getYaw(), getModulePositions(), new Pose2d());
+
         this.gyroIO = gyroIO;
+
+        this.visionQueue = visionQueue;
+
         logger = Logger.getInstance();
 
         keepHeadingPid = new PIDController(.1, 0, 0);
@@ -240,6 +259,12 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
         logger.processInputs("gyro", gyroInputs);
 
         swerveOdometry.update(getYaw(), getModulePositions());
+        poseEstimator.update(getYaw(), getModulePositions());
+
+        while (!visionQueue.isEmpty()) {
+            TimestampedValue<Pose2d> val = visionQueue.poll();
+            poseEstimator.addVisionMeasurement(val.getValue(), val.getTimestamp());
+        }
 
         logger.recordOutput("Swerve/Odometry", swerveOdometry.getPoseMeters());
         logger.recordOutput("Swerve/modules", getModuleStates());
