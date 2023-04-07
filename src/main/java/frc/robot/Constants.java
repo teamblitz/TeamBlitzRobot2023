@@ -176,7 +176,7 @@ public final class Constants {
 
                 public static final double CONE_HIGH = .8063;
                 public static final double CONE_MID = .067;
-                public static final double CUBE_HIGH = .4;
+                public static final double CUBE_HIGH = .6; // Up this to .5
                 public static final double CUBE_MID = 0;
 
                 public static final double HYBRID = 0;
@@ -250,7 +250,7 @@ public final class Constants {
 
             public static final double CONE_HIGH_RELATIVE = -33;
             public static final double CONE_MID_RELATIVE = -52;
-            public static final double CUBE_HIGH_RELATIVE = -30;
+            public static final double CUBE_HIGH_RELATIVE = 0;
             public static final double CUBE_MID_RELATIVE = 0;
 
             public static final double HYBRID_ROBOT_RELATIVE = 0;

@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.937970959275253,
-        "y": 0.5427673355346723
+        "x": 1.9288254290794298,
+        "y": 1.1022352044704096
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.561998394138969,
-        "y": 0.6838512255223576
+        "x": 2.3725824594506335,
+        "y": 0.5153307449472049
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "armHighCone",
+          "armHighCube",
           "outtake"
         ],
         "executionBehavior": "sequential",

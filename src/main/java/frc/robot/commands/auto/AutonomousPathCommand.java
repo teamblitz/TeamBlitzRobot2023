@@ -134,12 +134,12 @@ public class AutonomousPathCommand {
         eventMap.put(
                 "armConeGround",
                 this.manipulatorCommandFactory.groundUprightConePickup().withTimeout(3));
-        eventMap.put("armHighCone", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
-        eventMap.put("armMidCone", this.manipulatorCommandFactory.primeConeHigh().withTimeout(3));
+        eventMap.put("armHighCone", this.manipulatorCommandFactory.primeConeHigh().raceWith(intakeSubsystem.slowIntakeCommand()).withTimeout(3));
+        eventMap.put("armMidCone", this.manipulatorCommandFactory.primeConeMid().withTimeout(3));
         eventMap.put(
                 "armCubeGround", this.manipulatorCommandFactory.groundCubePickup().withTimeout(3));
-        eventMap.put("armMidCube", this.manipulatorCommandFactory.primeCubeMid().withTimeout(3));
-        eventMap.put("armHighCube", this.manipulatorCommandFactory.primeCubeHigh().withTimeout(3));
+        eventMap.put("armMidCube", this.manipulatorCommandFactory.primeCubeMid().raceWith(intakeSubsystem.slowIntakeCommand()).withTimeout(3));
+        eventMap.put("armHighCube", this.manipulatorCommandFactory.primeCubeHigh().raceWith(intakeSubsystem.slowIntakeCommand()).withTimeout(3));
 
         // ----- Intake -----
         eventMap.put("intakeCube", this.intakeSubsystem.buildCubeInCommand().withTimeout(1));
@@ -187,7 +187,7 @@ public class AutonomousPathCommand {
                 return manipulatorCommandFactory
                         .primeCubeHigh()
                         .alongWith(intakeSubsystem.slowIntakeCommand())
-                        .withTimeout(1)
+                        .withTimeout(1.3)
                         .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25))
                         .andThen(
                                 Commands.run(
@@ -231,7 +231,15 @@ public class AutonomousPathCommand {
                                                                                         < 2))
                                                         .andThen(Commands.print("4"))
                                                         .andThen(Commands.waitSeconds(.2)))
-                                        .alongWith(armSubsystem.homeArmCommand().withTimeout(.7).andThen(Commands.print("5"))))
+                                        .alongWith(armSubsystem.homeArmCommand().withTimeout(1.2).andThen(Commands.print("5"))))
+                        .andThen(Commands.runOnce(() -> driveSubsystem.drive(
+                                new Translation2d(0, 0),
+                                0,
+                                false,
+                                true,
+                                true
+                        )))
+                        .andThen(Commands.waitSeconds(0.5))
                         .andThen(
                                 Commands.run(
                                                 () ->
