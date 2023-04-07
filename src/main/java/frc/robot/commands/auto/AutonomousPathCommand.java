@@ -192,7 +192,7 @@ public class AutonomousPathCommand {
                                 Commands.run(
                                                 () ->
                                                         this.driveSubsystem.drive(
-                                                                new Translation2d(-1, 0),
+                                                                new Translation2d(-1.75, 0),
                                                                 0,
                                                                 false,
                                                                 true,
@@ -229,19 +229,20 @@ public class AutonomousPathCommand {
                                                                                                         .getPitch())
                                                                                         < 2))
                                                         .andThen(Commands.print("4"))
-                                                        .andThen(Commands.waitSeconds(.5)))
-                                        .alongWith(armSubsystem.homeArmCommand().withTimeout(1).andThen(Commands.print("5"))))
+                                                        .andThen(Commands.waitSeconds(.2)))
+                                        .alongWith(armSubsystem.homeArmCommand().withTimeout(.7).andThen(Commands.print("5"))))
                         .andThen(
                                 Commands.run(
                                                 () ->
                                                         this.driveSubsystem.drive(
-                                                                new Translation2d(1, 0),
+                                                                new Translation2d(1.5, 0),
                                                                 0,
                                                                 false,
                                                                 true,
                                                                 true)).alongWith(Commands.print("1"))
                                         .alongWith(Commands.print("6"))
                                         .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
+                                        .andThen(Commands.waitSeconds(1.3))
                                         .andThen(() -> this.driveSubsystem.setBrakeMode(true))
                                         .andThen(new AutoBalance(this.driveSubsystem)).andThen(Commands.print("7"))
                                         .andThen(
