@@ -159,7 +159,8 @@ public class AutonomousPathCommand {
         // Actual Pathing
         switch (path) {
             case "Score":
-                return autoCubeOut();
+                return manipulatorCommandFactory.primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(2)
+                        .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25));
             case "BalanceTest":
                 return manipulatorCommandFactory
                         .primeCubeHigh()
@@ -287,10 +288,8 @@ public class AutonomousPathCommand {
     public Command generateBackupAuto(String path) {
         switch (path) {
             case "Score":
-                // return autoMidCube();
-                // .andThen(() -> System.out.println("Score"))
-                // .andThen(driveSubsystem.buildParkCommand().repeatedly());
-                return this.autoCubeOut();
+                return manipulatorCommandFactory.primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(2)
+                .andThen(intakeSubsystem.buildCubeOutCommand());
             case "Left":
                 return autoMidCube()
                         .andThen(() -> System.out.println("Left pre drive"))
