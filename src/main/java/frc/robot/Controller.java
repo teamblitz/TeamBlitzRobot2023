@@ -7,6 +7,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.oi.SaitekX52Joystick;
 
+/**
+ * This was a very interesting experiment/way to do things. Overall, I think it worked fairly well, however it has gotten messy quick.
+ * I liked moving the actual button to trigger binding out of robot container, it makes things a lot cleaner, (we had about 10 buttons with maw, and that was near unmanageable)
+ * we have 30, and it is a lot cleaner. However, having to dig though this class to change bindings is kind of tedious
+ * I know why we decided to do it this way and not have bindings in constants (cough cough analog triggers)
+ * I think it might be better to have them in constants, but this worked as well, and I am not opposed to keeping this as is with some organization.
+ */
 public class Controller {
 
     private final CommandGenericHID commandDriverController;
@@ -180,8 +187,10 @@ public class Controller {
 
     public double getWristSpeed() {
         return -.2
-                * MathUtil.applyDeadband(Constants.OIConstants.inputCurve.apply(
-                        commandOperatorController.getHID().getRightY()), .1);
+                * MathUtil.applyDeadband(
+                        Constants.OIConstants.inputCurve.apply(
+                                commandOperatorController.getHID().getRightY()),
+                        .1);
     }
 
     public double getExtensionSpeed() {

@@ -134,12 +134,27 @@ public class AutonomousPathCommand {
         eventMap.put(
                 "armConeGround",
                 this.manipulatorCommandFactory.groundUprightConePickup().withTimeout(3));
-        eventMap.put("armHighCone", this.manipulatorCommandFactory.primeConeHigh().raceWith(intakeSubsystem.slowIntakeCommand()).withTimeout(3));
+        eventMap.put(
+                "armHighCone",
+                this.manipulatorCommandFactory
+                        .primeConeHigh()
+                        .raceWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(3));
         eventMap.put("armMidCone", this.manipulatorCommandFactory.primeConeMid().withTimeout(3));
         eventMap.put(
                 "armCubeGround", this.manipulatorCommandFactory.groundCubePickup().withTimeout(3));
-        eventMap.put("armMidCube", this.manipulatorCommandFactory.primeCubeMid().raceWith(intakeSubsystem.slowIntakeCommand()).withTimeout(3));
-        eventMap.put("armHighCube", this.manipulatorCommandFactory.primeCubeHigh().raceWith(intakeSubsystem.slowIntakeCommand()).withTimeout(3));
+        eventMap.put(
+                "armMidCube",
+                this.manipulatorCommandFactory
+                        .primeCubeMid()
+                        .raceWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(3));
+        eventMap.put(
+                "armHighCube",
+                this.manipulatorCommandFactory
+                        .primeCubeHigh()
+                        .raceWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(3));
 
         // ----- Intake -----
         eventMap.put("intakeCube", this.intakeSubsystem.buildCubeInCommand().withTimeout(1));
@@ -159,7 +174,10 @@ public class AutonomousPathCommand {
         // Actual Pathing
         switch (path) {
             case "Score":
-                return manipulatorCommandFactory.primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(2)
+                return manipulatorCommandFactory
+                        .primeCubeHigh()
+                        .alongWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(2)
                         .andThen(intakeSubsystem.buildCubeOutCommand().withTimeout(.25));
             case "BalanceTest":
                 return manipulatorCommandFactory
@@ -231,14 +249,20 @@ public class AutonomousPathCommand {
                                                                                         < 2))
                                                         .andThen(Commands.print("4"))
                                                         .andThen(Commands.waitSeconds(.2)))
-                                        .alongWith(armSubsystem.homeArmCommand().withTimeout(1.2).andThen(Commands.print("5"))))
-                        .andThen(Commands.runOnce(() -> driveSubsystem.drive(
-                                new Translation2d(0, 0),
-                                0,
-                                false,
-                                true,
-                                true
-                        )))
+                                        .alongWith(
+                                                armSubsystem
+                                                        .homeArmCommand()
+                                                        .withTimeout(1.2)
+                                                        .andThen(Commands.print("5"))))
+                        .andThen(
+                                Commands.runOnce(
+                                        () ->
+                                                driveSubsystem.drive(
+                                                        new Translation2d(0, 0),
+                                                        0,
+                                                        false,
+                                                        true,
+                                                        true)))
                         .andThen(Commands.waitSeconds(0.5))
                         .andThen(
                                 Commands.run(
@@ -248,12 +272,14 @@ public class AutonomousPathCommand {
                                                                 0,
                                                                 false,
                                                                 true,
-                                                                true)).alongWith(Commands.print("1"))
+                                                                true))
+                                        .alongWith(Commands.print("1"))
                                         .alongWith(Commands.print("6"))
                                         .until(() -> Math.abs(this.driveSubsystem.getPitch()) > 12)
                                         .andThen(Commands.waitSeconds(1.3))
                                         .andThen(() -> this.driveSubsystem.setBrakeMode(true))
-                                        .andThen(new AutoBalance(this.driveSubsystem)).andThen(Commands.print("7"))
+                                        .andThen(new AutoBalance(this.driveSubsystem))
+                                        .andThen(Commands.print("7"))
                                         .andThen(
                                                 this.driveSubsystem
                                                         .buildParkCommand()
@@ -296,8 +322,11 @@ public class AutonomousPathCommand {
     public Command generateBackupAuto(String path) {
         switch (path) {
             case "Score":
-                return manipulatorCommandFactory.primeCubeHigh().alongWith(intakeSubsystem.slowIntakeCommand()).withTimeout(2)
-                .andThen(intakeSubsystem.buildCubeOutCommand());
+                return manipulatorCommandFactory
+                        .primeCubeHigh()
+                        .alongWith(intakeSubsystem.slowIntakeCommand())
+                        .withTimeout(2)
+                        .andThen(intakeSubsystem.buildCubeOutCommand());
             case "Left":
                 return autoMidCube()
                         .andThen(() -> System.out.println("Left pre drive"))

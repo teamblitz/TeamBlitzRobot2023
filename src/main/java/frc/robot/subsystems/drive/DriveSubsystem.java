@@ -32,6 +32,10 @@ import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Here we can probably do some cleanup, main thing we can probably do here is separate telemetry/hardware io.
+ * Also, we need a better way to do dynamic pid loop tuning.
+ */
 public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] swerveModules;

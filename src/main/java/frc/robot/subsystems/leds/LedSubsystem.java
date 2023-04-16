@@ -7,7 +7,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// TODO: After denver change this subsystem to follow the io layer pattern
+/**
+ * Here we can probably do some work, I am not entirely sure if this should follow the io layer system or not.
+ * for consistency’s sake I say yes, but we should probably see what 6328's code base does as we are using their
+ * logging framework.
+ */
 public class LedSubsystem extends SubsystemBase {
     private final AddressableLED led;
     private final AddressableLEDBuffer ledBuffer;

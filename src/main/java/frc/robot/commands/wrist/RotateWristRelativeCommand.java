@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.wrist.WristSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+// TODO: Make inlined
 public class RotateWristRelativeCommand extends CommandBase {
     private final WristSubsystem wristSubsystem;
 

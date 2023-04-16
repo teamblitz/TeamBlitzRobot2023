@@ -132,13 +132,6 @@ public class RobotContainer {
         ;
         armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));
-        // wristSubsystem.setDefaultCommand(
-        // Commands.waitSeconds(.8).andThen(wristSubsystem.holdAtCommand()));
-        //        wristSubsystem.setDefaultCommand(
-        //        Commands.run(
-        //                () -> wristSubsystem.setRotationSpeed(controller.getWristSpeed()),
-        //                wristSubsystem)
-        //        );
         wristSubsystem.setDefaultCommand(
                 Commands.waitSeconds(0).andThen(wristSubsystem.holdAtRelativeCommand()));
     }
@@ -176,11 +169,10 @@ public class RobotContainer {
                         new WristIOSpark(),
                         () -> armSubsystem.getRotation(),
                         () -> armSubsystem.getArmLength());
-        // wristSubsystem = new WristSubsystem(new WristIO() {}, () -> armSubsystem.getRotation());
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
 
-        driveController = new SaitekX52Joystick(0); // Move this to Controller
+        driveController = new SaitekX52Joystick(0); // Move this to Controller (and I never did)
         controller = new Controller(0, 1);
     }
 
@@ -191,7 +183,6 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
         controller
                 .coneInTrigger()
                 .whileTrue(intakeSubsystem.buildConeInCommand())
@@ -247,9 +238,6 @@ public class RobotContainer {
                                         },
                                         armSubsystem.extensionRequirement)
                                 .finallyDo((b) -> armSubsystem.setArmExtensionSpeed(0)));
-
-        // controller.armTo20Trigger().whileTrue(armSubsystem.extendToCommand(.2));
-        // controller.armTo40Trigger().whileTrue(armSubsystem.extendToCommand(.5));
 
         controller.primeHybridTrigger().onTrue(manipulatorCommandFactory.primeHybrid());
 

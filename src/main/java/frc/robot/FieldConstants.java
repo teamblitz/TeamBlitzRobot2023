@@ -15,6 +15,8 @@ import java.util.Map;
  * <p>All translations and poses are stored with the origin at the rightmost point on the BLUE
  * ALLIANCE wall. Use the {@link #allianceFlip(Translation2d)} and {@link #allianceFlip(Pose2d)}
  * methods to flip these values based on the current alliance color.
+ *
+ * TODO, currently unused, I want to verify values in here, and maybe make documentation more concise.
  */
 public final class FieldConstants {
     public static final double fieldLength = Units.inchesToMeters(651.25);

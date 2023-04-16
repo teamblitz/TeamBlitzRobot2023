@@ -15,7 +15,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/** Keeps track of motor status and conveys errors to the dashboard */
+/**
+ * Keeps track of motor status and conveys errors to the dashboard
+ *
+ * <p>Todo before KCMT, this class was made obsolete when we integrated advantage kit, as it relies
+ * on Robot's add periodic method, which we can't use anymore. The main issue with this is that it
+ * is not very useful, when I made it I was under the assumption that we would get data from it, and
+ * be able to fix can bus wiring issues before the match if they were detected, however, the radio
+ * takes a while to boot, and it is even longer before the fms actually connects you (the field is
+ * already closed up), and while it could be useful for pre match checks, it requires tethering to
+ * the robot which is not ideal. A more useful solution would be on boot status LEDs on the robot
+ * (these could be used for other things as well) that would show robot status for 10 seconds on
+ * boot if there are no issues, and longer if there are. This would be a lot more useful, as it
+ * would give pitcrew and driveteam insight into the data provided by this class much easier. I am
+ * not entirely sure about how I want to implement it, but I would like to avoid using a singleton
+ * for it.
+ */
 public class StatusManager implements Runnable {
     private static StatusManager instance;
 

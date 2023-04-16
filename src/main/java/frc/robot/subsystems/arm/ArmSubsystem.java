@@ -10,6 +10,10 @@ import frc.robot.commands.arm.RotateToCommand;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * Maybe divide this into 2 subsystems, depends on how we want to control it.
+ * The current way we do this, 2 subsystems is ideal (and is kinda what we are pseudo doing)
+ */
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     private final ArmIO io;

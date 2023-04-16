@@ -3,6 +3,7 @@ package frc.robot.commands.wrist;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.wrist.WristSubsystem;
 
+// TODO: Make inlined
 public class HoldWristAtPositionCommand extends CommandBase {
 
     private final WristSubsystem wristSubsystem;
