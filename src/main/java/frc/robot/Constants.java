@@ -320,15 +320,15 @@ public final class Constants {
          *
          * Not even sure if it does anything because the fuses are 40a
          */
-        public static final int DRIVE_SMART_CURRENT_LIMIT = 40;
-        public static final int DRIVE_SECONDARY_CURRENT_LIMIT = 65;
+        public static final int DRIVE_SMART_CURRENT_LIMIT = 65;
+        public static final int DRIVE_SECONDARY_CURRENT_LIMIT = 80;
 
         public static final int ANGLE_SMART_CURRENT_LIMIT = 25;
         public static final int ANGLE_SECONDARY_CURRENT_LIMIT = 40;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double OPEN_LOOP_RAMP = 0.25;
+        public static final double OPEN_LOOP_RAMP = 0.15;
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
