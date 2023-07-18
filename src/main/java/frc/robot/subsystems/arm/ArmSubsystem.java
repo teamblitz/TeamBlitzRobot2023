@@ -1,18 +1,21 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.BlitzSubsystem;
+import frc.lib.MutableReference;
 import frc.robot.Constants;
 import frc.robot.commands.arm.ExtendToCommand;
-import frc.robot.commands.arm.RotateToCommand;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Maybe divide this into 2 subsystems, depends on how we want to control it.
- * The current way we do this, 2 subsystems is ideal (and is kinda what we are pseudo doing)
+ * Maybe divide this into 2 subsystems, depends on how we want to control it. The current way we do
+ * this, 2 subsystems is ideal (and is kinda what we are pseudo doing)
  */
 public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
@@ -52,13 +55,13 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
                 .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)
                 .schedule();
 
-        // Schedule a command to seed the arm, as the encoder does not appear to be connected when
-        // this class is initiated.
-        Commands.waitSeconds(5).andThen(this::seedArm).ignoringDisable(true).schedule();
-        // DO require the arm, this will cancel the active hold at command, and will stop the arm
-        // from slamming to vertical if the bot is enabled before the encoder is connected.
-        // new Trigger(() -> inputs.encoderConnected).onTrue(Commands.runOnce(this::seedArm,
-        // rotationRequirement).ignoringDisable(true));
+        new Trigger(() -> inputs.encoderConnected).onTrue(
+                runOnce(io::seedArmPosition)
+                        .andThen(() -> io.setArmRotationSpeed(0)) // Set the arm to 0 to end on board pid loop
+                        .ignoringDisable(true)
+                        .));
+
+
 
         protectArmCommand = extendToCommand(Constants.Arm.PULL_TO);
 
@@ -208,10 +211,35 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     public CommandBase rotateToCommand(double degrees) {
-        return new RotateToCommand(
-                this,
-                MathUtil.clamp(degrees, Constants.Arm.MIN_ROT, Constants.Arm.MAX_ROT),
-                Constants.Arm.ROT_THRESHOLD);
+        double goal = MathUtil.clamp(degrees, Constants.Arm.MIN_ROT, Constants.Arm.MAX_ROT);
+
+        MutableReference<TrapezoidProfile> profile = new MutableReference<>();
+        Timer timer = new Timer();
+
+        return runOnce(
+                        () -> {
+                            profile.set(
+                                    new TrapezoidProfile(
+                                            new TrapezoidProfile.Constraints(
+                                                    Constants.Arm.ROTATION_VELOCITY,
+                                                    Constants.Arm.ROTATION_ACCELERATION),
+                                            new TrapezoidProfile.State(goal, 0),
+                                            new TrapezoidProfile.State(
+                                                    getRotation(), getRotationSpeed())));
+                            timer.restart();
+                        })
+                .andThen(
+                        run(
+                                () -> {
+                                    TrapezoidProfile.State setpoint =
+                                            profile.get().calculate(timer.get());
+                                    updateRotation(setpoint.position, setpoint.velocity);
+                                }))
+                .until(() -> profile.get().isFinished(timer.get()))
+                .finallyDo(
+                        (interrupted) ->
+                                updateRotation(profile.get().calculate(timer.get()).position, 0))
+                .
     }
 
     public CommandBase extendToCommand(double meters) {
@@ -238,13 +266,4 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         return rotateToCommand(Constants.Arm.Position.Rotation.LEVEL);
     }
 
-    public void seedArm() {
-        io.seedArmPosition();
-    }
-
-    double wristPos;
-
-    public void setWristPos(double p) {
-        wristPos = p;
-    }
 }

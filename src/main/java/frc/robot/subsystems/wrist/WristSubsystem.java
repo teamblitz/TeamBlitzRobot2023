@@ -19,9 +19,9 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Here we can probably increase the clearness of some things, for example calling rotation relative to the robot
- * just relative rotation is not exactly clear what it is relative to (in some places it is called robot relative rotation)
- * but this is kinda long, maybe bot relative?
+ * Here we can probably increase the clearness of some things, for example calling rotation relative
+ * to the robot just relative rotation is not exactly clear what it is relative to (in some places
+ * it is called robot relative rotation) but this is kinda long, maybe bot relative?
  */
 public class WristSubsystem extends SubsystemBase implements BlitzSubsystem {
     private final WristIO io;

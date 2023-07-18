@@ -6,11 +6,11 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
 /**
- * Todo, integrate this with constants and swerve module io spark, this class kinda made sense when we copied this with the serve
- * code, but I don't really like that we are using a singleton for it.
+ * Todo, integrate this with constants and swerve module io spark, this class kinda made sense when
+ * we copied this with the serve code, but I don't really like that we are using a singleton for it.
  *
- * Unfortunately, although the Config all routine is nice, it doesn't leave much in the way of static constants.
- * We could probably have this all in constants using static {} blocks
+ * <p>Unfortunately, although the Config all routine is nice, it doesn't leave much in the way of
+ * static constants. We could probably have this all in constants using static {} blocks
  */
 public final class CTREConfigs {
     private static CTREConfigs instance;
