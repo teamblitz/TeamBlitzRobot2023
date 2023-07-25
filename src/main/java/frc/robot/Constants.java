@@ -43,26 +43,7 @@ public final class Constants {
     }
 
     public static final class Intake {
-
-        /*
-         * Neo 550
-         * 20A Limit - Motor survived full 220s test.
-         * 40A Limit - Motor failure at approximately 27s.
-         * 60A Limit - Motor failure at approximately 5.5s
-         * 80A Limit* - Motor failure at approximately 2.0s
-         *
-         * For NEOs use 40
-         * https://www.revrobotics.com/neo-brushless-motor-locked-rotor-testing/
-         * */
         public static final int CURRENT_LIMIT = 60;
-
-        // Which intake is on the bot?
-        public enum Type {
-            Simple,
-            Complex
-        }
-
-        public static final Type type = Type.Simple;
 
         public static final class Simple {
             public static final double IN_SPEED = 0.6;
@@ -70,14 +51,6 @@ public final class Constants {
             public static final double SLOW_INTAKE = .1;
 
             public static final int MOTOR_ID = 15;
-        }
-
-        public static final class Complex {
-            public static final double IN_SPEED = 0.5;
-            public static final double OUT_SPEED = -0.5;
-
-            public static final int FRONT_MOTOR_ID = 14;
-            public static final int BACK_MOTOR_ID = 15;
         }
 
         public static final int DETECTION_CURRENT_THRESHOLD = 55; // needs value
