@@ -12,6 +12,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.oi.SaitekX52Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ManipulatorCommandFactory;
 import frc.robot.commands.TeleopSwerve;
@@ -59,7 +59,8 @@ public class RobotContainer {
     /* ***** --- Controllers --- ***** */
 
     private Controller controller;
-    private SaitekX52Joystick driveController;
+    //     private SaitekX52Joystick driveController;
+    private Joystick driveController;
 
     // private final Logger logger = Logger.getInstance();
 
@@ -115,19 +116,11 @@ public class RobotContainer {
                         driveSubsystem,
                         () ->
                                 OIConstants.inputCurve.apply(
-                                        -driveController.getRawAxis(
-                                                        SaitekX52Joystick.Axis.kYAxis.value)
-                                                * calculateDriveMultiplier()),
+                                        -driveController.getY() * calculateDriveMultiplier()),
                         () ->
                                 OIConstants.inputCurve.apply(
-                                        -driveController.getRawAxis(
-                                                        SaitekX52Joystick.Axis.kXAxis.value)
-                                                * calculateDriveMultiplier()),
-                        () ->
-                                OIConstants.inputCurve.apply(
-                                                -driveController.getRawAxis(
-                                                        SaitekX52Joystick.Axis.kZRot.value))
-                                        * .3,
+                                        -driveController.getX() * calculateDriveMultiplier()),
+                        () -> OIConstants.inputCurve.apply(-driveController.getTwist()) * .3,
                         () -> false));
         ;
         armSubsystem.rotationRequirement.setDefaultCommand(
@@ -139,12 +132,10 @@ public class RobotContainer {
     private final SlewRateLimiter driveMultiplierLimiter = new SlewRateLimiter(.25);
 
     private double calculateDriveMultiplier() {
-        if (driveController.getRawButton(SaitekX52Joystick.Button.kLowerTrigger.value)) {
+        if (driveController.getRawButton(2)) {
             return driveMultiplierLimiter.calculate(.3);
-        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger2.value)) {
+        } else if (driveController.getRawButton(1)) {
             return driveMultiplierLimiter.calculate(1);
-        } else if (driveController.getRawButton(SaitekX52Joystick.Button.kUpperTrigger1.value)) {
-            return driveMultiplierLimiter.calculate(.80);
         } else {
             return driveMultiplierLimiter.calculate(.60);
         }
@@ -172,7 +163,7 @@ public class RobotContainer {
         intakeSubsystem = new IntakeSubsystem(new IntakeIOSimple());
         ledSubsystem = new LedSubsystem();
 
-        driveController = new SaitekX52Joystick(0); // Move this to Controller (and I never did)
+        driveController = new Joystick(0); // Move this to Controller (and I never did)
         controller = new Controller(0, 1);
     }
 

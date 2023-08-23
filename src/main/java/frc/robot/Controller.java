@@ -218,18 +218,18 @@ public class Controller {
 
     // Driver Controls
     public Trigger restGyroTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kFire.value);
+        return commandDriverController.button(5);
     }
 
     public Trigger xBrakeTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kT4.value);
+        return commandDriverController.button(3);
     }
 
     public Trigger brakeModeTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kT6.value);
+        return commandDriverController.button(4);
     }
 
     public Trigger coastModeTrigger() {
-        return commandDriverController.button(SaitekX52Joystick.Button.kT5.value);
+        return commandDriverController.button(6);
     }
 }
