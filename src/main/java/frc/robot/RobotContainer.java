@@ -94,7 +94,7 @@ public class RobotContainer {
         configureButtonBindings();
         setDefaultCommands();
 
-        CameraServer.startAutomaticCapture();
+//        CameraServer.startAutomaticCapture();
 
         DriverStation.silenceJoystickConnectionWarning(true);
         Shuffleboard.getTab("DriveSubsystem")

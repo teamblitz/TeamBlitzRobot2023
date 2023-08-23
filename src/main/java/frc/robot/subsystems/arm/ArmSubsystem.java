@@ -55,18 +55,20 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
                 .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)
                 .schedule();
 
-        new Trigger(() -> inputs.encoderConnected).onTrue(
-                runOnce(io::seedArmPosition)
-                        .andThen(() -> io.setArmRotationSpeed(0)) // Set the arm to 0 to end on board pid loop
-                        .ignoringDisable(true)
-                        .));
-
-
+        Commands.waitSeconds(8).andThen(io::seedArmPosition)
+                                .andThen(
+                                        () ->
+                                                io.setArmRotationSpeed(
+                                                        0)) // Set the arm to 0 to end on board pid
+                                // loop
+                                .ignoringDisable(true).schedule();
 
         protectArmCommand = extendToCommand(Constants.Arm.PULL_TO);
 
         this.relativeWristRotSupplier = relativeWristRotSupplier;
         this.wristRotSupplier = wristRotSupplier;
+
+        io.seedArmPosition();
     }
 
     @Override
@@ -150,7 +152,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
     }
 
     // Currently velocity is unused as we do not do feed forward on the telescoping aspect of the
-    // arm
+    // arm (and we never will)
     public void updateExtension(double meters, double velocity) {
         logger.recordOutput("arm/wanted_extension", meters);
         io.setExtensionSetpoint(meters);
@@ -216,7 +218,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
         MutableReference<TrapezoidProfile> profile = new MutableReference<>();
         Timer timer = new Timer();
 
-        return runOnce(
+        return Commands.runOnce(
                         () -> {
                             profile.set(
                                     new TrapezoidProfile(
@@ -227,7 +229,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
                                             new TrapezoidProfile.State(
                                                     getRotation(), getRotationSpeed())));
                             timer.restart();
-                        })
+                        }, rotationRequirement)
                 .andThen(
                         run(
                                 () -> {
@@ -238,8 +240,7 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
                 .until(() -> profile.get().isFinished(timer.get()))
                 .finallyDo(
                         (interrupted) ->
-                                updateRotation(profile.get().calculate(timer.get()).position, 0))
-                .
+                                updateRotation(profile.get().calculate(timer.get()).position, 0));
     }
 
     public CommandBase extendToCommand(double meters) {
@@ -259,11 +260,10 @@ public class ArmSubsystem extends SubsystemBase implements BlitzSubsystem {
 
     public CommandBase homeArmCommand() {
         return retractArmCommand()
-                .andThen(rotateToCommand(Constants.Arm.Position.Rotation.VERTICAL));
+                .alongWith(rotateToCommand(Constants.Arm.Position.Rotation.VERTICAL));
     }
 
     public CommandBase levelArmCommand() {
         return rotateToCommand(Constants.Arm.Position.Rotation.LEVEL);
     }
-
 }

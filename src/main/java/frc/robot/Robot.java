@@ -101,8 +101,6 @@ public class Robot extends LoggedRobot {
 
         robotContainer = new RobotContainer();
 
-        System.out.println("Robot Start up at: " + Timer.getFPGATimestamp());
-
         // This should be uncommented at some point.
         // try {
         //     Networker networker = new Networker();

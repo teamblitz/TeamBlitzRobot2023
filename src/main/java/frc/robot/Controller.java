@@ -165,6 +165,7 @@ public class Controller {
 
     public Trigger homeArmTrigger() {
         return basicModeTrigger().and(commandOperatorController.b());
+//        return unbound;
     }
 
     public Trigger wristLevelTrigger() {
