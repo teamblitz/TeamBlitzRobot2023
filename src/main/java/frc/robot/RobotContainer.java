@@ -121,8 +121,9 @@ public class RobotContainer {
                                 OIConstants.inputCurve.apply(
                                         -driveController.getX() * calculateDriveMultiplier()),
                         () -> OIConstants.inputCurve.apply(-driveController.getTwist()) * .3,
-                        () -> false));
-        ;
+                        () -> false,
+                        () -> driveController.getPOV()));
+
         armSubsystem.rotationRequirement.setDefaultCommand(
                 new HoldArmAtPositionCommand(armSubsystem));
         wristSubsystem.setDefaultCommand(

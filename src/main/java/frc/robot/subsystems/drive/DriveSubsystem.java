@@ -126,17 +126,40 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
             boolean isOpenLoop,
             boolean maintainHeading) {
 
-        if (rotation != 0) {
-            lastTurnCommandSeconds = Timer.getFPGATimestamp();
-            keepHeadingSetpointSet = false;
-            logger.recordOutput("Swerve/Turning", true);
-        }
-        if (lastTurnCommandSeconds + .5 <= Timer.getFPGATimestamp()
-                && !keepHeadingSetpointSet) { // If it has been at least .5 seconds.
-            keepHeadingPid.setSetpoint(getYaw().getDegrees());
+        angleDrive(
+                translation,
+                rotation,
+                0,
+                fieldRelative,
+                isOpenLoop,
+                maintainHeading,
+                false);
+    }
+
+    public void angleDrive(Translation2d translation,
+                           double rotation,
+                           double rotationSetpoint,
+                           boolean fieldRelative,
+                           boolean isOpenLoop,
+                           boolean maintainHeading,
+                           boolean doRotationPid) {
+        if (doRotationPid) {
+            keepHeadingPid.setSetpoint(rotationSetpoint);
             keepHeadingSetpointSet = true;
-            logger.recordOutput("Swerve/Turning", false);
+        } else {
+            if (rotation != 0) {
+                lastTurnCommandSeconds = Timer.getFPGATimestamp();
+                keepHeadingSetpointSet = false;
+                logger.recordOutput("Swerve/Turning", true);
+            }
+            if (lastTurnCommandSeconds + .5 <= Timer.getFPGATimestamp()
+                    && !keepHeadingSetpointSet) { // If it has been at least .5 seconds.
+                keepHeadingPid.setSetpoint(getYaw().getDegrees());
+                keepHeadingSetpointSet = true;
+                logger.recordOutput("Swerve/Turning", false);
+            }
         }
+
         if (keepHeadingSetpointSet && maintainHeading) {
             rotation = keepHeadingPid.calculate(getYaw().getDegrees());
         }
@@ -147,14 +170,15 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
                 KINEMATICS.toSwerveModuleStates(
                         fieldRelative
                                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                        translation.getX(), translation.getY(), rotation, getYaw())
+                                translation.getX(), translation.getY(), rotation, getYaw())
                                 : new ChassisSpeeds(
-                                        translation.getX(), translation.getY(), rotation));
+                                translation.getX(), translation.getY(), rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
 
         for (SwerveModule mod : swerveModules) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop, false, false);
         }
+
     }
 
     /* Used by SwerveControllerCommand in Auto */
