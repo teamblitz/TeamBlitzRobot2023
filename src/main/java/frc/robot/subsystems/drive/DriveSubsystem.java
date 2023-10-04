@@ -5,6 +5,7 @@ package frc.robot.subsystems.drive;
 import static frc.robot.Constants.Swerve.*;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -75,7 +77,8 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
     private double lastTurnCommandSeconds;
     private boolean keepHeadingSetpointSet;
 
-    private PIDController keepHeadingPid;
+    private final PIDController keepHeadingPid;
+    private final ProfiledPIDController rotateToHeadingPid;
 
     public DriveSubsystem(
             SwerveModuleIO frontLeft,
@@ -107,6 +110,9 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
 
         keepHeadingPid = new PIDController(.1, 0, 0);
         keepHeadingPid.enableContinuousInput(-180, 180);
+
+        rotateToHeadingPid = new ProfiledPIDController(.1, 0, 0, new Constraints(360, 360*3));
+        rotateToHeadingPid.enableContinuousInput(-180, 180);
         initTelemetry();
 
         // In theory ignoring disabled is unnecessary, but this is a critical command that must run.
@@ -144,8 +150,9 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
                            boolean maintainHeading,
                            boolean doRotationPid) {
         if (doRotationPid) {
-            keepHeadingPid.setSetpoint(rotationSetpoint);
-            keepHeadingSetpointSet = true;
+            keepHeadingSetpointSet = false;
+
+            rotation = rotateToHeadingPid.calculate(getYaw().getDegrees(), rotationSetpoint);
         } else {
             if (rotation != 0) {
                 lastTurnCommandSeconds = Timer.getFPGATimestamp();
@@ -158,11 +165,13 @@ public class DriveSubsystem extends SubsystemBase implements BlitzSubsystem {
                 keepHeadingSetpointSet = true;
                 logger.recordOutput("Swerve/Turning", false);
             }
+
+            if (keepHeadingSetpointSet && maintainHeading) {
+                rotation = keepHeadingPid.calculate(getYaw().getDegrees());
+            }
         }
 
-        if (keepHeadingSetpointSet && maintainHeading) {
-            rotation = keepHeadingPid.calculate(getYaw().getDegrees());
-        }
+        
         logger.recordOutput("Swerve/keepHeadingSetpointSet", keepHeadingSetpointSet);
         logger.recordOutput("Swerve/keepSetpoint", keepHeadingPid.getSetpoint());
 
