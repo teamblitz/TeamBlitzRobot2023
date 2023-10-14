@@ -206,7 +206,7 @@ public final class Constants {
         public static final double ROTATION_VELOCITY = 60;
         public static final double ROTATION_ACCELERATION = 120; // 1 seconds to full
 
-        public static final double ENCODER_OFFSET = 14;
+        public static final double ENCODER_OFFSET = -3; // was 14 now -3
         //        public static final double CG_OFFSET = Math.toDegrees(1.1423);
         public static final double CG_OFFSET = 35;
 
